@@ -838,6 +838,8 @@ const STR = {
     googleWhat:'Your data lives on this phone. Signing in keeps one private copy in your own Google Drive, so a lost or changed phone does not lose your records.',
     googlePrivacy:'The copy sits in a private app folder only PocketSeeds can open. Nothing is sent to us — there is no server.',
     needClientId:'One-time setup: paste your Google OAuth Client ID so sign-in can work on your own domain.',
+    clientIdOverride:'Sign-in already works on this site. Only change this if you are hosting your own copy on a different address.',
+    clientIdCurrent:'In use: {id}',
     clientIdSteps:'console.cloud.google.com → APIs & Services → Credentials → Create OAuth client ID → Web application. Add your site address under Authorised JavaScript origins, then enable the Google Drive API.',
     navMore:'More',
     // budget 50/30/20
@@ -1019,6 +1021,8 @@ const STR = {
     googleWhat:'మీ డేటా ఈ ఫోన్‌లోనే ఉంటుంది. సైన్ ఇన్ చేస్తే మీ సొంత Google Drive లో ఒక ప్రైవేట్ కాపీ ఉంటుంది — ఫోన్ పోయినా, మారినా వివరాలు పోవు.',
     googlePrivacy:'ఆ కాపీ PocketSeeds మాత్రమే తెరవగల ప్రైవేట్ ఫోల్డర్‌లో ఉంటుంది. మాకు ఏమీ రాదు — సర్వరే లేదు.',
     needClientId:'ఒక్కసారి సెటప్: మీ Google OAuth Client ID ఇక్కడ పెడితే మీ సైట్‌లో సైన్ ఇన్ పని చేస్తుంది.',
+    clientIdOverride:'ఈ సైట్‌లో సైన్ ఇన్ ఇప్పటికే పని చేస్తుంది. వేరే చిరునామాలో మీ సొంత కాపీ పెట్టుకుంటేనే దీన్ని మార్చండి.',
+    clientIdCurrent:'వాడుతున్నది: {id}',
     clientIdSteps:'console.cloud.google.com → APIs & Services → Credentials → Create OAuth client ID → Web application. Authorised JavaScript origins లో మీ సైట్ చిరునామా చేర్చి, Google Drive API ఆన్ చేయండి.',
     navMore:'మరిన్ని',
     budget:'బడ్జెట్', budget503020:'50 / 30 / 20 బడ్జెట్', monthlyIncomeL:'నా నెల ఆదాయం',
@@ -3104,10 +3108,15 @@ function loadGis(){
   });
 }
 
+/* OAuth client ID for this deployment. A web client ID is a public identifier —
+   it is visible in any browser app's source — and is restricted by the authorised
+   JavaScript origins set in Google Cloud, not by being kept secret. Anyone hosting
+   their own copy can override it in the app's Save-data setup sheet. */
+const GOOGLE_CLIENT_ID = '653411803649-ap28hqcg6u1aagc7ngsltjpj1690gcup.apps.googleusercontent.com';
 const GSCOPE = 'https://www.googleapis.com/auth/drive.appdata openid email profile';
 
 async function googleConnect(){
-  const cid = (DB.settings.googleClientId || '').trim();
+  const cid = (DB.settings.googleClientId || '').trim() || GOOGLE_CLIENT_ID;
   if(!cid){ return sheetGoogleSetup(); }
   const bar = $('#btnSaveData'); bar.classList.add('busy');
   try{
@@ -3206,10 +3215,11 @@ function sheetGoogle(){
 function sheetGoogleSetup(){
   openSheet(`
     <h3>${L('saveMyData')}</h3>
-    <div class="sheet-sub">${t('needClientId')}</div>
+    <div class="sheet-sub">${t('clientIdOverride')}</div>
     <div class="field"><label>Google OAuth Client ID</label>
       <input id="gcid" type="text" placeholder="xxxxx.apps.googleusercontent.com"
         value="${esc(DB.settings.googleClientId||'')}"></div>
+    <div class="hint" style="margin:-6px 0 12px">${t('clientIdCurrent',{id: (DB.settings.googleClientId||GOOGLE_CLIENT_ID).slice(0,28)+'…'})}</div>
     <button class="btn btn-p btn-block" id="gcSave">${L('saveSettings')}</button>
     <div class="hint">${t('clientIdSteps')}</div>`);
   $('#gcSave').addEventListener('click', () => {

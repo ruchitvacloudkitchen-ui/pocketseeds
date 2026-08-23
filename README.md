@@ -45,7 +45,11 @@ The "Save my data" bar signs the user in with Google and keeps one private copy
 of their data in their **own** Google Drive app folder. No server, and the copy
 sits in a folder only this app can open.
 
-To switch it on, create an OAuth client ID once:
+The client ID for the live site is already built into `index.html`, so sign-in
+works with no setup. A web OAuth client ID is a public identifier restricted by
+its authorised origins, not a secret.
+
+If you host your own copy on a different address, create your own client ID:
 
 1. https://console.cloud.google.com → new project
 2. **APIs & Services → Library** → enable **Google Drive API**
@@ -53,7 +57,7 @@ To switch it on, create an OAuth client ID once:
    → *Web application*
 4. Under **Authorised JavaScript origins** add the site address, e.g.
    `https://ruchitvacloudkitchen-ui.github.io`
-5. Copy the client ID (`…apps.googleusercontent.com`) and paste it the first
-   time you tap "Save my data" in the app
+5. Copy the client ID and paste it in the app: Save my data → the setup sheet
 
-Until an ID is set, the button explains the setup instead of failing.
+While the Google Cloud project is in **Testing**, only accounts listed as test
+users can sign in. Publish the app when you are ready for real users.
