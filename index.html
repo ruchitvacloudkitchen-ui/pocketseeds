@@ -211,6 +211,26 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .sb-g .i{fill:currentColor;stroke:none;width:22px;height:22px}
 .sb-g{color:#4285F4}
 
+/* SIP projection table */
+.sip-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sip-amt{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:11px;padding:7px 11px;flex:1;min-width:150px}
+.sip-amt span{font-size:17px;font-weight:700;color:var(--muted)}
+.sip-amt input{border:0;background:none;padding:0;font-size:21px;font-weight:800;letter-spacing:-.02em;
+  font-family:'Plus Jakarta Sans',sans-serif;width:100%}
+.sip-amt input:focus{border:0}
+.sip-wrap{overflow-x:auto;margin-top:13px;-webkit-overflow-scrolling:touch}
+table.sip{width:100%;border-collapse:collapse;font-size:14px;min-width:290px}
+table.sip th,table.sip td{padding:9px 6px;text-align:right;white-space:nowrap}
+table.sip th{font-size:12px;font-weight:700;color:var(--muted);border-bottom:1px solid var(--line)}
+table.sip th:first-child,table.sip td:first-child{text-align:left;font-weight:700}
+table.sip tbody tr+tr td{border-top:1px solid var(--line)}
+table.sip td{font-weight:700;font-variant-numeric:tabular-nums}
+table.sip .r12{color:var(--ink)} table.sip .r14{color:var(--brand-2)} table.sip .r18{color:var(--brand)}
+table.sip tbody tr:last-child td{font-size:15px}
+.sip-risk{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:11px;padding-top:10px;
+  border-top:1px dashed var(--line)}
+
 /* quick amount pad */
 .qa-amt{display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--line);
   border-radius:14px;padding:10px 16px}
@@ -320,6 +340,11 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="savingsCoach">Savings coach</h3></div>
       <div class="coach" id="coachBox"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><h3 data-i18n="sipTitle">SIP &amp; mutual funds</h3></div>
+      <div class="card" style="padding:15px" id="sipBox"></div>
     </div>
 
     <div class="sec">
@@ -513,6 +538,11 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="howMuchSave">How much should I save?</h3></div>
       <div class="coach" id="coachBox2"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><h3 data-i18n="sipTitle">SIP &amp; mutual funds</h3></div>
+      <div class="card" style="padding:15px" id="sipBox2"></div>
     </div>
 
     <div class="sec">
@@ -841,6 +871,12 @@ const STR = {
     clientIdOverride:'Sign-in already works on this site. Only change this if you are hosting your own copy on a different address.',
     clientIdCurrent:'In use: {id}',
     clientIdSteps:'console.cloud.google.com → APIs & Services → Credentials → Create OAuth client ID → Web application. Add your site address under Authorised JavaScript origins, then enable the Google Drive API.',
+    sipTitle:'SIP & mutual funds', sipIfInvest:'If you invest {a}',
+    sipOneTime:'One time', sipMonthly:'Every month', sipYears:'Years',
+    sipAmount:'Amount to invest', sipUseBalance:'Use my balance',
+    sipInvested:'You put in {a}', sipGain:'Growth {a}',
+    sipRisk:'These are only projections at a steady rate, for comparison. Mutual funds carry market risk — real returns move up and down and can be negative. Nothing here is investment advice.',
+    sipHint:'The same money at three different return rates. The gap between 5 years and 25 years is what compounding does.',
     navMore:'More',
     // budget 50/30/20
     budget:'Budget', budget503020:'50 / 30 / 20 budget', monthlyIncomeL:'My monthly income',
@@ -1024,6 +1060,12 @@ const STR = {
     clientIdOverride:'ఈ సైట్‌లో సైన్ ఇన్ ఇప్పటికే పని చేస్తుంది. వేరే చిరునామాలో మీ సొంత కాపీ పెట్టుకుంటేనే దీన్ని మార్చండి.',
     clientIdCurrent:'వాడుతున్నది: {id}',
     clientIdSteps:'console.cloud.google.com → APIs & Services → Credentials → Create OAuth client ID → Web application. Authorised JavaScript origins లో మీ సైట్ చిరునామా చేర్చి, Google Drive API ఆన్ చేయండి.',
+    sipTitle:'SIP & మ్యూచువల్ ఫండ్స్', sipIfInvest:'{a} పెట్టుబడి పెడితే',
+    sipOneTime:'ఒకేసారి', sipMonthly:'నెలనెలా', sipYears:'సంవత్సరాలు',
+    sipAmount:'ఎంత పెట్టాలి', sipUseBalance:'నా నిల్వ వాడు',
+    sipInvested:'మీరు వేసేది {a}', sipGain:'పెరిగేది {a}',
+    sipRisk:'ఇవి ఒకే రేటు అనుకుని వేసిన అంచనాలు మాత్రమే, పోల్చి చూడటానికి. మ్యూచువల్ ఫండ్స్‌లో మార్కెట్ రిస్క్ ఉంటుంది — నిజమైన రాబడి పెరగవచ్చు, తగ్గవచ్చు, నష్టం కూడా రావచ్చు. ఇది పెట్టుబడి సలహా కాదు.',
+    sipHint:'ఒకే డబ్బు, మూడు రకాల రాబడి రేట్లలో. 5 ఏళ్లకు, 25 ఏళ్లకు మధ్య తేడాయే చక్రవడ్డీ మహిమ.',
     navMore:'మరిన్ని',
     budget:'బడ్జెట్', budget503020:'50 / 30 / 20 బడ్జెట్', monthlyIncomeL:'నా నెల ఆదాయం',
     needs:'అవసరాలు', wants:'కోరికలు', savingsPart:'పొదుపు',
@@ -3231,4 +3273,97 @@ function sheetGoogleSetup(){
 
 $('#btnSaveData').addEventListener('click', sheetGoogle);
 paintIcons(); renderSaveBar();   /* this block loads after the first render */
+</script>
+
+<script>
+'use strict';
+/* =========================================================================
+   SIP / mutual fund projection
+   One-time:  FV = P (1+r)^n
+   Monthly:   FV = P [((1+i)^n - 1)/i](1+i),  i = r/12, n = months
+   Compounding is annual for the lump sum and monthly for the SIP, which is
+   how fund houses quote them.
+   ========================================================================= */
+const SIP_YEARS = [5, 10, 15, 20, 25];
+const SIP_RATES = [12, 14, 18];
+let SIP_MODE = 'once';     // 'once' | 'monthly'
+let SIP_AMT  = null;       // null = follow the balance
+
+function sipFuture(P, years, ratePct, monthly){
+  P = Number(P) || 0;
+  if(!P) return 0;
+  if(monthly){
+    const i = ratePct / 1200, n = years * 12;
+    return Math.round(P * ((Math.pow(1 + i, n) - 1) / i) * (1 + i));
+  }
+  return Math.round(P * Math.pow(1 + ratePct / 100, years));
+}
+
+function sipBaseAmount(){
+  if(SIP_AMT !== null) return SIP_AMT;
+  const b = stats().balance;
+  return b > 0 ? Math.round(b) : 0;
+}
+
+function sipHTML(){
+  const P = sipBaseAmount();
+  const monthly = SIP_MODE === 'monthly';
+  const rows = SIP_YEARS.map(y => {
+    const put = monthly ? P * 12 * y : P;
+    return `<tr>
+      <td>${y} ${t('sipYears')}<div style="font-size:11px;font-weight:500;color:var(--muted)">${t('sipInvested',{a:money(put)})}</div></td>
+      ${SIP_RATES.map(r => `<td class="r${r}">${money(sipFuture(P, y, r, monthly))}</td>`).join('')}
+    </tr>`;
+  }).join('');
+
+  return `
+    <div class="sip-head">
+      <div class="sip-amt">
+        <span>₹</span><input id="sipVal" type="number" inputmode="decimal" value="${P || ''}" placeholder="0">
+      </div>
+      <div class="seg" style="margin:0;flex:1;min-width:170px">
+        <button data-sip="once" aria-pressed="${!monthly}">${t('sipOneTime')}</button>
+        <button data-sip="monthly" aria-pressed="${monthly}">${t('sipMonthly')}</button>
+      </div>
+    </div>
+    <div class="hint" style="margin-top:9px">${t('sipIfInvest',{a:money(P)})}${
+      SIP_AMT !== null ? ` · <button class="link" data-sip-reset="1" style="font-size:12px">${t('sipUseBalance')}</button>` : ''}</div>
+    <div class="sip-wrap">
+      <table class="sip">
+        <thead><tr><th>${t('sipYears')}</th>${SIP_RATES.map(r=>`<th>${r}%</th>`).join('')}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="hint" style="margin-top:9px">${t('sipHint')}</div>
+    <div class="sip-risk">${t('sipRisk')}</div>`;
+}
+
+function renderSip(){
+  const html = sipHTML();
+  ['#sipBox', '#sipBox2'].forEach(sel => { const el = $(sel); if(el) el.innerHTML = html; });
+}
+
+/* one delegated handler covers both copies of the card */
+document.addEventListener('click', e => {
+  const seg = e.target.closest('[data-sip]');
+  if(seg){ SIP_MODE = seg.dataset.sip; renderSip(); return; }
+  if(e.target.closest('[data-sip-reset]')){ SIP_AMT = null; renderSip(); }
+});
+document.addEventListener('input', e => {
+  if(e.target && e.target.id === 'sipVal'){
+    const v = Number(e.target.value);
+    SIP_AMT = e.target.value === '' ? null : Math.max(0, v);
+    const focused = e.target === document.activeElement;
+    const caret = e.target.value.length;
+    renderSip();
+    if(focused){ const f = $('#sipVal'); if(f){ f.focus(); f.setSelectionRange(caret, caret); } }
+  }
+});
+
+/* keep it in step with the rest of the app */
+(function(){
+  const prev = window.renderAll;
+  window.renderAll = function(){ prev(); try{ renderSip(); }catch(e){ console.error(e); } };
+  renderSip();
+})();
 </script>
