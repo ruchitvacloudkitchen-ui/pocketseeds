@@ -211,6 +211,57 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .sb-g .i{fill:currentColor;stroke:none;width:22px;height:22px}
 .sb-g{color:#4285F4}
 
+/* SIP calculator */
+.sipc-head{display:flex;align-items:flex-start;gap:11px;margin-bottom:13px}
+.sipc-ic{width:38px;height:38px;border-radius:12px;background:var(--in-bg);color:var(--brand);
+  display:grid;place-items:center;flex:0 0 auto}
+.sipc-head h4{font-size:16px;font-weight:800;letter-spacing:-.01em}
+.sipc-head p{font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+.sipc-bal{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--in-bg);
+  border-radius:12px;padding:10px 13px;margin-bottom:13px;cursor:pointer}
+.sipc-bal .l{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--brand)}
+.sipc-bal b{font-size:15px;font-weight:800;color:var(--brand)}
+.sipc-fields{display:grid;grid-template-columns:1.35fr 1fr;gap:10px}
+.sipc-f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.sipc-f .box{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:12px;padding:11px 13px}
+.sipc-f .box span{font-size:14px;font-weight:600;color:var(--muted);flex:0 0 auto}
+.sipc-f .box input{border:0;background:none;padding:0;font-size:19px;font-weight:800;width:100%;
+  font-family:'Plus Jakarta Sans',sans-serif}
+.sipc-f .box input:focus{border:0}
+.sipc-rate{margin-top:13px}
+.sipc-rate .chips{gap:6px}
+.sipc-rate .chip{padding:8px 14px}
+.sipc-out{margin-top:14px;background:var(--in-bg);border-radius:14px;padding:14px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sipc-out .lbl{font-size:12.5px;color:var(--muted);font-weight:600}
+.sipc-out .big{font-size:28px;font-weight:800;color:var(--brand);letter-spacing:-.02em;line-height:1.1}
+.sipc-out .side{text-align:right}
+.sipc-out .side b{font-size:15px;font-weight:800;display:block;margin-top:2px}
+.sipc-glance{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
+.sipc-glance div{flex:0 0 auto;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;
+  padding:9px 12px;text-align:center;min-width:78px}
+.sipc-glance .y{font-size:11.5px;color:var(--muted);font-weight:700}
+.sipc-glance .v{font-size:13.5px;font-weight:800;margin-top:3px}
+
+/* fund list + shortcut cards */
+.fund-row{display:flex;align-items:flex-start;gap:11px;padding:12px 0;border-top:1px solid var(--line)}
+.fund-row:first-of-type{border-top:0}
+.fund-dot{width:9px;height:9px;border-radius:50%;margin-top:6px;flex:0 0 auto}
+.fund-row .fb{flex:1;min-width:0}
+.fund-row .fn{font-size:14.5px;font-weight:700;line-height:1.3}
+.fund-row .fc{font-size:12px;color:var(--muted);margin-top:2px}
+.fund-tag{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--surface-2);
+  border:1px solid var(--line);color:var(--muted);white-space:nowrap;flex:0 0 auto}
+.sc-card{display:flex;align-items:center;gap:12px;width:100%;padding:14px;border-radius:15px;border:0;
+  background:var(--in-bg);cursor:pointer;font-family:inherit;text-align:left;margin-bottom:9px}
+.sc-card .sc-ic{width:40px;height:40px;border-radius:50%;background:var(--brand);color:#fff;
+  display:grid;place-items:center;flex:0 0 auto}
+.sc-card .sc-b{flex:1;min-width:0}
+.sc-card .sc-t{display:block;font-size:14.5px;font-weight:700;line-height:1.3}
+.sc-card .sc-s{display:block;font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+.sc-card .sc-x{color:var(--brand);flex:0 0 auto}
+
 /* SIP projection table */
 .sip-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .sip-amt{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--line);
@@ -335,23 +386,18 @@ table.sip tbody tr:last-child td{font-size:15px}
       </div>
     </div>
 
-    <div id="monthBanner"></div>
-    <div id="dueBanner"></div>
-
-    <div class="sec">
-      <div class="sec-head"><h3 data-i18n="savingsCoach">Savings coach</h3></div>
-      <div class="coach" id="coachBox"></div>
-    </div>
-
-    <div class="sec">
-      <div class="sec-head"><h3 data-i18n="sipTitle">SIP &amp; mutual funds</h3></div>
-      <div class="card" style="padding:15px" id="sipBox"></div>
-    </div>
-
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="quickAdd">Quick add</h3></div>
       <div class="grid3" id="quickTiles"></div>
       <div class="hint" data-i18n="quickAddHint">Tap once for the things you buy every day.</div>
+    </div>
+
+    <div id="monthBanner"></div>
+    <div id="dueBanner"></div>
+
+    <div class="sec">
+      <div class="sec-head"><h3 data-i18n="sipTitle">SIP &amp; mutual funds</h3></div>
+      <div class="card" style="padding:15px" id="sipBox"></div>
     </div>
 
     <div class="sec">
@@ -372,6 +418,11 @@ table.sip tbody tr:last-child td{font-size:15px}
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="whereMoneyWent">Where the money went</h3></div>
       <div class="card" style="padding:15px 14px" id="catBox"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><h3 data-i18n="savingsCoach">Savings coach</h3></div>
+      <div class="coach" id="coachBox"></div>
     </div>
   </section>
 
@@ -605,8 +656,14 @@ table.sip tbody tr:last-child td{font-size:15px}
   <!-- ===================== MORE HUB ===================== -->
   <section class="page" id="page-more">
     <div class="sec" style="margin-top:4px">
-      <div class="list" id="moreList"></div>
+      <div class="card" style="padding:16px" id="fundsBox"></div>
     </div>
+
+    <div class="sec">
+      <div class="sec-head"><h3 data-i18n="shortcuts">Helpful shortcuts</h3></div>
+      <div id="shortcutList"></div>
+    </div>
+
     <div class="sec">
       <div class="ad-wrap" id="adSlot2"><span class="ad-tag">Ad</span><div id="adHouse2"></div></div>
     </div>
@@ -890,6 +947,22 @@ const STR = {
     stFooter:'Generated by PocketSeeds — your money, on your phone',
     saveImage:'Save as image', savePdf:'Save as PDF', shareIt:'Share',
     imgSaved:'Statement saved', shareFail:'Sharing is not available here',
+    sipCalc:'SIP seed calculator', sipCalcSub:'See what small monthly steps can grow into.',
+    sipAvail:'Available balance', sipMonthlySeed:'Monthly seed', sipLump:'Amount', sipYearsL:'Years',
+    sipExpected:'Expected return', sipProjected:'Projected value', sipYouPlant:'You plant',
+    sipGlance:'Same amount, longer', sipYr:'yr',
+    funds:'Fund categories to explore', fundsSub:'A research starting point for long-term SIP investors — not a recommendation.',
+    fundsHow:'How this list is built', fundsCriteria:'Chosen only as well-known, long-running schemes across different categories, so you can compare like with like. No ranking, no performance claim.',
+    fundsCheck:'Before you invest, check current returns, expense ratio, AUM, portfolio and your own risk profile on the AMC factsheet or AMFI.',
+    fundsRisk:'Very high', fundsRiskMod:'Moderately high',
+    fundsDisc:'For education only. This is not investment advice or a recommendation to buy or sell any scheme. Mutual fund investments are subject to market risks — read all scheme related documents carefully.',
+    shortcuts:'Helpful shortcuts',
+    scReminders:'Payment reminders', scRemindersSub:'Keep borrowed money from slipping through the cracks.',
+    scTracker:'Monthly tracker', scTrackerSub:'See your planting and pruning in one place.',
+    scVaddi:'Interest & chits', scVaddiSub:'What every hand loan is really costing you.',
+    scMoyi:'Gift book', scMoyiSub:'Who gave what, and what you owe back.',
+    scStatement:'Monthly statement', scStatementSub:'Download a receipt for any month.',
+    scBudget:'50/30/20 budget', scBudgetSub:'Keep needs, wants and savings in their lanes.',
     navMore:'More',
     // budget 50/30/20
     budget:'Budget', budget503020:'50 / 30 / 20 budget', monthlyIncomeL:'My monthly income',
@@ -1089,6 +1162,22 @@ const STR = {
     stFooter:'PocketSeeds తయారు చేసినది — మీ డబ్బు, మీ ఫోన్‌లో',
     saveImage:'ఇమేజ్‌గా భద్రపరచు', savePdf:'PDF గా భద్రపరచు', shareIt:'పంపు',
     imgSaved:'స్టేట్‌మెంట్ భద్రమైంది', shareFail:'ఇక్కడ షేర్ చేయలేం',
+    sipCalc:'SIP లెక్క', sipCalcSub:'చిన్న నెలవారీ అడుగులు ఎంతవుతాయో చూడండి.',
+    sipAvail:'అందుబాటులో ఉన్న నిల్వ', sipMonthlySeed:'నెలకు', sipLump:'మొత్తం', sipYearsL:'సంవత్సరాలు',
+    sipExpected:'ఆశించే రాబడి', sipProjected:'అంచనా విలువ', sipYouPlant:'మీరు వేసేది',
+    sipGlance:'అదే మొత్తం, ఎక్కువ కాలం', sipYr:'ఏళ్లు',
+    funds:'చూడదగ్గ ఫండ్ రకాలు', fundsSub:'దీర్ఘకాల SIP కోసం పరిశోధన మొదలుపెట్టే చోటు — సిఫారసు కాదు.',
+    fundsHow:'ఈ జాబితా ఎలా తయారైంది', fundsCriteria:'వేర్వేరు రకాల్లో చాలా కాలంగా నడుస్తున్న, అందరికీ తెలిసిన స్కీమ్‌లను మాత్రమే పోల్చి చూడటానికి పెట్టాం. ర్యాంకింగ్ కాదు, రాబడి హామీ అంతకన్నా కాదు.',
+    fundsCheck:'పెట్టుబడి పెట్టే ముందు ప్రస్తుత రాబడి, ఖర్చు నిష్పత్తి, AUM, పోర్ట్‌ఫోలియో, మీ రిస్క్ సామర్థ్యం — AMC ఫ్యాక్ట్‌షీట్ లేదా AMFI లో చూసుకోండి.',
+    fundsRisk:'చాలా ఎక్కువ రిస్క్', fundsRiskMod:'కొంచెం ఎక్కువ రిస్క్',
+    fundsDisc:'ఇది విద్యా ప్రయోజనం కోసమే. ఇది పెట్టుబడి సలహా కాదు, ఏ స్కీమ్‌నూ కొనమని చెప్పడం కాదు. మ్యూచువల్ ఫండ్ పెట్టుబడులు మార్కెట్ రిస్క్‌కు లోబడి ఉంటాయి — స్కీమ్ పత్రాలన్నీ జాగ్రత్తగా చదవండి.',
+    shortcuts:'ఉపయోగపడే దారులు',
+    scReminders:'చెల్లింపు గుర్తుంపులు', scRemindersSub:'తీసుకున్న అప్పు మర్చిపోకుండా.',
+    scTracker:'నెల లెక్క', scTrackerSub:'ఆదాయం, ఖర్చు ఒకేచోట.',
+    scVaddi:'వడ్డీ & చిట్టీలు', scVaddiSub:'ప్రతి చేతి అప్పు నిజంగా ఎంత ఖరీదో.',
+    scMoyi:'మొయి పుస్తకం', scMoyiSub:'ఎవరు ఎంత ఇచ్చారు, మనం ఎంత ఇవ్వాలి.',
+    scStatement:'నెల స్టేట్‌మెంట్', scStatementSub:'ఏ నెల రసీదైనా దించుకోండి.',
+    scBudget:'50/30/20 బడ్జెట్', scBudgetSub:'అవసరాలు, కోరికలు, పొదుపు — మూడూ దారిలో.',
     navMore:'మరిన్ని',
     budget:'బడ్జెట్', budget503020:'50 / 30 / 20 బడ్జెట్', monthlyIncomeL:'నా నెల ఆదాయం',
     needs:'అవసరాలు', wants:'కోరికలు', savingsPart:'పొదుపు',
@@ -2565,18 +2654,6 @@ const MORE_ITEMS = [
   {go:'search',  ic:'search', key:'search',       sub:'searchPh'}
 ];
 function renderMore(){
-  $('#moreList').innerHTML = MORE_ITEMS.map(m => `
-    <button class="row" data-go="${m.go}" style="width:100%;text-align:left;cursor:pointer;font-family:inherit">
-      <div class="ic ic-save">${ic(m.ic)}</div>
-      <div class="body"><div class="title">${L(m.key)}</div>
-        <div class="meta" style="white-space:normal">${t(m.sub, {r:DB.taxSlab||20})}</div></div>
-      <div style="color:var(--muted)">›</div>
-    </button>`).join('') + `
-    <button class="row" id="moreSettings" style="width:100%;text-align:left;cursor:pointer;font-family:inherit">
-      <div class="ic ic-warn">${ic('gear')}</div>
-      <div class="body"><div class="title">${L('settings')}</div></div>
-      <div style="color:var(--muted)">›</div>
-    </button>`;
   const s2 = $('#adSlot2');
   if(s2 && !DB.settings.adClient){
     const a = HOUSE_ADS[1], c = LANG === 'te' ? a.te : a.en;
@@ -3308,57 +3385,74 @@ paintIcons(); renderSaveBar();   /* this block loads after the first render */
    Compounding is annual for the lump sum and monthly for the SIP, which is
    how fund houses quote them.
    ========================================================================= */
-const SIP_YEARS = [5, 10, 15, 20, 25];
-const SIP_RATES = [12, 14, 18];
-let SIP_MODE = 'once';     // 'once' | 'monthly'
-let SIP_AMT  = null;       // null = follow the balance
+const SIP_GLANCE = [5, 10, 15, 20, 25];
+const SIP_RATES  = [8, 10, 12, 14, 18];
+let SIP_MODE = 'monthly';      // 'monthly' | 'once'
+let SIP_AMT  = null;           // null = suggest from the balance
+let SIP_YRS  = 10;
+let SIP_RATE = 12;
 
 function sipFuture(P, years, ratePct, monthly){
   P = Number(P) || 0;
-  if(!P) return 0;
+  if(!P || !years) return 0;
   if(monthly){
-    const i = ratePct / 1200, n = years * 12;
+    const i = ratePct / 1200, n = Math.round(years * 12);
     return Math.round(P * ((Math.pow(1 + i, n) - 1) / i) * (1 + i));
   }
   return Math.round(P * Math.pow(1 + ratePct / 100, years));
 }
-
+function sipBalance(){ const b = stats().balance; return b > 0 ? Math.round(b) : 0; }
 function sipBaseAmount(){
   if(SIP_AMT !== null) return SIP_AMT;
-  const b = stats().balance;
-  return b > 0 ? Math.round(b) : 0;
+  const b = sipBalance();
+  /* a sensible monthly seed rather than the whole balance */
+  return SIP_MODE === 'monthly' ? Math.max(500, Math.round(b / 10 / 500) * 500) : b;
 }
 
 function sipHTML(){
   const P = sipBaseAmount();
   const monthly = SIP_MODE === 'monthly';
-  const rows = SIP_YEARS.map(y => {
-    const put = monthly ? P * 12 * y : P;
-    return `<tr>
-      <td>${y} ${t('sipYears')}<div style="font-size:11px;font-weight:500;color:var(--muted)">${t('sipInvested',{a:money(put)})}</div></td>
-      ${SIP_RATES.map(r => `<td class="r${r}">${money(sipFuture(P, y, r, monthly))}</td>`).join('')}
-    </tr>`;
-  }).join('');
-
+  const fv = sipFuture(P, SIP_YRS, SIP_RATE, monthly);
+  const put = monthly ? P * 12 * SIP_YRS : P;
   return `
-    <div class="sip-head">
-      <div class="sip-amt">
-        <span>₹</span><input id="sipVal" type="number" inputmode="decimal" value="${P || ''}" placeholder="0">
-      </div>
-      <div class="seg" style="margin:0;flex:1;min-width:170px">
-        <button data-sip="once" aria-pressed="${!monthly}">${t('sipOneTime')}</button>
-        <button data-sip="monthly" aria-pressed="${monthly}">${t('sipMonthly')}</button>
-      </div>
+    <div class="sipc-head">
+      <div class="sipc-ic">${ic('chart')}</div>
+      <div><h4>${L('sipCalc')}</h4><p>${t('sipCalcSub')}</p></div>
     </div>
-    <div class="hint" style="margin-top:9px">${t('sipIfInvest',{a:money(P)})}${
-      SIP_AMT !== null ? ` · <button class="link" data-sip-reset="1" style="font-size:12px">${t('sipUseBalance')}</button>` : ''}</div>
-    <div class="sip-wrap">
-      <table class="sip">
-        <thead><tr><th>${t('sipYears')}</th>${SIP_RATES.map(r=>`<th>${r}%</th>`).join('')}</tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
+
+    <button class="sipc-bal" data-sip-usebal="1">
+      <span class="l">${ic('wallet')}<span>${t('sipAvail')}</span></span>
+      <b>${money(sipBalance())}</b>
+    </button>
+
+    <div class="seg" style="margin-bottom:13px">
+      <button data-sip="monthly" aria-pressed="${monthly}">SIP Monthly</button>
+      <button data-sip="once" aria-pressed="${!monthly}">Lumpsum</button>
     </div>
-    <div class="hint" style="margin-top:9px">${t('sipHint')}</div>
+
+    <div class="sipc-fields">
+      <div class="sipc-f"><label>${t(monthly ? 'sipMonthlySeed' : 'sipLump')}</label>
+        <div class="box"><span>₹</span><input id="sipVal" type="number" inputmode="decimal" value="${P || ''}" placeholder="0"></div></div>
+      <div class="sipc-f"><label>${t('sipYearsL')}</label>
+        <div class="box"><span>${t('sipYr')}</span><input id="sipYrs" type="number" inputmode="numeric" value="${SIP_YRS}" min="1" max="40"></div></div>
+    </div>
+
+    <div class="sipc-rate">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:7px">${t('sipExpected')}</label>
+      <div class="chips">${SIP_RATES.map(r => `<button class="chip" data-sip-rate="${r}" aria-pressed="${r===SIP_RATE}">${r}%</button>`).join('')}</div>
+    </div>
+
+    <div class="sipc-out">
+      <div><div class="lbl">${t('sipProjected')}</div><div class="big">${money(fv)}</div></div>
+      <div class="side"><div class="lbl">${t('sipYouPlant')}</div><b>${money(put)}</b></div>
+    </div>
+
+    <div class="hint" style="margin-top:11px">${t('sipGlance')} · ${SIP_RATE}%</div>
+    <div class="sipc-glance">
+      ${SIP_GLANCE.map(y => `<div><div class="y">${y} ${t('sipYr')}</div>
+        <div class="v">${money(sipFuture(P, y, SIP_RATE, monthly))}</div></div>`).join('')}
+    </div>
+
     <div class="sip-risk">${t('sipRisk')}</div>`;
 }
 
@@ -3367,21 +3461,22 @@ function renderSip(){
   ['#sipBox', '#sipBox2'].forEach(sel => { const el = $(sel); if(el) el.innerHTML = html; });
 }
 
-/* one delegated handler covers both copies of the card */
 document.addEventListener('click', e => {
-  const seg = e.target.closest('[data-sip]');
-  if(seg){ SIP_MODE = seg.dataset.sip; renderSip(); return; }
-  if(e.target.closest('[data-sip-reset]')){ SIP_AMT = null; renderSip(); }
+  const mode = e.target.closest('[data-sip]');
+  if(mode){ SIP_MODE = mode.dataset.sip; SIP_AMT = null; renderSip(); return; }
+  const rate = e.target.closest('[data-sip-rate]');
+  if(rate){ SIP_RATE = Number(rate.dataset.sipRate); renderSip(); return; }
+  if(e.target.closest('[data-sip-usebal]')){ SIP_AMT = sipBalance(); renderSip(); }
 });
 document.addEventListener('input', e => {
-  if(e.target && e.target.id === 'sipVal'){
-    const v = Number(e.target.value);
-    SIP_AMT = e.target.value === '' ? null : Math.max(0, v);
-    const focused = e.target === document.activeElement;
-    const caret = e.target.value.length;
-    renderSip();
-    if(focused){ const f = $('#sipVal'); if(f){ f.focus(); f.setSelectionRange(caret, caret); } }
-  }
+  const el = e.target;
+  if(!el || (el.id !== 'sipVal' && el.id !== 'sipYrs')) return;
+  const id = el.id, caret = el.value.length;
+  if(id === 'sipVal') SIP_AMT = el.value === '' ? null : Math.max(0, Number(el.value));
+  else SIP_YRS = Math.min(40, Math.max(1, Number(el.value) || 1));
+  const focused = el === document.activeElement;
+  renderSip();
+  if(focused){ const f = $('#' + id); if(f){ f.focus(); try{ f.setSelectionRange(caret, caret); }catch(_){} } }
 });
 
 /* keep it in step with the rest of the app */
@@ -3596,5 +3691,83 @@ $('#btnStatement').addEventListener('click', () => openStatement(VIEW));
   const prev = window.renderAll;
   window.renderAll = function(){ prev(); try{ renderMonthBanner(); }catch(e){ console.error(e); } };
   renderMonthBanner();
+})();
+</script>
+
+<script>
+'use strict';
+/* =========================================================================
+   Fund categories to explore  +  Helpful shortcuts
+   ------------------------------------------------------------------------
+   IMPORTANT, for whoever edits this list:
+   Only long-lived, factual descriptors live here — scheme name and category.
+   No returns, no expense ratios, no ranking. Those numbers change weekly and
+   publishing stale or unverified ones is exactly what SEBI's fair-communication
+   rules exist to prevent. If you add figures, take them from the AMC factsheet
+   or AMFI on the day you publish and stamp them with that date.
+   ========================================================================= */
+const FUND_LIST = [
+  { name:'Parag Parikh Flexi Cap Fund', cat:'Flexi cap', tone:'var(--brand)',  risk:'fundsRisk' },
+  { name:'HDFC Flexi Cap Fund',         cat:'Flexi cap', tone:'var(--brand)',  risk:'fundsRisk' },
+  { name:'Mirae Asset Large Cap Fund',  cat:'Large cap', tone:'var(--brand-2)',risk:'fundsRiskMod' },
+  { name:'UTI Nifty 50 Index Fund',     cat:'Index · Nifty 50', tone:'var(--brand-2)', risk:'fundsRiskMod' },
+  { name:'HDFC Balanced Advantage Fund',cat:'Hybrid',    tone:'var(--amber-2)',risk:'fundsRiskMod' },
+  { name:'Nippon India Small Cap Fund', cat:'Small cap', tone:'var(--out)',    risk:'fundsRisk' }
+];
+
+function renderFunds(){
+  const box = $('#fundsBox'); if(!box) return;
+  box.innerHTML = `
+    <div class="sipc-head" style="margin-bottom:10px">
+      <div class="sipc-ic">${ic('trend')}</div>
+      <div><h4>${L('funds')}</h4><p>${t('fundsSub')}</p></div>
+    </div>
+    ${FUND_LIST.map(f => `
+      <div class="fund-row">
+        <i class="fund-dot" style="background:${f.tone}"></i>
+        <div class="fb"><div class="fn">${esc(f.name)}</div><div class="fc">${esc(f.cat)}</div></div>
+        <span class="fund-tag">${t(f.risk)}</span>
+      </div>`).join('')}
+    <div class="hint" style="margin-top:12px"><b>${t('fundsHow')}:</b> ${t('fundsCriteria')}</div>
+    <div class="hint" style="margin-top:7px">${t('fundsCheck')}</div>
+    <div class="sip-risk">${t('fundsDisc')}</div>`;
+}
+
+const SHORTCUTS = [
+  { go:'loans',   icon:'bell',    t:'scReminders',  s:'scRemindersSub' },
+  { go:'reports', icon:'chart',   t:'scTracker',    s:'scTrackerSub'   },
+  { go:'loans',   icon:'refresh', t:'scVaddi',      s:'scVaddiSub'     },
+  { go:'save',    icon:'gift',    t:'scMoyi',       s:'scMoyiSub'      },
+  { go:'budget',  icon:'piggy',   t:'scBudget',     s:'scBudgetSub'    },
+  { act:'statement', icon:'receipt', t:'scStatement', s:'scStatementSub' },
+  { go:'save',    icon:'coin',    t:'navSave',      s:'howMuchSave'    },
+  { go:'family',  icon:'people',  t:'family',       s:'familyHint'     },
+  { go:'credit',  icon:'trend',   t:'creditHealth', s:'creditHint'     },
+  { go:'tax',     icon:'receipt', t:'taxTitle',     s:'taxHint'        },
+  { go:'search',  icon:'search',  t:'search',       s:'searchPh'       },
+  { act:'settings', icon:'gear',  t:'settings',     s:'storedHint'     }
+];
+function renderShortcuts(){
+  const box = $('#shortcutList'); if(!box) return;
+  box.innerHTML = SHORTCUTS.map(x => `
+    <button class="sc-card" ${x.go ? `data-go="${x.go}"` : `data-shortcut="${x.act}"`}>
+      <span class="sc-ic">${ic(x.icon)}</span>
+      <span class="sc-b"><span class="sc-t">${L(x.t)}</span><span class="sc-s">${t(x.s, {r: DB.taxSlab || 20})}</span></span>
+      <span class="sc-x">${ic('back')}</span>
+    </button>`).join('')
+    .replace(/<svg class="i " viewBox="0 0 24 24"([^>]*)>(<path d="M19 12H5"\/><path d="M11.4 5.4 4.8 12l6.6 6.6"\/>)/g,
+             '<svg class="i " style="transform:rotate(180deg)" viewBox="0 0 24 24"$1>$2');
+}
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-shortcut]');
+  if(!el) return;
+  if(el.dataset.shortcut === 'statement') openStatement(VIEW);
+  if(el.dataset.shortcut === 'settings') sheetSettings();
+});
+
+(function(){
+  const prev = window.renderAll;
+  window.renderAll = function(){ prev(); try{ renderFunds(); renderShortcuts(); }catch(e){ console.error(e); } };
+  renderFunds(); renderShortcuts();
 })();
 </script>

@@ -61,3 +61,19 @@ If you host your own copy on a different address, create your own client ID:
 
 While the Google Cloud project is in **Testing**, only accounts listed as test
 users can sign in. Publish the app when you are ready for real users.
+
+## Editing the fund list
+
+`FUND_LIST` in `index.html` holds scheme name and category only — deliberately
+no returns, expense ratios or ranking. Those change constantly, and publishing
+stale or unverified numbers is what SEBI's fair-communication rules exist to
+prevent.
+
+Before publishing or promoting this screen, verify every scheme name, category
+and risk label against the AMC factsheet or AMFI, and stamp the screen with the
+date you checked. If you add performance figures later, add the "as of <date>"
+label with them.
+
+The screen carries the required framing already: educational title, stated
+selection criteria, a prompt to check current data, and the market-risk
+disclaimer.
