@@ -38,3 +38,22 @@ No build step, no dependencies. Edit `index.html` and commit.
 
 The banner under recent activity is a live slot. Add your Google AdSense client
 and slot IDs in Settings to serve real ads; until then it shows a house ad.
+
+## Google backup (one-time setup)
+
+The "Save my data" bar signs the user in with Google and keeps one private copy
+of their data in their **own** Google Drive app folder. No server, and the copy
+sits in a folder only this app can open.
+
+To switch it on, create an OAuth client ID once:
+
+1. https://console.cloud.google.com → new project
+2. **APIs & Services → Library** → enable **Google Drive API**
+3. **APIs & Services → Credentials → Create credentials → OAuth client ID**
+   → *Web application*
+4. Under **Authorised JavaScript origins** add the site address, e.g.
+   `https://ruchitvacloudkitchen-ui.github.io`
+5. Copy the client ID (`…apps.googleusercontent.com`) and paste it the first
+   time you tap "Save my data" in the app
+
+Until an ID is set, the button explains the setup instead of failing.
