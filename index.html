@@ -40,11 +40,11 @@ html[lang="te"] .balance-amt,html[lang="te"] .t-amt,html[lang="te"] .amt,html[la
 /* ---------- header ---------- */
 .top{position:sticky;top:0;z-index:40;background:var(--bg);padding:12px 0 8px}
 .top-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.brand{display:flex;align-items:center;gap:9px;letter-spacing:-.02em}
-.wordmark{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:400;color:var(--ink)}
-.wordmark b{font-weight:800}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;letter-spacing:-.02em}
 .logo{width:33px;height:33px;display:grid;place-items:center;flex:0 0 auto;color:#0A8A66}
-.mark{width:100%;height:100%;display:block}
+.mark{width:100%;height:100%;display:block;object-fit:contain}
+.mark-fallback{display:block;width:100%;height:100%;color:#0A8A66}
+.mark-fallback svg{width:100%;height:100%;display:block}
 .month-pick{display:flex;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--line);
   border-radius:999px;padding:3px;box-shadow:var(--shadow)}
 .month-pick button{background:none;border:0;color:var(--muted);font-size:17.5px;padding:4px 8px;border-radius:999px;cursor:pointer}
@@ -354,7 +354,7 @@ table.sip tbody tr:last-child td{font-size:15px}
 
   <header class="top">
     <div class="top-row">
-      <div class="brand"><div class="logo" id="logoIcon"></div><span class="wordmark"><b>pocket</b>seeds</span></div>
+      <div class="brand"><div class="logo" id="logoIcon"></div>PocketSeeds</div>
       <div style="display:flex;gap:7px;align-items:center">
         <div class="month-pick">
           <button id="mPrev" aria-label="prev">‹</button>
@@ -1279,7 +1279,13 @@ function paintIcons(){
     el.dataset.painted = el.dataset.icon;
   });
   const lg = document.getElementById('logoIcon');
-  if(lg && !lg.dataset.painted){ lg.innerHTML = MARK_SVG; lg.dataset.painted = '1'; }
+  if(lg && !lg.dataset.painted){
+    /* icon.png is the supplied artwork; the vector mark stands in until it is added */
+    lg.innerHTML = '<img src="icon.png" alt="PocketSeeds" class="mark" ' +
+      'onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),' +
+      '{innerHTML:MARK_SVG, className:\'mark-fallback\'}))">';
+    lg.dataset.painted = '1';
+  }
 }
 function applyLang(){
   LANG = LMODE === 'en' ? 'en' : 'te';
