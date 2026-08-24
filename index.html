@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0B7A43">
 <title>PocketSeeds — తెలుగు డబ్బు యాప్</title>
 <meta name="description" content="తెలుగు వారి కోసం డబ్బు యాప్ — ఆదాయం, ఖర్చులు, వడ్డీ అప్పులు, చిట్టీలు, మొయి పుస్తకం, పండుగ పొదుపు.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B7A43'/%3E%3Cpath d='M6.5 25.5c-1-10 5.5-18 19-19 1 13-6.5 19.5-19 19z' fill='none' stroke='white' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M7 25 16 16' stroke='white' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M7%200h86a7%207%200%200%201%207%207v45.5C100%2080.4%2077.6%20100%2050%20100S0%2080.4%200%2052.5V7a7%207%200%200%201%207-7z' fill='%230A8A66'/%3E%3Cpath d='M75.5%2029.5C71.2%2019.6%2061.8%2014%2049.5%2014%2034.6%2014%2024.5%2022.2%2024.5%2033.4c0%2012.4%2011.4%2017.2%2025.6%2021.2%2012.6%203.5%2020.4%206.4%2020.4%2014.2%200%208.2-8.2%2013.4-20.6%2013.4-12.8%200-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,9 +40,11 @@ html[lang="te"] .balance-amt,html[lang="te"] .t-amt,html[lang="te"] .amt,html[la
 /* ---------- header ---------- */
 .top{position:sticky;top:0;z-index:40;background:var(--bg);padding:12px 0 8px}
 .top-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;letter-spacing:-.02em}
-.logo{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand-2));
-  display:grid;place-items:center;color:#fff;font-size:19px;flex:0 0 auto}
+.brand{display:flex;align-items:center;gap:9px;letter-spacing:-.02em}
+.wordmark{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:400;color:var(--ink)}
+.wordmark b{font-weight:800}
+.logo{width:33px;height:33px;display:grid;place-items:center;flex:0 0 auto;color:#0A8A66}
+.mark{width:100%;height:100%;display:block}
 .month-pick{display:flex;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--line);
   border-radius:999px;padding:3px;box-shadow:var(--shadow)}
 .month-pick button{background:none;border:0;color:var(--muted);font-size:17.5px;padding:4px 8px;border-radius:999px;cursor:pointer}
@@ -215,9 +217,9 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 /* narrow phones: keep the header inside the viewport */
 @media (max-width:392px){
   .app{padding:0 11px}
-  .brand{font-size:14.5px;gap:7px}
   .logo{width:29px;height:29px}
-  .logo .i{width:17px;height:17px}
+  .brand{font-size:14.5px;gap:7px}
+
   .top-row{gap:6px}
   .month-pick{padding:2px}
   .month-pick button{padding:3px 6px;font-size:14px}
@@ -335,7 +337,6 @@ table.sip tbody tr:last-child td{font-size:15px}
 .i-xl{width:34px;height:34px}
 .nav button span .i{width:24px;height:24px;vertical-align:0}
 .row .ic .i{width:21px;height:21px}
-.logo .i{width:20px;height:20px}
 .icon-btn .i{width:19px;height:19px;vertical-align:-4px}
 .fab .i{width:26px;height:26px;stroke-width:2.2}
 .fab.mic .i{width:22px;height:22px}
@@ -353,7 +354,7 @@ table.sip tbody tr:last-child td{font-size:15px}
 
   <header class="top">
     <div class="top-row">
-      <div class="brand"><div class="logo" id="logoIcon"></div>PocketSeeds</div>
+      <div class="brand"><div class="logo" id="logoIcon"></div><span class="wordmark"><b>pocket</b>seeds</span></div>
       <div style="display:flex;gap:7px;align-items:center">
         <div class="month-pick">
           <button id="mPrev" aria-label="prev">‹</button>
@@ -1278,7 +1279,7 @@ function paintIcons(){
     el.dataset.painted = el.dataset.icon;
   });
   const lg = document.getElementById('logoIcon');
-  if(lg && !lg.dataset.painted){ lg.innerHTML = ic('leaf'); lg.dataset.painted = '1'; }
+  if(lg && !lg.dataset.painted){ lg.innerHTML = MARK_SVG; lg.dataset.painted = '1'; }
 }
 function applyLang(){
   LANG = LMODE === 'en' ? 'en' : 'te';
@@ -1605,6 +1606,13 @@ const QUICK = [
 /* =========================== ICONS ===========================
    One stroke-drawn set, single colour: every glyph inherits the text
    colour, so the same icon is green on white and white on green. */
+/* the PocketSeeds mark: shield plus the S, one colour on a green field */
+const MARK_SHIELD = 'M7 0h86a7 7 0 0 1 7 7v45.5C100 80.4 77.6 100 50 100S0 80.4 0 52.5V7a7 7 0 0 1 7-7z';
+const MARK_S = 'M75.5 29.5C71.2 19.6 61.8 14 49.5 14 34.6 14 24.5 22.2 24.5 33.4c0 12.4 11.4 17.2 25.6 21.2 12.6 3.5 20.4 6.4 20.4 14.2 0 8.2-8.2 13.4-20.6 13.4-12.8 0-22.4-4.8-27.4-13.6';
+const MARK_SVG = '<svg class="mark" viewBox="0 0 100 100" aria-hidden="true">' +
+  '<path d="' + MARK_SHIELD + '" fill="currentColor"/>' +
+  '<path d="' + MARK_S + '" fill="none" stroke="#fff" stroke-width="17.5"/></svg>';
+
 const ICON = {
   home:'<path d="M3 10.4 12 3.2l9 7.2V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9.2 21v-6.6h5.6V21"/>',
   wallet:'<rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.5h18"/><circle cx="16.8" cy="14.6" r="1.15"/>',
@@ -3560,8 +3568,12 @@ function drawStatement(data){
   g.globalAlpha = 0.055;
   g.fillStyle = '#0B7A43';
   g.save();
-  g.translate(-140, -215); g.scale(12.5, 12.5);
-  g.fill(new Path2D(LEAF_PATH));
+  g.translate(-115, -230); g.scale(2.5, 2.5);
+  g.fill(new Path2D(MARK_SHIELD));
+  g.save();
+  g.strokeStyle = '#FFFFFF'; g.lineWidth = 17.5; g.globalAlpha = 1;
+  g.stroke(new Path2D(MARK_S));
+  g.restore();
   g.restore();
   g.font = F(800, 74); g.textAlign = 'center';
   g.fillText('PocketSeeds', 0, 70);
@@ -3573,8 +3585,13 @@ function drawStatement(data){
   g.fillStyle = '#FFFFFF'; g.textAlign = 'left';
   g.font = F(800, 27);
   g.fillText(t('stTitle').toUpperCase(), pad, headH/2 - 2);
-  g.font = F(600, 14); g.globalAlpha = .9; g.textAlign = 'right';
-  g.fillText('PocketSeeds', W - pad, headH/2 - 2);
+  g.font = F(600, 14); g.globalAlpha = .95; g.textAlign = 'right';
+  g.fillText('pocketseeds', W - pad, headH/2 - 2);
+  g.save();
+  g.translate(W - pad - 112, headH/2 - 15); g.scale(0.30, 0.30);
+  g.fillStyle = '#FFFFFF'; g.fill(new Path2D(MARK_SHIELD));
+  g.strokeStyle = '#0B7A43'; g.lineWidth = 17.5; g.stroke(new Path2D(MARK_S));
+  g.restore();
   g.globalAlpha = 1;
 
   let y = headH + 40;
