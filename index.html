@@ -2710,11 +2710,24 @@ const HOUSE_ADS = [
     en:{h:'Small savings, big harvest', p:'Setting aside ₹100 a day builds ₹36,500 in a year.', c:'Start saving'},
     url:'#save' }
 ];
+/* Google's AdSense programme policies do not allow AdSense in an app, and a
+   Play build is an app however thin the wrapper. When PocketSeeds is launched
+   from the installed Android package we serve only our own house cards, which
+   are plain links and not an ad network. On the web nothing changes. */
+const IS_TWA = (function(){
+  try{
+    if(document.referrer && document.referrer.indexOf('android-app://') === 0){
+      localStorage.setItem('pocketseeds.twa','1'); return true;
+    }
+    return localStorage.getItem('pocketseeds.twa') === '1';
+  }catch(e){ return false; }
+})();
+
 function mountAd(){
   const slot = $('#adSlot'), st = DB.settings;
   slot.querySelectorAll('ins').forEach(n => n.remove());
   const house = $('#adHouse');
-  if(st.adClient && st.adSlot){
+  if(st.adClient && st.adSlot && !IS_TWA){
     house.innerHTML = '';
     const ins = document.createElement('ins');
     ins.className = 'adsbygoogle'; ins.style.display = 'block';
@@ -2951,7 +2964,7 @@ const MORE_ITEMS = [
 ];
 function renderMore(){
   const s2 = $('#adSlot2');
-  if(s2 && !DB.settings.adClient){
+  if(s2 && (!DB.settings.adClient || IS_TWA)){
     const a = HOUSE_ADS[1], c = LANG === 'te' ? a.te : a.en;
     $('#adHouse2').innerHTML = `<div class="house-ad" data-ad-url="${a.url}">
       <div class="ha-ic">${ic(a.icon,'i-lg')}</div><div><h4>${c.h}</h4><p>${c.p}</p>
