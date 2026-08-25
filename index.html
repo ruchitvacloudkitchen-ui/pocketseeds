@@ -230,6 +230,19 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 }
 @media (max-width:339px){ .brand span,.brand{font-size:0} .brand .logo{font-size:16px} }
 
+/* menu tiles */
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.menu-tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;
+  padding:14px 7px 12px;border-radius:16px;border:1px solid var(--line);background:var(--surface);
+  box-shadow:var(--shadow);cursor:pointer;font-family:inherit;text-align:center;min-height:104px}
+.menu-tile:active{transform:scale(.97)}
+.menu-tile .mt-ic{width:42px;height:42px;border-radius:50%;background:var(--in-bg);color:var(--brand);
+  display:grid;place-items:center;flex:0 0 auto}
+.menu-tile .mt-ic .i{width:21px;height:21px}
+.menu-tile .mt-t{display:block;font-size:12.5px;font-weight:700;line-height:1.25;color:var(--ink)}
+.menu-tile .mt-s{display:block;font-size:10.5px;font-weight:600;line-height:1.2;color:var(--muted);margin-top:3px}
+@media (max-width:339px){.menu-grid{grid-template-columns:repeat(2,1fr)}}
+
 /* rates strip */
 .rate-bar{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);
   border-radius:14px;padding:11px 13px;box-shadow:var(--shadow);cursor:pointer;overflow-x:auto}
@@ -729,8 +742,8 @@ table.sip tbody tr:last-child td{font-size:15px}
     </div>
 
     <div class="sec">
-      <div class="sec-head"><h3 data-i18n="shortcuts">Helpful shortcuts</h3></div>
-      <div id="shortcutList"></div>
+      <div class="sec-head"><h3 data-i18n="menuTitle">Everything else</h3></div>
+      <div class="menu-grid" id="menuGrid"></div>
     </div>
 
     <div class="sec">
@@ -875,7 +888,7 @@ table.sip tbody tr:last-child td{font-size:15px}
     <button data-go="home"    aria-selected="true"><span data-icon="home"></span><i data-i18n="navHome" style="font-style:normal">Home</i></button>
     <button data-go="income"  aria-selected="false"><span data-icon="wallet"></span><i data-i18n="navIncome" style="font-style:normal">Income</i></button>
     <button data-go="expense" aria-selected="false"><span data-icon="cardout"></span><i data-i18n="navExpense" style="font-style:normal">Expenses</i></button>
-    <button data-go="loans"   aria-selected="false"><span data-icon="handshake"></span><i data-i18n="navLoans" style="font-style:normal">Loans</i></button>
+    <button data-go="calendar" aria-selected="false"><span data-icon="calendar"></span><i data-i18n="navCalendar" style="font-style:normal">Calendar</i></button>
     <button data-go="more"    aria-selected="false"><span data-icon="dots"></span><i data-i18n="navMore" style="font-style:normal">More</i></button>
   </div>
 </nav>
@@ -1064,6 +1077,11 @@ const STR = {
     calAddNote:'Add a date', calFestivals:'Festivals & important days',
     calFestNote:'Festival dates follow the lunar calendar and change every year. Add the ones you keep, from your panchangam.',
     calAdd:'+ Add day', calName:'What is the day', calDate:'Date', calDayDetail:'{d}',
+    navCalendar:'Calendar',
+    mReminders:'Reminders', mTracker:'Monthly tracker', mChits:'Chits', mVaddi:'Hand loans',
+    mGift:'Gift book', mSavings:'Savings', mBudget:'Budget', mFamily:'Family',
+    mCredit:'Credit', mTax:'Tax', mStatement:'Statement', mSearch:'Search', mSettings:'Settings',
+    menuTitle:'Everything else',
     navMore:'More',
     // budget 50/30/20
     budget:'Budget', budget503020:'50 / 30 / 20 budget', monthlyIncomeL:'My monthly income',
@@ -1291,6 +1309,11 @@ const STR = {
     calAddNote:'తేదీ చేర్చు', calFestivals:'పండుగలు & ముఖ్యమైన రోజులు',
     calFestNote:'పండుగ తేదీలు చాంద్రమానం ప్రకారం ప్రతి సంవత్సరం మారతాయి. మీ పంచాంగం చూసి మీవి చేర్చుకోండి.',
     calAdd:'+ రోజు చేర్చు', calName:'ఏ రోజు', calDate:'తేదీ', calDayDetail:'{d}',
+    navCalendar:'క్యాలెండర్',
+    mReminders:'గుర్తుంపులు', mTracker:'నెల లెక్క', mChits:'చిట్టీలు', mVaddi:'చేతి అప్పులు',
+    mGift:'మొయి పుస్తకం', mSavings:'పొదుపు', mBudget:'బడ్జెట్', mFamily:'కుటుంబం',
+    mCredit:'క్రెడిట్', mTax:'పన్ను', mStatement:'స్టేట్‌మెంట్', mSearch:'వెతుకు', mSettings:'సెట్టింగ్‌లు',
+    menuTitle:'మిగతావన్నీ',
     navMore:'మరిన్ని',
     budget:'బడ్జెట్', budget503020:'50 / 30 / 20 బడ్జెట్', monthlyIncomeL:'నా నెల ఆదాయం',
     needs:'అవసరాలు', wants:'కోరికలు', savingsPart:'పొదుపు',
@@ -3884,31 +3907,52 @@ function renderFunds(){
     <div class="sip-risk">${t('fundsDisc')}</div>`;
 }
 
-const SHORTCUTS = [
-  { go:'loans',   icon:'bell',    t:'scReminders',  s:'scRemindersSub' },
-  { go:'reports', icon:'chart',   t:'scTracker',    s:'scTrackerSub'   },
-  { go:'loans',   icon:'refresh', t:'scVaddi',      s:'scVaddiSub'     },
-  { go:'save',    icon:'gift',    t:'scMoyi',       s:'scMoyiSub'      },
-  { go:'budget',  icon:'piggy',   t:'scBudget',     s:'scBudgetSub'    },
-  { act:'statement', icon:'receipt', t:'scStatement', s:'scStatementSub' },
-  { go:'save',    icon:'coin',    t:'navSave',      s:'howMuchSave'    },
-  { go:'family',  icon:'people',  t:'family',       s:'familyHint'     },
-  { go:'credit',  icon:'trend',   t:'creditHealth', s:'creditHint'     },
-  { go:'tax',     icon:'receipt', t:'taxTitle',     s:'taxHint'        },
-  { go:'search',  icon:'search',  t:'search',       s:'searchPh'       },
-  { act:'settings', icon:'gear',  t:'settings',     s:'storedHint'     }
+const MENU = [
+  { go:'loans',    focus:'remindList', icon:'bell',     t:'mReminders' },
+  { go:'reports',                      icon:'chart',    t:'mTracker'   },
+  { go:'loans',    focus:'chitList',   icon:'refresh',  t:'mChits'     },
+  { go:'loans',    focus:'loanList',   icon:'handshake',t:'mVaddi'     },
+  { go:'save',     focus:'moyiList',   icon:'gift',     t:'mGift'      },
+  { go:'save',                         icon:'piggy',    t:'mSavings'   },
+  { go:'budget',                       icon:'coin',     t:'mBudget'    },
+  { go:'family',                       icon:'people',   t:'mFamily'    },
+  { go:'credit',                       icon:'trend',    t:'mCredit'    },
+  { go:'tax',                          icon:'receipt',  t:'mTax'       },
+  { act:'statement',                   icon:'doc',      t:'mStatement' },
+  { go:'search',                       icon:'search',   t:'mSearch'    },
+  { act:'settings',                    icon:'gear',     t:'mSettings'  }
 ];
-function renderShortcuts(){
-  const box = $('#shortcutList'); if(!box) return;
-  box.innerHTML = SHORTCUTS.map(x => `
-    <button class="sc-card" ${x.go ? `data-go="${x.go}"` : `data-shortcut="${x.act}"`}>
-      <span class="sc-ic">${ic(x.icon)}</span>
-      <span class="sc-b"><span class="sc-t">${L(x.t)}</span><span class="sc-s">${t(x.s, {r: DB.taxSlab || 20})}</span></span>
-      <span class="sc-x">${ic('back')}</span>
-    </button>`).join('')
-    .replace(/<svg class="i " viewBox="0 0 24 24"([^>]*)>(<path d="M19 12H5"\/><path d="M11.4 5.4 4.8 12l6.6 6.6"\/>)/g,
-             '<svg class="i " style="transform:rotate(180deg)" viewBox="0 0 24 24"$1>$2');
+
+/* Tiles are narrow, so the two languages stack rather than sitting on one
+   line with a divider the way headings do. */
+function tileLabel(key){
+  const te = one('te', key), en = one('en', key);
+  if(LMODE === 'te') return `<span class="mt-t">${esc(te)}</span>`;
+  if(LMODE === 'en') return `<span class="mt-t">${esc(en)}</span>`;
+  return `<span class="mt-t">${esc(te)}</span>` + (te === en ? '' : `<span class="mt-s">${esc(en)}</span>`);
 }
+
+function renderMenu(){
+  const box = $('#menuGrid'); if(!box) return;
+  box.innerHTML = MENU.map(m => `
+    <button class="menu-tile" ${m.go ? `data-go="${m.go}"` : `data-shortcut="${m.act}"`}
+      ${m.focus ? `data-focus="${m.focus}"` : ''}>
+      <span class="mt-ic">${ic(m.icon)}</span>
+      <span>${tileLabel(m.t)}</span>
+    </button>`).join('');
+}
+
+/* a tile that names a section scrolls to it after the page opens */
+document.addEventListener('click', e => {
+  const tile = e.target.closest('[data-focus]');
+  if(!tile) return;
+  const id = tile.dataset.focus;
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if(el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+  }, 260);
+});
+
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-shortcut]');
   if(!el) return;
@@ -3918,8 +3962,8 @@ document.addEventListener('click', e => {
 
 (function(){
   const prev = window.renderAll;
-  window.renderAll = function(){ prev(); try{ renderFunds(); renderShortcuts(); }catch(e){ console.error(e); } };
-  renderFunds(); renderShortcuts();
+  window.renderAll = function(){ prev(); try{ renderFunds(); renderMenu(); }catch(e){ console.error(e); } };
+  renderFunds(); renderMenu();
 })();
 </script>
 
@@ -4119,7 +4163,7 @@ $('#calNext').addEventListener('click', () => { CAL_VIEW = new Date(CAL_VIEW.get
 $('#btnAddDay').addEventListener('click', sheetDay);
 
 /* calendar joins the shortcut list */
-SHORTCUTS.splice(2, 0, { go:'calendar', icon:'calendar', t:'calendar', s:'calSub' });
+/* calendar has its own tab in the bottom bar now */
 
 (function(){
   const prev = window.renderAll;
