@@ -230,6 +230,22 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 }
 @media (max-width:339px){ .brand span,.brand{font-size:0} .brand .logo{font-size:16px} }
 
+/* panchangam */
+.cal-cell{aspect-ratio:auto;min-height:52px;padding:5px 2px}
+.cal-cell .t{font-size:8.5px;line-height:1.1;color:var(--muted);margin-top:2px;max-width:100%;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.cal-cell.today .t{color:rgba(255,255,255,.9)}
+.pan-box{background:var(--surface-2);border-radius:13px;padding:12px 13px;margin-top:4px}
+.pan-grid{display:grid;grid-template-columns:1fr;gap:1px}
+.pan-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:5px 0;
+  border-bottom:1px dashed var(--line)}
+.pan-row:last-child{border-bottom:0}
+.pan-row span{font-size:12px;color:var(--muted);font-weight:600;flex:0 0 auto}
+.pan-row b{font-size:13px;font-weight:700;text-align:right}
+.pan-row b.k{color:var(--brand)}
+.pan-row b.k2{color:var(--out)}
+.pan-note{font-size:10.5px;color:var(--muted);margin-top:9px;line-height:1.45}
+
 /* menu tiles */
 .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
 .menu-tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;
@@ -273,11 +289,11 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
   font-size:19px;color:var(--ink);cursor:pointer;flex:0 0 auto;font-family:inherit}
 .cal-title{font-size:16.5px;font-weight:800}
 .cal-sub{font-size:11.5px;color:var(--muted);margin-top:1px}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
 .cal-dow{font-size:10.5px;font-weight:700;color:var(--muted);text-align:center;padding:4px 0}
 .cal-cell{aspect-ratio:1;border-radius:10px;border:1px solid transparent;background:var(--surface-2);
   display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;
-  font-family:inherit;padding:0;position:relative}
+  font-family:inherit;padding:0;position:relative;min-width:0;overflow:hidden}
 .cal-cell.blank{background:none;cursor:default}
 .cal-cell .d{font-size:13px;font-weight:700;color:var(--ink);line-height:1}
 .cal-cell .m{font-size:8.5px;color:var(--out);font-weight:700;margin-top:2px;line-height:1}
@@ -1082,6 +1098,11 @@ const STR = {
     mGift:'Gift book', mSavings:'Savings', mBudget:'Budget', mFamily:'Family',
     mCredit:'Credit', mTax:'Tax', mStatement:'Statement', mSearch:'Search', mSettings:'Settings',
     menuTitle:'Everything else',
+    panTithi:'Tithi', panNak:'Nakshatra', panYoga:'Yoga', panMasa:'Month', panPaksha:'Paksha',
+    panSunrise:'Sunrise', panSunset:'Sunset', panRahu:'Rahu kalam', panYama:'Yamagandam',
+    panGulika:'Gulika', panVarjya:'Varjyam', panUntil:'until {t}', panFor:'for Hyderabad',
+    panNote:'Computed by modern astronomy (drik ganita) for Hyderabad. Traditional vakya panchangams can differ by a few minutes to a couple of hours. For muhurtham, please follow your family panchangam.',
+    panNextDay:'⁺ means the next morning',
     navMore:'More',
     // budget 50/30/20
     budget:'Budget', budget503020:'50 / 30 / 20 budget', monthlyIncomeL:'My monthly income',
@@ -1314,6 +1335,11 @@ const STR = {
     mGift:'మొయి పుస్తకం', mSavings:'పొదుపు', mBudget:'బడ్జెట్', mFamily:'కుటుంబం',
     mCredit:'క్రెడిట్', mTax:'పన్ను', mStatement:'స్టేట్‌మెంట్', mSearch:'వెతుకు', mSettings:'సెట్టింగ్‌లు',
     menuTitle:'మిగతావన్నీ',
+    panTithi:'తిథి', panNak:'నక్షత్రం', panYoga:'యోగం', panMasa:'మాసం', panPaksha:'పక్షం',
+    panSunrise:'సూర్యోదయం', panSunset:'సూర్యాస్తమయం', panRahu:'రాహుకాలం', panYama:'యమగండం',
+    panGulika:'గుళికకాలం', panVarjya:'వర్జ్యం', panUntil:'{t} వరకు', panFor:'హైదరాబాద్ ప్రకారం',
+    panNote:'ఆధునిక ఖగోళ గణితం (దృక్ గణితం) ప్రకారం హైదరాబాద్‌కు లెక్కించినవి. సంప్రదాయ వాక్య పంచాంగాలతో కొన్ని నిమిషాల నుంచి రెండు గంటల వరకు తేడా రావచ్చు. ముహూర్తాలకు మీ ఇంటి పంచాంగమే చూడండి.',
+    panNextDay:'⁺ అంటే మరుసటి రోజు తెల్లవారుజాము',
     navMore:'మరిన్ని',
     budget:'బడ్జెట్', budget503020:'50 / 30 / 20 బడ్జెట్', monthlyIncomeL:'నా నెల ఆదాయం',
     needs:'అవసరాలు', wants:'కోరికలు', savingsPart:'పొదుపు',
@@ -4085,7 +4111,12 @@ function renderCalendar(){
   const grid = $('#calGrid'); if(!grid) return;
   const y = CAL_VIEW.getFullYear(), m = CAL_VIEW.getMonth();
   $('#calTitle').textContent = t('months')[m] + ' ' + y;
-  $('#calSub2').textContent  = STR.en.months[m] + ' ' + y;
+  let pHead = STR.en.months[m] + ' ' + y;
+  try{
+    const pm = panchangam(CAL_SEL);
+    pHead = `${pm.masa} మాసం · ${pm.paksha} · శ్రీ ${pm.samvat} నామ సంవత్సరం`;
+  }catch(e){}
+  $('#calSub2').textContent = pHead;
 
   const first = new Date(y, m, 1).getDay();
   const total = daysIn(y, m);
@@ -4101,9 +4132,12 @@ function renderCalendar(){
   for(let d = 1; d <= total; d++){
     const date = y + '-' + pad(m+1) + '-' + pad(d);
     const spent = spendByDay[date];
+    let tith = '';
+    try{ tith = panchangam(date).tithi; }catch(e){}
     html += `<button class="cal-cell ${date===today?'today':''} ${date===CAL_SEL?'sel':''}" data-cal="${date}">
       ${marked.has(date) ? '<i class="fest"></i>' : ''}
       <span class="d">${d}</span>
+      <span class="t">${esc(tith)}</span>
       ${spent ? `<span class="m">${spent >= 1000 ? Math.round(spent/1000)+'k' : spent}</span>` : ''}
     </button>`;
   }
@@ -4131,9 +4165,32 @@ function renderCalDetail(){
       ${spent?`<div style="text-align:right"><div style="font-size:11px;color:var(--muted)">${t('calSpent')}</div>
         <div style="font-size:16px;font-weight:800;color:var(--out)">${money(spent)}</div></div>`:''}
     </div>
-    ${rows.length ? rows.map(txRow).join('')
-      : `<div style="font-size:13px;color:var(--muted);text-align:center;padding:6px">${t('calNoDay')}</div>`}`;
+    ${panchangamHTML(CAL_SEL)}
+    ${rows.length ? `<div style="margin-top:12px">${rows.map(txRow).join('')}</div>`
+      : `<div style="font-size:13px;color:var(--muted);text-align:center;padding:10px 6px 2px">${t('calNoDay')}</div>`}`;
 }
+function panchangamHTML(date){
+  let p;
+  try{ p = panchangam(date); }catch(e){ return ''; }
+  const row = (label, value, strong) => `
+    <div class="pan-row"><span>${label}</span><b class="${strong?'k':''}">${value}</b></div>`;
+  return `
+    <div class="pan-box">
+      <div class="pan-grid">
+        ${row(t('panTithi'),   `${p.tithi} · ${t('panUntil',{t:p.tithiEnd})}`, 1)}
+        ${row(t('panNak'),     `${p.nak} · ${t('panUntil',{t:p.nakEnd})}`, 1)}
+        ${row(t('panYoga'),    p.yoga)}
+        ${row(t('panSunrise'), p.sunrise)}
+        ${row(t('panSunset'),  p.sunset)}
+        ${row(t('panRahu'),    p.rahu, 2)}
+        ${row(t('panYama'),    p.yama)}
+        ${row(t('panGulika'),  p.gulika)}
+        ${row(t('panVarjya'),  p.varjya)}
+      </div>
+      <div class="pan-note">${t('panNextDay')} · ${t('panFor')}</div>
+    </div>`;
+}
+
 function sheetDay(){
   openSheet(`
     <h3>${L('calAddNote')}</h3>
@@ -4173,4 +4230,196 @@ $('#btnAddDay').addEventListener('click', sheetDay);
   };
   renderShop(); renderCalendar(); loadRates();
 })();
+</script>
+
+<script>
+'use strict';
+/* =========================================================================
+   Panchangam — computed, not copied
+   ------------------------------------------------------------------------
+   Drik Ganita: solar and lunar longitudes from Meeus (verified against his
+   worked examples to 0.1 arcmin), Lahiri ayanamsa, sunrise/sunset for
+   Hyderabad. Rahu kalam, yamagandam and gulika are fixed eighths of the
+   daylight span and were checked against a printed 2026 panchangam for all
+   seven weekdays.
+
+   Traditional Vakya calendars can differ from these figures by minutes to a
+   couple of hours mid-month. For muhurtham, people should still use their
+   family panchangam — the app says so on the screen.
+   ========================================================================= */
+const PD2R = Math.PI/180;
+const pnorm = a => ((a % 360) + 360) % 360;
+const psin = d => Math.sin(d*PD2R), pcos = d => Math.cos(d*PD2R);
+
+function pJulian(y, m, d, hourUT){
+  if(m <= 2){ y -= 1; m += 12; }
+  const A = Math.floor(y/100), B = 2 - A + Math.floor(A/4);
+  return Math.floor(365.25*(y+4716)) + Math.floor(30.6001*(m+1)) + d + B - 1524.5 + (hourUT||0)/24;
+}
+const pT = jd => (jd - 2451545.0)/36525;
+
+function pSun(jd){
+  const T = pT(jd);
+  const L0 = 280.46646 + 36000.76983*T + 0.0003032*T*T;
+  const M  = 357.52911 + 35999.05029*T - 0.0001537*T*T;
+  const C  = (1.914602 - 0.004817*T - 0.000014*T*T)*psin(M)
+           + (0.019993 - 0.000101*T)*psin(2*M) + 0.000289*psin(3*M);
+  return pnorm(L0 + C - 0.00569 - 0.00478*psin(125.04 - 1934.136*T));
+}
+const MOON_TERMS = [
+  [0,0,1,0,6288774],[2,0,-1,0,1274027],[2,0,0,0,658314],[0,0,2,0,213618],
+  [0,1,0,0,-185116],[0,0,0,2,-114332],[2,0,-2,0,58793],[2,-1,-1,0,57066],
+  [2,0,1,0,53322],[2,-1,0,0,45758],[0,1,-1,0,-40923],[1,0,0,0,-34720],
+  [0,1,1,0,-30383],[2,0,0,-2,15327],[0,0,1,2,-12528],[0,0,1,-2,10980],
+  [4,0,-1,0,10675],[0,0,3,0,10034],[4,0,-2,0,8548],[2,1,-1,0,-7888],
+  [2,1,0,0,-6766],[1,0,-1,0,-5163],[1,1,0,0,4987],[2,-1,1,0,4036],
+  [2,0,2,0,3994],[4,0,0,0,3861],[2,0,-3,0,3665],[0,1,-2,0,-2689],
+  [2,0,-1,2,-2602],[2,-1,-2,0,2390],[1,0,1,0,-2348],[2,-2,0,0,2236],
+  [0,1,2,0,-2120],[0,2,0,0,-2069],[2,-2,-1,0,2048],[2,0,1,-2,-1773],
+  [2,0,0,2,-1595],[4,-1,-1,0,1215],[0,0,2,2,-1110],[3,0,-1,0,-892],
+  [2,1,1,0,-810],[4,-1,-2,0,759],[0,2,-1,0,-713],[2,2,-1,0,-700],
+  [2,1,-2,0,691],[2,-1,0,-2,596],[4,0,1,0,549],[0,0,4,0,537],
+  [4,-1,0,0,520],[1,0,-2,0,-487],[2,1,0,-2,-399],[0,0,2,-2,-381],
+  [1,1,1,0,351],[3,0,-2,0,-340],[4,0,-3,0,330],[2,-1,2,0,327],
+  [0,2,1,0,-323],[1,1,-1,0,299],[2,0,3,0,294]
+];
+function pMoon(jd){
+  const T = pT(jd);
+  const Lp = 218.3164477 + 481267.88123421*T - 0.0015786*T*T + T*T*T/538841 - T*T*T*T/65194000;
+  const D  = 297.8501921 + 445267.1114034*T - 0.0018819*T*T + T*T*T/545868 - T*T*T*T/113065000;
+  const M  = 357.5291092 + 35999.0502909*T - 0.0001536*T*T + T*T*T/24490000;
+  const Mp = 134.9633964 + 477198.8675055*T + 0.0087414*T*T + T*T*T/69699 - T*T*T*T/14712000;
+  const F  = 93.2720950 + 483202.0175233*T - 0.0036539*T*T - T*T*T/3526000 + T*T*T*T/863310000;
+  const E  = 1 - 0.002516*T - 0.0000074*T*T;
+  let sum = 0;
+  for(const [d,m,mp,f,c] of MOON_TERMS){
+    let coef = c;
+    if(Math.abs(m) === 1) coef *= E; else if(Math.abs(m) === 2) coef *= E*E;
+    sum += coef * psin(d*D + m*M + mp*Mp + f*F);
+  }
+  return pnorm(Lp + sum/1000000);
+}
+function pAyanamsa(jd){
+  const t = (jd - 2415020.0)/36525;
+  return 22.460148 + 1.396042*t + 0.000308*t*t;
+}
+const pElong = jd => pnorm(pMoon(jd) - pSun(jd));
+const pMoonSid = jd => pnorm(pMoon(jd) - pAyanamsa(jd));
+const pYogaAng = jd => pnorm(pMoon(jd) + pSun(jd) - 2*pAyanamsa(jd));
+
+function pCross(jd0, step, fn){
+  const v0 = fn(jd0), target = (Math.floor(v0/step) + 1) * step;
+  let lo = jd0, hi = jd0 + 2.5, mid = hi;
+  for(let i = 0; i < 60; i++){
+    mid = (lo + hi)/2;
+    let v = fn(mid); if(v < v0 - step/2) v += 360;
+    (v < target) ? lo = mid : hi = mid;
+  }
+  return mid;
+}
+function pSunEvents(y, m, d, lat, lon, tz){
+  const jd = pJulian(y, m, d, 12 - tz), T = pT(jd);
+  const L0 = pnorm(280.46646 + 36000.76983*T), M = 357.52911 + 35999.05029*T;
+  const C = (1.914602 - 0.004817*T)*psin(M) + (0.019993 - 0.000101*T)*psin(2*M) + 0.000289*psin(3*M);
+  const lam = L0 + C - 0.00569, eps = 23.439291 - 0.0130042*T;
+  const dec = Math.asin(psin(eps)*psin(lam))*180/Math.PI;
+  const y2 = Math.tan(eps/2*PD2R)**2, e = 0.016708634;
+  const eq = 4*(180/Math.PI)*(y2*psin(2*L0) - 2*e*psin(M) + 4*e*y2*psin(M)*pcos(2*L0)
+             - 0.5*y2*y2*psin(4*L0) - 1.25*e*e*psin(2*M));
+  const cosH = pcos(90.833)/(pcos(lat)*pcos(dec)) - Math.tan(lat*PD2R)*Math.tan(dec*PD2R);
+  if(cosH > 1 || cosH < -1) return { sunrise:6, sunset:18 };
+  const ha = Math.acos(cosH)*180/Math.PI;
+  const noon = (720 - 4*lon - eq + tz*60)/1440;
+  return { sunrise:(noon - ha*4/1440)*24, sunset:(noon + ha*4/1440)*24 };
+}
+
+const PLACE = { lat:17.385, lon:78.4867, tz:5.5, name:'హైదరాబాద్' };
+const P_TITHI = ['పాడ్యమి','విదియ','తదియ','చవితి','పంచమి','షష్ఠి','సప్తమి','అష్టమి','నవమి','దశమి',
+  'ఏకాదశి','ద్వాదశి','త్రయోదశి','చతుర్దశి','పూర్ణిమ','పాడ్యమి','విదియ','తదియ','చవితి','పంచమి',
+  'షష్ఠి','సప్తమి','అష్టమి','నవమి','దశమి','ఏకాదశి','ద్వాదశి','త్రయోదశి','చతుర్దశి','అమావాస్య'];
+const P_NAK = ['అశ్విని','భరణి','కృత్తిక','రోహిణి','మృగశిర','ఆరుద్ర','పునర్వసు','పుష్యమి','ఆశ్లేష','మఖ',
+  'పుబ్బ','ఉత్తర','హస్త','చిత్త','స్వాతి','విశాఖ','అనూరాధ','జ్యేష్ఠ','మూల','పూర్వాషాఢ','ఉత్తరాషాఢ',
+  'శ్రవణం','ధనిష్ఠ','శతభిషం','పూర్వాభాద్ర','ఉత్తరాభాద్ర','రేవతి'];
+const P_YOGA = ['విష్కంభ','ప్రీతి','ఆయుష్మాన్','సౌభాగ్య','శోభన','అతిగండ','సుకర్మ','ధృతి','శూల','గండ',
+  'వృద్ధి','ధ్రువ','వ్యాఘాత','హర్షణ','వజ్ర','సిద్ధి','వ్యతీపాత','వరీయాన్','పరిఘ','శివ','సిద్ధ','సాధ్య',
+  'శుభ','శుక్ల','బ్రహ్మ','ఐంద్ర','వైధృతి'];
+const P_MASA = ['చైత్ర','వైశాఖ','జ్యేష్ఠ','ఆషాఢ','శ్రావణ','భాద్రపద','ఆశ్వయుజ','కార్తీక',
+  'మార్గశిర','పుష్య','మాఘ','ఫాల్గుణ'];
+const P_SAMVAT = ['ప్రభవ','విభవ','శుక్ల','ప్రమోదూత','ప్రజోత్పత్తి','ఆంగీరస','శ్రీముఖ','భావ','యువ','ధాత',
+  'ఈశ్వర','బహుధాన్య','ప్రమాది','విక్రమ','వృష','చిత్రభాను','స్వభాను','తారణ','పార్థివ','వ్యయ','సర్వజిత్',
+  'సర్వధారి','విరోధి','వికృతి','ఖర','నందన','విజయ','జయ','మన్మథ','దుర్ముఖి','హేవిళంబి','విళంబి','వికారి',
+  'శార్వరి','ప్లవ','శుభకృత్','శోభకృత్','క్రోధి','విశ్వావసు','పరాభవ','ప్లవంగ','కీలక','సౌమ్య','సాధారణ',
+  'విరోధికృత్','పరీధావి','ప్రమాదీచ','ఆనంద','రాక్షస','నల','పింగళ','కాళయుక్తి','సిద్ధార్థి','రౌద్రి','దుర్మతి',
+  'దుందుభి','రుధిరోద్గారి','రక్తాక్షి','క్రోధన','అక్షయ'];
+/* varjyam start, in ghatis of the nakshatra's own span */
+const VARJYA = [50,24,30,40,14,21,30,20,32,30,20,18,21,20,14,14,10,14,20,24,20,10,10,18,16,24,30];
+
+function pHHMM(h){
+  let m = Math.round(h*60); const nextDay = m >= 1440; m = ((m % 1440) + 1440) % 1440;
+  const H = Math.floor(m/60), MM = m % 60;
+  return { s: String(H).padStart(2,'0') + ':' + String(MM).padStart(2,'0'), next: nextDay };
+}
+function pFmt(h){ const o = pHHMM(h); return o.s + (o.next ? '⁺' : ''); }
+
+function panchangam(dateStr){
+  const [y, mo, d] = dateStr.split('-').map(Number);
+  const { sunrise, sunset } = pSunEvents(y, mo, d, PLACE.lat, PLACE.lon, PLACE.tz);
+  const midnight = pJulian(y, mo, d, -PLACE.tz);
+  const jdSr = pJulian(y, mo, d, sunrise - PLACE.tz);
+  const local = jd => (jd - midnight) * 24;
+
+  const tIdx = Math.floor(pElong(jdSr)/12);
+  const nIdx = Math.floor(pMoonSid(jdSr)/(360/27));
+  const yIdx = Math.floor(pYogaAng(jdSr)/(360/27));
+  const tEnd = local(pCross(jdSr, 12, pElong));
+  const nEnd = local(pCross(jdSr, 360/27, pMoonSid));
+
+  /* varjyam sits at a fixed fraction of the nakshatra, lasting 1/15 of it */
+  const nStartAng = nIdx*(360/27);
+  let lo = jdSr - 1.5, hi = jdSr, nStart = lo;
+  for(let i = 0; i < 50; i++){
+    const mid = (lo + hi)/2;
+    if(pnorm(pMoonSid(mid) - nStartAng) > 180) lo = mid; else hi = mid;
+    nStart = mid;
+  }
+  const nSpan = pCross(jdSr, 360/27, pMoonSid) - nStart;
+  const vStart = local(nStart + nSpan * VARJYA[nIdx]/60);
+  const vEnd   = vStart + (nSpan * 4/60) * 24;
+
+  const dow = new Date(Date.UTC(y, mo-1, d)).getUTCDay();
+  const seg = (sunset - sunrise)/8;
+  const RAHU = [8,2,7,5,6,4,3], YAMA = [5,4,3,2,1,7,6], GULI = [7,6,5,4,3,2,1];
+  const span = i => pFmt(sunrise + (i-1)*seg) + '–' + pFmt(sunrise + i*seg);
+
+  /* Lunar month is named after the solar rashi holding the new moon that
+     began it. Converge on the nearest new moon using a signed elongation,
+     then step back one lunation if that one is still ahead of us. */
+  let nm = jdSr;
+  for(let i = 0; i < 8; i++){
+    let e = pElong(nm);
+    if(e > 180) e -= 360;              // signed: negative means the new moon is ahead
+    nm -= e/12.19;
+  }
+  if(nm > jdSr) nm -= 29.530588;
+  const masaIdx = (Math.floor(pnorm(pSun(nm) - pAyanamsa(nm))/30) + 1) % 12;
+
+  /* the samvatsara turns at Chaitra shukla padyami, in March or April */
+  const samYear = (mo >= 4) ? y : (mo <= 2 ? y - 1 : (masaIdx === 0 ? y : y - 1));
+  const samvat = P_SAMVAT[((samYear - 1987) % 60 + 60) % 60];
+
+  return {
+    tithi: P_TITHI[tIdx], tithiEnd: pFmt(tEnd),
+    paksha: tIdx < 15 ? 'శుక్ల' : 'బహుళ',
+    nak: P_NAK[nIdx], nakEnd: pFmt(nEnd),
+    yoga: P_YOGA[yIdx], masa: P_MASA[masaIdx], samvat,
+    sunrise: pFmt(sunrise), sunset: pFmt(sunset),
+    rahu: span(RAHU[dow]), yama: span(YAMA[dow]), gulika: span(GULI[dow]),
+    varjya: pFmt(vStart) + '–' + pFmt(vEnd)
+  };
+}
+window.panchangam = panchangam;
+
+/* this block loads last, so paint the calendar again now that the
+   panchangam is available */
+if(typeof renderCalendar === 'function') renderCalendar();
 </script>

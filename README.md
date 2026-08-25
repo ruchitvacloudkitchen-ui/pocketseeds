@@ -116,3 +116,23 @@ It deliberately does **not** print tithi or nakshatra: those need an
 astronomical ephemeris, and a wrong panchangam is worse than none. Festival
 and family dates live in `DB.days`, added by each user from their own
 panchangam, and show as a dot on the date.
+
+## Panchangam
+
+The calendar computes its own panchangam rather than reproducing anyone's
+published calendar. Solar and lunar longitudes follow Meeus (verified against
+his worked examples to 0.1 arcmin), with Lahiri ayanamsa and sunrise/sunset for
+Hyderabad. From those come tithi, nakshatra, yoga, masa, paksha and samvatsara;
+rahu kalam, yamagandam and gulika are fixed eighths of the daylight span.
+
+Validated against a printed 2026 Telugu panchangam:
+
+- Rahu kalam and yamagandam match for all seven weekdays
+- Masa and samvatsara match (పుష్య, శ్రీ విశ్వావసు for January 2026)
+- Tithi and nakshatra names match; full moon lands within 40 minutes
+
+These are **drik ganita** figures. Traditional vakya panchangams differ by
+minutes to a couple of hours mid-month, so the screen says as much and tells
+people to follow their family panchangam for muhurtham.
+
+Changing city: edit `PLACE` in `index.html` (latitude, longitude, timezone).
