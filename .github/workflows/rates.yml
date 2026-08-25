@@ -1,0 +1,82 @@
+# Refreshes rates.json once a day so the app can show Hyderabad gold and
+# silver rates without a backend and without an API key in the page.
+#
+# SETUP (once):
+#   1. Get a free API key from a metals provider, e.g. goldapi.io
+#   2. Repo → Settings → Secrets and variables → Actions → New repository secret
+#      Name: GOLDAPI_KEY      Value: your key
+#   3. Repo → Settings → Actions → General → Workflow permissions
+#      → "Read and write permissions" → Save
+#
+# Without the secret the workflow exits quietly and the app falls back to
+# the rate you type in by hand. Nothing breaks.
+name: Daily metal rates
+
+on:
+  schedule:
+    - cron: '30 2 * * *'      # 08:00 IST, after the Indian market opens
+  workflow_dispatch:           # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  rates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch gold and silver
+        env:
+          GOLDAPI_KEY: ${{ secrets.GOLDAPI_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GOLDAPI_KEY:-}" ]; then
+            echo "No GOLDAPI_KEY secret set — leaving rates.json untouched."
+            exit 0
+          fi
+
+          gold=$(curl -sf -H "x-access-token: $GOLDAPI_KEY" \
+                 https://www.goldapi.io/api/XAU/INR || echo '')
+          silver=$(curl -sf -H "x-access-token: $GOLDAPI_KEY" \
+                   https://www.goldapi.io/api/XAG/INR || echo '')
+
+          if [ -z "$gold" ] || [ -z "$silver" ]; then
+            echo "Provider did not answer — keeping yesterday's file."
+            exit 0
+          fi
+
+          python3 - "$gold" "$silver" <<'PY'
+          import json, sys, datetime
+          gold, silver = json.loads(sys.argv[1]), json.loads(sys.argv[2])
+
+          # goldapi returns price per troy ounce; India quotes gold per gram
+          # and silver per kilogram.
+          OZ_TO_G = 31.1034768
+          g24 = gold.get('price_gram_24k') or (gold['price'] / OZ_TO_G)
+          g22 = gold.get('price_gram_22k') or (g24 * 22 / 24)
+          ag  = (silver['price'] / OZ_TO_G) * 1000
+
+          json.dump({
+              'city': 'Hyderabad',
+              'gold24': round(g24),
+              'gold22': round(g22),
+              'silver': round(ag),
+              'updated': datetime.date.today().isoformat(),
+              'source': 'goldapi.io',
+              'note': 'Indicative rates. Local jewellers add making charges and GST.'
+          }, open('rates.json', 'w'), indent=2)
+          print('wrote rates.json')
+          PY
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- rates.json; then
+            echo "No change."
+            exit 0
+          fi
+          git config user.name  "pocketseeds-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add rates.json
+          git commit -m "Update Hyderabad rates $(date -u +%F)"
+          git push

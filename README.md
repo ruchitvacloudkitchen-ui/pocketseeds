@@ -77,3 +77,42 @@ label with them.
 The screen carries the required framing already: educational title, stated
 selection criteria, a prompt to check current data, and the market-risk
 disclaimer.
+
+## Daily gold & silver rates
+
+The rates strip on the home screen reads `rates.json` from this repo — same
+origin, so no CORS problem and no API key in the page.
+
+`.github/workflows/rates.yml` refreshes that file every morning. To switch it on:
+
+1. Get a free API key from a metals provider (e.g. goldapi.io)
+2. Repo → Settings → Secrets and variables → Actions → **New repository secret**
+   named `GOLDAPI_KEY`
+3. Repo → Settings → Actions → General → Workflow permissions →
+   **Read and write permissions** → Save
+4. Actions tab → "Daily metal rates" → **Run workflow** to test it now
+
+Until the secret exists the workflow exits quietly and users can tap the strip
+to type today's rate in by hand. Rates are shown with the date they were taken
+and marked when they are not from today.
+
+## Shopping strip
+
+`SHOP_CATS` and `SHOP_SITES` in `index.html` build search links with each
+platform's own under-₹500 price filter, rotating category by day. They are
+category links, not specific products, because prices and stock change hourly
+and a stale "₹499" claim is worse than none.
+
+Add affiliate tags in `SHOP_TAG` once each programme approves you. The links
+already carry `rel="sponsored"` and the strip is labelled as sponsored, which
+is what the disclosure rules require.
+
+## Telugu calendar
+
+A Gregorian grid with Telugu weekday and month names, today highlighted, and
+each day's spending shown on the cell. Tapping a day shows that day's entries.
+
+It deliberately does **not** print tithi or nakshatra: those need an
+astronomical ephemeris, and a wrong panchangam is worse than none. Festival
+and family dates live in `DB.days`, added by each user from their own
+panchangam, and show as a dot on the date.

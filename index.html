@@ -230,6 +230,49 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 }
 @media (max-width:339px){ .brand span,.brand{font-size:0} .brand .logo{font-size:16px} }
 
+/* rates strip */
+.rate-bar{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:11px 13px;box-shadow:var(--shadow);cursor:pointer;overflow-x:auto}
+.rate-bar .r-ic{width:34px;height:34px;border-radius:10px;background:#FDF3D6;color:#A97A12;display:grid;
+  place-items:center;flex:0 0 auto}
+@media (prefers-color-scheme:dark){.rate-bar .r-ic{background:#2E2410;color:#E7C46A}}
+.rate-item{flex:0 0 auto;padding-right:14px;border-right:1px solid var(--line);margin-right:2px}
+.rate-item:last-child{border-right:0;padding-right:0}
+.rate-item .rl{font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap}
+.rate-item .rv{font-size:15px;font-weight:800;white-space:nowrap;margin-top:2px}
+.rate-when{font-size:10.5px;color:var(--muted);white-space:nowrap;margin-left:auto;padding-left:8px}
+.rate-when.stale{color:var(--warn)}
+/* shopping strip */
+.shop-wrap{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 13px;box-shadow:var(--shadow)}
+.shop-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.shop-top .st{font-size:14px;font-weight:800}
+.shop-top .ss{font-size:11.5px;color:var(--muted);margin-top:1px}
+.shop-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.shop-chip{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:5px;text-decoration:none;
+  padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);min-width:78px}
+.shop-chip b{font-size:12px;font-weight:700;color:var(--ink)}
+.shop-chip i{font-style:normal;font-size:10.5px;color:var(--muted)}
+.shop-logo{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;color:#fff;
+  font-size:12.5px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif}
+/* calendar */
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;text-align:center}
+.cal-nav{width:34px;height:34px;border-radius:11px;border:1px solid var(--line);background:var(--surface-2);
+  font-size:19px;color:var(--ink);cursor:pointer;flex:0 0 auto;font-family:inherit}
+.cal-title{font-size:16.5px;font-weight:800}
+.cal-sub{font-size:11.5px;color:var(--muted);margin-top:1px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-dow{font-size:10.5px;font-weight:700;color:var(--muted);text-align:center;padding:4px 0}
+.cal-cell{aspect-ratio:1;border-radius:10px;border:1px solid transparent;background:var(--surface-2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;
+  font-family:inherit;padding:0;position:relative}
+.cal-cell.blank{background:none;cursor:default}
+.cal-cell .d{font-size:13px;font-weight:700;color:var(--ink);line-height:1}
+.cal-cell .m{font-size:8.5px;color:var(--out);font-weight:700;margin-top:2px;line-height:1}
+.cal-cell.today{background:var(--brand);border-color:var(--brand)}
+.cal-cell.today .d{color:#fff} .cal-cell.today .m{color:rgba(255,255,255,.85)}
+.cal-cell.sel{border-color:var(--brand)}
+.cal-cell .fest{position:absolute;top:3px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--amber-2)}
+
 /* SIP calculator */
 .sipc-head{display:flex;align-items:flex-start;gap:11px;margin-bottom:13px}
 .sipc-ic{width:38px;height:38px;border-radius:12px;background:var(--in-bg);color:var(--brand);
@@ -424,6 +467,14 @@ table.sip tbody tr:last-child td{font-size:15px}
         <button class="link" data-go="expense" data-i18n="seeAll">See all →</button>
       </div>
       <div class="list" id="recentList"></div>
+    </div>
+
+    <div class="sec">
+      <div class="rate-bar" id="rateBar"></div>
+    </div>
+
+    <div class="sec">
+      <div id="shopBar"></div>
     </div>
 
     <div class="sec">
@@ -684,6 +735,26 @@ table.sip tbody tr:last-child td{font-size:15px}
 
     <div class="sec">
       <div class="ad-wrap" id="adSlot2"><span class="ad-tag">Ad</span><div id="adHouse2"></div></div>
+    </div>
+  </section>
+
+  <!-- ===================== TELUGU CALENDAR ===================== -->
+  <section class="page" id="page-calendar">
+    <button class="btn btn-g btn-sm" data-go="more" style="margin-bottom:12px" data-icon="back"></button>
+    <div class="card" style="padding:15px">
+      <div class="cal-head">
+        <button class="cal-nav" id="calPrev">‹</button>
+        <div><div class="cal-title" id="calTitle">—</div><div class="cal-sub" id="calSub2">—</div></div>
+        <button class="cal-nav" id="calNext">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="sec"><div class="card" style="padding:15px" id="calDetail"></div></div>
+    <div class="sec">
+      <div class="sec-head"><h3 data-i18n="calFestivals">Festivals &amp; important days</h3>
+        <button class="link" id="btnAddDay" data-i18n="calAdd">+ Add day</button></div>
+      <div class="sub" data-i18n="calFestNote"></div>
+      <div class="list" id="dayList"></div>
     </div>
   </section>
 
@@ -981,6 +1052,18 @@ const STR = {
     scMoyi:'Gift book', scMoyiSub:'Who gave what, and what you owe back.',
     scStatement:'Monthly statement', scStatementSub:'Download a receipt for any month.',
     scBudget:'50/30/20 budget', scBudgetSub:'Keep needs, wants and savings in their lanes.',
+    shopDeals:'Under ₹500 today', shopSub:'Everyday things worth a look.',
+    shopAmazon:'Amazon', shopFlipkart:'Flipkart', shopMeesho:'Meesho', shopMyntra:'Myntra',
+    shopAd:'Sponsored links', shopOpen:'Open',
+    rates:'Hyderabad rates', gold24:'Gold 24K', gold22:'Gold 22K', silverR:'Silver',
+    perGram:'per gram', perKg:'per kg', asOn:'as on {d}', ratesStale:'not updated today',
+    ratesNone:'Tap to add today\'s rate', ratesEdit:'Update rates', ratesSaved:'Rates updated',
+    ratesHint:'Rates are for reference only. Confirm with your jeweller before buying or selling.',
+    calendar:'Telugu calendar', calSub:'Your month, with what you spent on each day.',
+    calToday:'Today', calSpent:'spent', calNoDay:'Nothing on this day',
+    calAddNote:'Add a date', calFestivals:'Festivals & important days',
+    calFestNote:'Festival dates follow the lunar calendar and change every year. Add the ones you keep, from your panchangam.',
+    calAdd:'+ Add day', calName:'What is the day', calDate:'Date', calDayDetail:'{d}',
     navMore:'More',
     // budget 50/30/20
     budget:'Budget', budget503020:'50 / 30 / 20 budget', monthlyIncomeL:'My monthly income',
@@ -1196,6 +1279,18 @@ const STR = {
     scMoyi:'మొయి పుస్తకం', scMoyiSub:'ఎవరు ఎంత ఇచ్చారు, మనం ఎంత ఇవ్వాలి.',
     scStatement:'నెల స్టేట్‌మెంట్', scStatementSub:'ఏ నెల రసీదైనా దించుకోండి.',
     scBudget:'50/30/20 బడ్జెట్', scBudgetSub:'అవసరాలు, కోరికలు, పొదుపు — మూడూ దారిలో.',
+    shopDeals:'₹500 లోపు', shopSub:'రోజూ కావాల్సినవి, ఒకసారి చూడండి.',
+    shopAmazon:'Amazon', shopFlipkart:'Flipkart', shopMeesho:'Meesho', shopMyntra:'Myntra',
+    shopAd:'ప్రకటన లింకులు', shopOpen:'చూడు',
+    rates:'హైదరాబాద్ ధరలు', gold24:'బంగారం 24K', gold22:'బంగారం 22K', silverR:'వెండి',
+    perGram:'గ్రాముకు', perKg:'కిలోకు', asOn:'{d} నాటికి', ratesStale:'ఈ రోజు అప్‌డేట్ కాలేదు',
+    ratesNone:'ఈ రోజు ధర చేర్చండి', ratesEdit:'ధరలు మార్చు', ratesSaved:'ధరలు చేర్చాం',
+    ratesHint:'ఈ ధరలు సూచన కోసమే. కొనే ముందు, అమ్మే ముందు మీ నగల షాపులో సరిచూసుకోండి.',
+    calendar:'తెలుగు క్యాలెండర్', calSub:'మీ నెల, ఏ రోజు ఎంత ఖర్చు అయిందో సహా.',
+    calToday:'ఈ రోజు', calSpent:'ఖర్చు', calNoDay:'ఈ రోజు నమోదులు లేవు',
+    calAddNote:'తేదీ చేర్చు', calFestivals:'పండుగలు & ముఖ్యమైన రోజులు',
+    calFestNote:'పండుగ తేదీలు చాంద్రమానం ప్రకారం ప్రతి సంవత్సరం మారతాయి. మీ పంచాంగం చూసి మీవి చేర్చుకోండి.',
+    calAdd:'+ రోజు చేర్చు', calName:'ఏ రోజు', calDate:'తేదీ', calDayDetail:'{d}',
     navMore:'మరిన్ని',
     budget:'బడ్జెట్', budget503020:'50 / 30 / 20 బడ్జెట్', monthlyIncomeL:'నా నెల ఆదాయం',
     needs:'అవసరాలు', wants:'కోరికలు', savingsPart:'పొదుపు',
@@ -1280,13 +1375,27 @@ function paintIcons(){
   });
   const lg = document.getElementById('logoIcon');
   if(lg && !lg.dataset.painted){
-    /* icon.png is the supplied artwork; the vector mark stands in until it is added */
-    lg.innerHTML = '<img src="icon.png" alt="PocketSeeds" class="mark" ' +
-      'onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),' +
-      '{innerHTML:MARK_SVG, className:\'mark-fallback\'}))">';
+    lg.innerHTML = '<span class="mark-fallback">' + MARK_SVG + '</span>';
     lg.dataset.painted = '1';
+    useArtworkIfPresent(lg);
   }
 }
+/* icon.png is the supplied artwork. Look for it once a week rather than on
+   every load, so a missing file costs one request, not a 404 each time. */
+function useArtworkIfPresent(slot){
+  const KEY = 'pocketseeds.artwork';
+  let memo = {};
+  try{ memo = JSON.parse(localStorage.getItem(KEY) || '{}'); }catch(e){}
+  const weekAgo = Date.now() - 7 * 864e5;
+  const show = () => { slot.innerHTML = '<img src="icon.png" alt="PocketSeeds" class="mark">'; };
+  if(memo.found && memo.at > weekAgo) return show();
+  if(memo.found === false && memo.at > weekAgo) return;
+  const probe = new Image();
+  probe.onload  = () => { localStorage.setItem(KEY, JSON.stringify({found:true,  at:Date.now()})); show(); };
+  probe.onerror = () => { localStorage.setItem(KEY, JSON.stringify({found:false, at:Date.now()})); };
+  probe.src = 'icon.png';
+}
+
 function applyLang(){
   LANG = LMODE === 'en' ? 'en' : 'te';
   document.documentElement.lang = LANG;
@@ -1321,6 +1430,8 @@ const DEFAULTS = {
   taxSlab: 20,
   lastSync: '',
   receipts: [],   // months whose statement was downloaded
+  rates: null,    // {gold24,gold22,silver,updated,source} — manual fallback
+  days: [],       // {id,date,name} user's own calendar days
   loans:[],     // {id,kind:'borrowed'|'lent',person,principal,rate,start,closed}
   chits:[],     // {id,name,instal,months,paid,taken,prize,day}
   fests:[],     // {id,name,target,date,saved}
@@ -3809,5 +3920,213 @@ document.addEventListener('click', e => {
   const prev = window.renderAll;
   window.renderAll = function(){ prev(); try{ renderFunds(); renderShortcuts(); }catch(e){ console.error(e); } };
   renderFunds(); renderShortcuts();
+})();
+</script>
+
+<script>
+'use strict';
+/* =========================================================================
+   Shopping strip, Hyderabad metal rates, Telugu calendar
+   ========================================================================= */
+
+/* ---------------- shopping strip ----------------
+   These are category search links with the platform's own under-500 price
+   filter applied — not specific products, because prices and stock change
+   hourly and stale claims would be worse than none. Add your affiliate tag
+   in SHOP_TAG once each programme approves you. */
+const SHOP_TAG = { amazon:'', flipkart:'', meesho:'', myntra:'' };
+const SHOP_CATS = [
+  { te:'వంట సామాన్లు', en:'Kitchen',    q:'kitchen essentials' },
+  { te:'ఇంటి వస్తువులు', en:'Home',      q:'home essentials'    },
+  { te:'బట్టలు',        en:'Clothing',   q:'kurti'              },
+  { te:'ఎలక్ట్రానిక్స్',  en:'Gadgets',   q:'mobile accessories' },
+  { te:'పిల్లల వస్తువులు', en:'Kids',     q:'kids toys'          }
+];
+const SHOP_SITES = [
+  { k:'amazon',   label:'Amazon',   bg:'#FF9900',
+    url:q => `https://www.amazon.in/s?k=${encodeURIComponent(q)}&rh=p_36%3A-50000` + (SHOP_TAG.amazon?`&tag=${SHOP_TAG.amazon}`:'') },
+  { k:'flipkart', label:'Flipkart', bg:'#2874F0',
+    url:q => `https://www.flipkart.com/search?q=${encodeURIComponent(q)}&p%5B%5D=facets.price_range.to%3D500` + (SHOP_TAG.flipkart?`&affid=${SHOP_TAG.flipkart}`:'') },
+  { k:'meesho',   label:'Meesho',   bg:'#9F2089',
+    url:q => `https://www.meesho.com/search?q=${encodeURIComponent(q)}&maxPrice=500` },
+  { k:'myntra',   label:'Myntra',   bg:'#FF3F6C',
+    url:q => `https://www.myntra.com/${encodeURIComponent(q.split(' ')[0])}?rf=Price%3A0.0_500.0_0.0%20TO%20500.0` }
+];
+function renderShop(){
+  const box = $('#shopBar'); if(!box) return;
+  /* a different category each day, so the strip is not the same thing forever */
+  const cat = SHOP_CATS[new Date().getDate() % SHOP_CATS.length];
+  box.innerHTML = `
+    <div class="shop-wrap">
+      <div class="shop-top">
+        <div><div class="st">${L('shopDeals')}</div>
+          <div class="ss">${LANG==='te'?cat.te:cat.en} · ${t('shopSub')}</div></div>
+        <span class="pill">${t('shopAd')}</span>
+      </div>
+      <div class="shop-row">
+        ${SHOP_SITES.map(x => `
+          <a class="shop-chip" href="${x.url(cat.q)}" target="_blank" rel="noopener sponsored">
+            <span class="shop-logo" style="background:${x.bg}">${x.label[0]}</span>
+            <b>${x.label}</b><i>&lt; ₹500</i>
+          </a>`).join('')}
+      </div>
+    </div>`;
+}
+
+/* ---------------- Hyderabad gold & silver ----------------
+   rates.json is refreshed once a day by the GitHub Action in
+   .github/workflows/rates.yml. It sits on the same origin, so no CORS and
+   no API key in the page. If it is missing or stale, the user can type
+   today's rate in and it is used instead. */
+let RATES = null;
+async function loadRates(){
+  try{
+    const r = await fetch('rates.json?t=' + new Date().toISOString().slice(0,10), {cache:'no-store'});
+    if(r.ok){ const j = await r.json(); if(j && (j.gold24 || j.gold22 || j.silver)) RATES = j; }
+  }catch(e){ /* offline or not set up yet */ }
+  if(!RATES && DB.rates) RATES = DB.rates;
+  renderRates();
+}
+function renderRates(){
+  const box = $('#rateBar'); if(!box) return;
+  if(!RATES){
+    box.innerHTML = `<span class="r-ic">${ic('coin')}</span>
+      <div class="rate-item"><div class="rl">${L('rates')}</div>
+        <div class="rv" style="font-size:13px;color:var(--muted)">${t('ratesNone')}</div></div>`;
+    return;
+  }
+  const today = ymd(new Date());
+  const stale = RATES.updated !== today;
+  const item = (label, value, unit) => value ? `
+    <div class="rate-item"><div class="rl">${label} · ${unit}</div>
+      <div class="rv">${money(value)}</div></div>` : '';
+  box.innerHTML = `<span class="r-ic">${ic('coin')}</span>
+    ${item(t('gold24'), RATES.gold24, t('perGram'))}
+    ${item(t('gold22'), RATES.gold22, t('perGram'))}
+    ${item(t('silverR'), RATES.silver, t('perKg'))}
+    <span class="rate-when ${stale?'stale':''}">${t('asOn',{d:shortDate(RATES.updated||today)})}${stale?' · '+t('ratesStale'):''}</span>`;
+}
+function sheetRates(){
+  const r = RATES || {};
+  openSheet(`
+    <h3>${L('rates')}</h3>
+    <div class="sheet-sub">${t('ratesHint')}</div>
+    <div class="grid2">
+      <div class="field"><label>${t('gold24')} (${t('perGram')})</label>
+        <input id="rt24" type="number" inputmode="decimal" value="${r.gold24||''}"></div>
+      <div class="field"><label>${t('gold22')} (${t('perGram')})</label>
+        <input id="rt22" type="number" inputmode="decimal" value="${r.gold22||''}"></div>
+    </div>
+    <div class="field"><label>${t('silverR')} (${t('perKg')})</label>
+      <input id="rtag" type="number" inputmode="decimal" value="${r.silver||''}"></div>
+    <button class="btn btn-p btn-block" id="rtSave">${t('ratesEdit')}</button>`);
+  $('#rtSave').addEventListener('click', () => {
+    DB.rates = { gold24:Number($('#rt24').value)||0, gold22:Number($('#rt22').value)||0,
+                 silver:Number($('#rtag').value)||0, updated:ymd(new Date()), source:'manual' };
+    RATES = DB.rates; save(); renderRates(); closeSheet(); toast(t('ratesSaved'));
+  });
+}
+
+/* ---------------- Telugu calendar ----------------
+   Gregorian grid with Telugu names and each day's spending. Tithi and
+   nakshatra are deliberately absent: they need an ephemeris, and a wrong
+   panchangam is worse than none. Important days live in DB.days so each
+   family can keep their own. */
+const TE_DOW   = ['ఆది','సోమ','మంగళ','బుధ','గురు','శుక్ర','శని'];
+const EN_DOW   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+let CAL_VIEW = new Date();
+let CAL_SEL  = ymd(new Date());
+
+function renderCalendar(){
+  const grid = $('#calGrid'); if(!grid) return;
+  const y = CAL_VIEW.getFullYear(), m = CAL_VIEW.getMonth();
+  $('#calTitle').textContent = t('months')[m] + ' ' + y;
+  $('#calSub2').textContent  = STR.en.months[m] + ' ' + y;
+
+  const first = new Date(y, m, 1).getDay();
+  const total = daysIn(y, m);
+  const today = ymd(new Date());
+  const dow = LANG === 'te' ? TE_DOW : EN_DOW;
+  const spendByDay = {};
+  DB.tx.filter(x => x.type === 'expense' && monthOf(x.date) === mKey(CAL_VIEW))
+       .forEach(x => spendByDay[x.date] = (spendByDay[x.date] || 0) + (Number(x.amount) || 0));
+  const marked = new Set((DB.days || []).map(d => d.date));
+
+  let html = dow.map(d => `<div class="cal-dow">${d}</div>`).join('');
+  for(let i = 0; i < first; i++) html += '<div class="cal-cell blank"></div>';
+  for(let d = 1; d <= total; d++){
+    const date = y + '-' + pad(m+1) + '-' + pad(d);
+    const spent = spendByDay[date];
+    html += `<button class="cal-cell ${date===today?'today':''} ${date===CAL_SEL?'sel':''}" data-cal="${date}">
+      ${marked.has(date) ? '<i class="fest"></i>' : ''}
+      <span class="d">${d}</span>
+      ${spent ? `<span class="m">${spent >= 1000 ? Math.round(spent/1000)+'k' : spent}</span>` : ''}
+    </button>`;
+  }
+  grid.innerHTML = html;
+  renderCalDetail();
+  const list = [...(DB.days||[])].sort((a,b)=>a.date.localeCompare(b.date));
+  $('#dayList').innerHTML = list.length ? list.map(d => `
+    <div class="row">
+      <div class="ic ic-warn">${ic('calendar')}</div>
+      <div class="body"><div class="title">${esc(d.name)}</div>
+        <div class="meta">${shortDate(d.date)}</div></div>
+      <button class="swipe-del" data-del-day="${d.id}">✕</button>
+    </div>`).join('') : emptyBox('calendar', t('calFestNote'));
+}
+function renderCalDetail(){
+  const box = $('#calDetail'); if(!box) return;
+  const rows = DB.tx.filter(x => x.date === CAL_SEL)
+                    .sort((a,b)=> (a.type===b.type?0:(a.type==='income'?-1:1)));
+  const spent = rows.filter(x=>x.type==='expense').reduce((a,x)=>a+(+x.amount||0),0);
+  const day = (DB.days||[]).find(d => d.date === CAL_SEL);
+  box.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:${rows.length?'11px':'0'}">
+      <div><div style="font-size:15px;font-weight:800">${shortDate(CAL_SEL)}${CAL_SEL===ymd(new Date())?' · '+t('calToday'):''}</div>
+        ${day?`<div style="font-size:12.5px;color:var(--amber-2);font-weight:700;margin-top:2px">${esc(day.name)}</div>`:''}</div>
+      ${spent?`<div style="text-align:right"><div style="font-size:11px;color:var(--muted)">${t('calSpent')}</div>
+        <div style="font-size:16px;font-weight:800;color:var(--out)">${money(spent)}</div></div>`:''}
+    </div>
+    ${rows.length ? rows.map(txRow).join('')
+      : `<div style="font-size:13px;color:var(--muted);text-align:center;padding:6px">${t('calNoDay')}</div>`}`;
+}
+function sheetDay(){
+  openSheet(`
+    <h3>${L('calAddNote')}</h3>
+    <div class="field"><label>${L('calName')}</label><input id="dyName" type="text"></div>
+    <div class="field"><label>${L('calDate')}</label><input id="dyDate" type="date" value="${CAL_SEL}"></div>
+    <button class="btn btn-p btn-block" id="dySave">${L('add')}</button>
+    <div class="hint">${t('calFestNote')}</div>`);
+  $('#dySave').addEventListener('click', () => {
+    const name = $('#dyName').value.trim();
+    if(!name) return toast(t('enterAmount'));
+    DB.days = DB.days || [];
+    DB.days.push({ id:uid(), name, date:$('#dyDate').value || CAL_SEL });
+    save(); renderCalendar(); closeSheet(); toast(t('saved'));
+  });
+}
+
+/* ---------------- wiring ---------------- */
+document.addEventListener('click', e => {
+  const cell = e.target.closest('[data-cal]');
+  if(cell){ CAL_SEL = cell.dataset.cal; renderCalendar(); return; }
+  const del = e.target.closest('[data-del-day]');
+  if(del){ DB.days = (DB.days||[]).filter(d => d.id !== del.dataset.delDay); save(); renderCalendar(); return; }
+  if(e.target.closest('#rateBar')) sheetRates();
+});
+$('#calPrev').addEventListener('click', () => { CAL_VIEW = new Date(CAL_VIEW.getFullYear(), CAL_VIEW.getMonth()-1, 1); renderCalendar(); });
+$('#calNext').addEventListener('click', () => { CAL_VIEW = new Date(CAL_VIEW.getFullYear(), CAL_VIEW.getMonth()+1, 1); renderCalendar(); });
+$('#btnAddDay').addEventListener('click', sheetDay);
+
+/* calendar joins the shortcut list */
+SHORTCUTS.splice(2, 0, { go:'calendar', icon:'calendar', t:'calendar', s:'calSub' });
+
+(function(){
+  const prev = window.renderAll;
+  window.renderAll = function(){
+    prev();
+    try{ renderShop(); renderRates(); renderCalendar(); }catch(e){ console.error(e); }
+  };
+  renderShop(); renderCalendar(); loadRates();
 })();
 </script>
