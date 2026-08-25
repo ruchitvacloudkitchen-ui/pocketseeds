@@ -1,9 +1,14 @@
 {
-  "city": "Hyderabad",
-  "gold24": 14289,
-  "gold22": 13098,
-  "silver": 209260,
-  "updated": "2026-08-25",
-  "source": "goldapi.io",
-  "note": "Indicative rates. Local jewellers add making charges and GST."
+  "timestamp": "1787638710",
+  "date": "2026-08-25T06:18:30Z",
+  "gold": {
+    "price": null,
+    "currency": "USD",
+    "unit": "per troy ounce"
+  },
+  "silver": {
+    "price": null,
+    "currency": "USD",
+    "unit": "per troy ounce"
+  }
 }
