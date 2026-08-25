@@ -3,17 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<script>
-/* Money data and a Google sign-in have no business travelling over plain HTTP.
-   GitHub Pages redirects too once "Enforce HTTPS" is on; this covers the gap
-   and any host where it is not. localhost stays http so the test suite runs. */
-(function(){
-  var h = location.hostname;
-  if(location.protocol === 'http:' && h !== 'localhost' && h !== '127.0.0.1' && h !== '[::1]'){
-    location.replace('https://' + location.host + location.pathname + location.search + location.hash);
-  }
-})();
-</script>
 <meta name="theme-color" content="#0B7A43">
 <title>PocketSeeds — తెలుగు డబ్బు యాప్</title>
 <meta name="description" content="తెలుగు వారి కోసం డబ్బు యాప్ — ఆదాయం, ఖర్చులు, వడ్డీ అప్పులు, చిట్టీలు, మొయి పుస్తకం, పండుగ పొదుపు.">
