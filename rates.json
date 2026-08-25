@@ -1,14 +1,9 @@
 {
-  "timestamp": "1787638710",
-  "date": "2026-08-25T06:18:30Z",
-  "gold": {
-    "price": null,
-    "currency": "USD",
-    "unit": "per troy ounce"
-  },
-  "silver": {
-    "price": null,
-    "currency": "USD",
-    "unit": "per troy ounce"
-  }
+  "city": "Hyderabad",
+  "gold24": 0,
+  "gold22": 0,
+  "silver": 0,
+  "updated": "",
+  "source": "waiting for the first successful run",
+  "note": "Written daily by .github/workflows/rates.yml. Until it succeeds the app uses the rate you type in."
 }

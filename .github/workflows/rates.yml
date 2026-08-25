@@ -1,70 +1,122 @@
+# Refreshes rates.json every morning so the app can show Hyderabad gold and
+# silver rates without a backend and without an API key in the page.
+#
+# SETUP (once):
+#   1. Free key from goldapi.io
+#   2. Repo → Settings → Secrets and variables → Actions → New repository secret
+#      Name: GOLDAPI_KEY
+#   3. Repo → Settings → Actions → General → Workflow permissions
+#      → "Read and write permissions" → Save
+#
+# The job never overwrites good data with bad: if the provider fails, or returns
+# a figure outside a sane range, yesterday's file is left untouched.
 name: Daily metal rates
 
 on:
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '30 2 * * *'      # 08:00 IST
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   rates:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      - name: Fetch gold and silver rates
+      - name: Fetch gold and silver in INR
         env:
           GOLDAPI_KEY: ${{ secrets.GOLDAPI_KEY }}
         run: |
-          GOLD_RESPONSE=$(curl -s "https://www.goldapi.io/api/XAU/USD?api_key=$GOLDAPI_KEY")
-          GOLD_PRICE=$(echo $GOLD_RESPONSE | jq '.price')
-          GOLD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          
-          SILVER_RESPONSE=$(curl -s "https://www.goldapi.io/api/XAG/USD?api_key=$GOLDAPI_KEY")
-          SILVER_PRICE=$(echo $SILVER_RESPONSE | jq '.price')
-          
-          cat > rates.json <<EOF
-          {
-            "timestamp": "$(date +%s)",
-            "date": "$GOLD_DATE",
-            "gold": {
-              "price": $GOLD_PRICE,
-              "currency": "USD",
-              "unit": "per troy ounce"
-            },
-            "silver": {
-              "price": $SILVER_PRICE,
-              "currency": "USD",
-              "unit": "per troy ounce"
-            }
-          }
-          EOF
-
-      - name: Configure git
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-      - name: Commit if changed
-        id: commit
-        run: |
-          if git diff --quiet rates.json; then
-            echo "No changes to commit"
-            echo "changed=false" >> $GITHUB_OUTPUT
-          else
-            git add rates.json
-            git commit -m "Update metal rates $(date +%Y-%m-%d)"
-            echo "changed=true" >> $GITHUB_OUTPUT
+          set -uo pipefail
+          if [ -z "${GOLDAPI_KEY:-}" ]; then
+            echo "::warning::GOLDAPI_KEY not set - leaving rates.json untouched."
+            exit 0
           fi
 
-      - name: Pull remote changes
-        if: steps.commit.outputs.changed == 'true'
-        run: |
-          git pull --no-edit origin main || git pull --no-edit origin master
+          # goldapi.io authenticates with a header, not a query parameter.
+          get() {
+            curl -sf -H "x-access-token: $GOLDAPI_KEY" \
+                     -H "Content-Type: application/json" "$1" || true
+          }
 
-      - name: Push changes
-        if: steps.commit.outputs.changed == 'true'
+          GOLD_JSON=$(get https://www.goldapi.io/api/XAU/INR)
+          SILVER_JSON=$(get https://www.goldapi.io/api/XAG/INR)
+          USDINR=""
+
+          # If the INR pair is not on the plan, fall back to USD plus an FX rate.
+          if [ -z "$(printf '%s' "$GOLD_JSON" | jq -r '.price // empty')" ]; then
+            echo "INR pair unavailable - falling back to USD with conversion"
+            GOLD_JSON=$(get https://www.goldapi.io/api/XAU/USD)
+            SILVER_JSON=$(get https://www.goldapi.io/api/XAG/USD)
+            USDINR=$(curl -sf https://open.er-api.com/v6/latest/USD | jq -r '.rates.INR // empty')
+          fi
+
+          echo "gold response:   $(printf '%s' "$GOLD_JSON" | head -c 140)"
+          echo "silver response: $(printf '%s' "$SILVER_JSON" | head -c 140)"
+
+          export GOLD_JSON SILVER_JSON USDINR
+          python3 - <<'PY'
+          import json, os, sys, datetime, pathlib
+
+          def num(raw, key):
+              try:
+                  v = json.loads(raw).get(key)
+                  return float(v) if v not in (None, "") else None
+              except Exception:
+                  return None
+
+          gold, silver, fx = os.environ["GOLD_JSON"], os.environ["SILVER_JSON"], os.environ["USDINR"]
+
+          g_oz = num(gold, "price")
+          s_oz = num(silver, "price")
+          g24  = num(gold, "price_gram_24k")
+          g22  = num(gold, "price_gram_22k")
+
+          if fx:                       # USD figures need converting, per-gram fields too
+              try:
+                  rate = float(fx)
+                  g_oz = g_oz * rate if g_oz else None
+                  s_oz = s_oz * rate if s_oz else None
+                  g24 = g24 * rate if g24 else None
+                  g22 = g22 * rate if g22 else None
+              except ValueError:
+                  pass
+
+          OZ = 31.1034768
+          if not g24 and g_oz: g24 = g_oz / OZ
+          if not g22 and g24:  g22 = g24 * 22 / 24
+          ag_kg = (s_oz / OZ) * 1000 if s_oz else None
+
+          # A money app must never publish an absurd figure.
+          def sane(v, lo, hi): return v is not None and lo <= v <= hi
+          if not (sane(g24, 2000, 40000) and sane(ag_kg, 20000, 500000)):
+              print(f"::warning::Rates outside a sane range (24K/g={g24}, silver/kg={ag_kg}) - keeping the previous file.")
+              sys.exit(0)
+
+          pathlib.Path("rates.json").write_text(json.dumps({
+              "city": "Hyderabad",
+              "gold24": round(g24),
+              "gold22": round(g22),
+              "silver": round(ag_kg),
+              "updated": datetime.date.today().isoformat(),
+              "source": "goldapi.io",
+              "note": "Indicative rates. Jewellers add making charges and GST."
+          }, indent=2) + "\n")
+          print("wrote rates.json")
+          PY
+
+      - name: Commit if changed
         run: |
-          git push origin main || git push origin master
+          if git diff --quiet -- rates.json; then
+            echo "No change."
+            exit 0
+          fi
+          git config user.name  "pocketseeds-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add rates.json
+          git commit -m "Update Hyderabad rates $(date -u +%F)"
+          git pull --rebase --autostash origin main
+          git push origin main
