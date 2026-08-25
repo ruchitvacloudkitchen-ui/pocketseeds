@@ -25,8 +25,14 @@
   --radius:18px; --shadow:0 1px 3px rgba(14,27,20,.06),0 6px 18px rgba(14,27,20,.05);
   --card-h:154px;
 }
+/* Dark tokens live in one place and are applied three ways: the system
+   preference, and either explicit choice from the theme switch. */
 @media (prefers-color-scheme:dark){
-  :root{--bg:#0A120E;--surface:#121D17;--surface-2:#0E1712;--ink:#E7F0EA;--muted:#8FA398;--line:#1F2E26;
+  :root:not([data-theme="light"]){--bg:#0A120E;--surface:#121D17;--surface-2:#0E1712;--ink:#E7F0EA;--muted:#8FA398;--line:#1F2E26;
+  --in:#34D399;--in-bg:#0C2A1D;--out:#F87171;--out-bg:#2E1416;--warn-bg:#2E2410;--save:#34D399;--save-bg:#0C2A1D;
+  --plum:#C4B5FD;--plum-bg:#221A3A;--shadow:0 2px 12px rgba(0,0,0,.45)}
+}
+:root[data-theme="dark"]{--bg:#0A120E;--surface:#121D17;--surface-2:#0E1712;--ink:#E7F0EA;--muted:#8FA398;--line:#1F2E26;
   --in:#34D399;--in-bg:#0C2A1D;--out:#F87171;--out-bg:#2E1416;--warn-bg:#2E2410;--save:#34D399;--save-bg:#0C2A1D;
   --plum:#C4B5FD;--plum-bg:#221A3A;--shadow:0 2px 12px rgba(0,0,0,.45)}
 }
@@ -74,14 +80,18 @@ html[lang="te"] .balance-card .lbl{text-transform:none;letter-spacing:.02em;font
   padding:2px 7px;border-radius:999px}
 .house-ad{height:100%;display:flex;align-items:center;gap:14px;padding:16px 16px 16px 18px;cursor:pointer;
   background:linear-gradient(135deg,#FFF6E6,#FDE7BF)}
-@media (prefers-color-scheme:dark){.house-ad{background:linear-gradient(135deg,#2A2110,#3A2E15)}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .house-ad{background:linear-gradient(135deg,#2A2110,#3A2E15)}}
+:root[data-theme="dark"] .house-ad{background:linear-gradient(135deg,#2A2110,#3A2E15)}
 .house-ad .ha-ic{width:50px;height:50px;border-radius:14px;background:var(--amber-2);display:grid;place-items:center;
   font-size:28px;flex:0 0 auto}
 .house-ad h4{font-size:17.5px;line-height:1.25;font-weight:800;color:#7A4A08}
 .house-ad p{font-size:15px;color:#8C6522;margin-top:3px;line-height:1.35}
 .house-ad .ha-cta{margin-top:8px;display:inline-block;font-size:13.5px;font-weight:700;color:#3B2606;
   background:var(--amber);padding:5px 12px;border-radius:999px}
-@media (prefers-color-scheme:dark){.house-ad h4{color:#FFE0AE}.house-ad p{color:#C9B183}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .house-ad h4{color:#FFE0AE}
+  :root:not([data-theme="light"]) .house-ad p{color:#C9B183}}
+:root[data-theme="dark"] .house-ad h4{color:#FFE0AE}
+:root[data-theme="dark"] .house-ad p{color:#C9B183}
 /* ---------- tiles ---------- */
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .tile{padding:13px 14px;border-radius:15px}
@@ -264,7 +274,8 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
   border-radius:14px;padding:11px 13px;box-shadow:var(--shadow);cursor:pointer;overflow-x:auto}
 .rate-bar .r-ic{width:34px;height:34px;border-radius:10px;background:#FDF3D6;color:#A97A12;display:grid;
   place-items:center;flex:0 0 auto}
-@media (prefers-color-scheme:dark){.rate-bar .r-ic{background:#2E2410;color:#E7C46A}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rate-bar .r-ic{background:#2E2410;color:#E7C46A}}
+:root[data-theme="dark"] .rate-bar .r-ic{background:#2E2410;color:#E7C46A}
 .rate-item{flex:0 0 auto;padding-right:14px;border-right:1px solid var(--line);margin-right:2px}
 .rate-item:last-child{border-right:0;padding-right:0}
 .rate-item .rl{font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap}
@@ -1103,6 +1114,15 @@ const STR = {
     panGulika:'Gulika', panVarjya:'Varjyam', panUntil:'until {t}', panFor:'for Hyderabad',
     panNote:'Computed by modern astronomy (drik ganita) for Hyderabad. Traditional vakya panchangams can differ by a few minutes to a couple of hours. For muhurtham, please follow your family panchangam.',
     panNextDay:'⁺ means the next morning',
+    theme:'Appearance', themeAuto:'Match phone', themeLight:'Light', themeDark:'Dark',
+    editEntry:'Edit entry', amountChanged:'Amount updated',
+    admin:'Owner panel', adminLocked:'Enter the owner passcode',
+    adminHint:'This only hides the panel — anyone can read a web app\'s code, so never keep anything secret here.',
+    adminOpen:'Open', adminWrong:'Wrong passcode', adminIn:'Owner mode on', adminOut:'Leave owner mode',
+    adBanner:'Ad banner', adTitle:'Headline', adText:'Text', adCta:'Button text', adUrl:'Link',
+    brandColour:'Brand colour', accentColour:'Accent colour', resetColours:'Back to default colours',
+    publish:'Publish to everyone', publishHow:'Copy this into config.json in your repo, commit, and every phone picks it up on the next open.',
+    copied:'Copied', downloadCfg:'Download config.json', livePreview:'Changes show here at once',
     navMore:'More',
     // budget 50/30/20
     budget:'Budget', budget503020:'50 / 30 / 20 budget', monthlyIncomeL:'My monthly income',
@@ -1340,6 +1360,15 @@ const STR = {
     panGulika:'గుళికకాలం', panVarjya:'వర్జ్యం', panUntil:'{t} వరకు', panFor:'హైదరాబాద్ ప్రకారం',
     panNote:'ఆధునిక ఖగోళ గణితం (దృక్ గణితం) ప్రకారం హైదరాబాద్‌కు లెక్కించినవి. సంప్రదాయ వాక్య పంచాంగాలతో కొన్ని నిమిషాల నుంచి రెండు గంటల వరకు తేడా రావచ్చు. ముహూర్తాలకు మీ ఇంటి పంచాంగమే చూడండి.',
     panNextDay:'⁺ అంటే మరుసటి రోజు తెల్లవారుజాము',
+    theme:'రూపం', themeAuto:'ఫోన్ ప్రకారం', themeLight:'తెలుపు', themeDark:'నలుపు',
+    editEntry:'మార్చు', amountChanged:'మొత్తం మారింది',
+    admin:'యజమాని ప్యానెల్', adminLocked:'యజమాని పాస్‌కోడ్ ఇవ్వండి',
+    adminHint:'ఇది ప్యానెల్‌ను దాచడమే — వెబ్ యాప్ కోడ్ ఎవరైనా చూడగలరు, కాబట్టి రహస్యమైనవి ఇక్కడ పెట్టవద్దు.',
+    adminOpen:'తెరువు', adminWrong:'పాస్‌కోడ్ తప్పు', adminIn:'యజమాని మోడ్ ఆన్', adminOut:'యజమాని మోడ్ ఆపు',
+    adBanner:'ప్రకటన బ్యానర్', adTitle:'శీర్షిక', adText:'వివరణ', adCta:'బటన్ మాట', adUrl:'లింక్',
+    brandColour:'ప్రధాన రంగు', accentColour:'రెండో రంగు', resetColours:'మామూలు రంగులకు',
+    publish:'అందరికీ ప్రచురించు', publishHow:'దీన్ని మీ repo లోని config.json లో పెట్టి commit చేయండి — తర్వాత తెరిచినప్పుడు అందరి ఫోన్‌లోనూ కనిపిస్తుంది.',
+    copied:'కాపీ అయ్యింది', downloadCfg:'config.json దించు', livePreview:'మార్పులు వెంటనే ఇక్కడ కనిపిస్తాయి',
     navMore:'మరిన్ని',
     budget:'బడ్జెట్', budget503020:'50 / 30 / 20 బడ్జెట్', monthlyIncomeL:'నా నెల ఆదాయం',
     needs:'అవసరాలు', wants:'కోరికలు', savingsPart:'పొదుపు',
@@ -1905,14 +1934,15 @@ function txRow(x){
   const label = isIn ? incLabel(x.category) : catLabel(x.category);
   return `<div class="row">
     <div class="ic ${isIn?'ic-in':'ic-out'}">${ic(isIn?'down':catIcon(x.category))}</div>
-    <div class="body">
+    <div class="body" data-edit-tx="${x.id}" style="cursor:pointer">
       <div class="title">${esc(x.note || label)}</div>
       <div class="meta">${shortDate(x.date)} · ${esc(label)}
         ${x.auto?`<span class="pill auto">${t('auto')}</span>`:''}
         ${x.method && x.method!=='auto'?`<span class="pill">${esc(UPI_LABEL[x.method]||x.method)}</span>`:''}</div>
     </div>
     <div class="amt ${isIn?'in':'out'}">${isIn?'+':'−'}${money(x.amount)}</div>
-    <button class="swipe-del" data-del-tx="${x.id}" aria-label="x">✕</button>
+    <button class="swipe-del" data-edit-tx="${x.id}" aria-label="edit">${ic('pencil')}</button>
+    <button class="swipe-del" data-del-tx="${x.id}" aria-label="delete">${ic('x')}</button>
   </div>`;
 }
 
@@ -2490,6 +2520,12 @@ function sheetSettings(){
         <option value="both" ${LMODE==='both'?'selected':''}>తెలుగు | English</option>
         <option value="te" ${LMODE==='te'?'selected':''}>తెలుగు</option>
         <option value="en" ${LMODE==='en'?'selected':''}>English</option></select></div>
+    <div class="field"><label>${L('theme')}</label>
+      <div class="seg" style="grid-template-columns:repeat(3,1fr);margin:0" id="cTheme">
+        <button data-theme-set="auto"  aria-pressed="${THEME==='auto'}">${t('themeAuto')}</button>
+        <button data-theme-set="light" aria-pressed="${THEME==='light'}">${t('themeLight')}</button>
+        <button data-theme-set="dark"  aria-pressed="${THEME==='dark'}">${t('themeDark')}</button>
+      </div></div>
     <div class="field"><label>${t('savingsRatePct')}</label><input id="cRate" type="number" min="0" max="90" value="${st.rate}"></div>
     <div class="field"><label>${t('remindBefore')}</label>
       <select id="cNotify">${[1,2,3,5,7].map(d=>`<option value="${d}" ${d==st.notifyDays?'selected':''}>${d}</option>`).join('')}</select></div>
@@ -2671,7 +2707,7 @@ function go(tab){
 }
 
 document.addEventListener('click', e => {
-  const el = e.target.closest('[data-go],[data-quick],[data-del-tx],[data-del-save],[data-edit-src],[data-edit-rem],[data-pay-rem],[data-ad-url],[data-edit-loan],[data-close-loan],[data-pay-vaddi],[data-edit-chit],[data-pay-chit],[data-edit-fest],[data-add-fest],[data-settle-udhaar],[data-del-udhaar],#quickSave');
+  const el = e.target.closest('[data-go],[data-quick],[data-edit-tx],[data-del-tx],[data-del-save],[data-edit-src],[data-edit-rem],[data-pay-rem],[data-ad-url],[data-edit-loan],[data-close-loan],[data-pay-vaddi],[data-edit-chit],[data-pay-chit],[data-edit-fest],[data-add-fest],[data-settle-udhaar],[data-del-udhaar],#quickSave');
   if(!el) return;
   const d = el.dataset;
 
@@ -2680,6 +2716,11 @@ document.addEventListener('click', e => {
   if(d.quick){
     const q = QUICK[+d.quick];
     return sheetTx('expense', null, { amount:q.amt, note:(LANG==='te'?q.te:q.en), category:q.cat });
+  }
+  if(d.editTx){
+    const rec = DB.tx.find(x => x.id === d.editTx);
+    if(rec) sheetTx(rec.type, rec);
+    return;
   }
   if(d.delTx){ DB.tx = DB.tx.filter(x=>x.id!==d.delTx); save(); renderAll(); return toast(t('deleted')); }
   if(d.delSave){ DB.savings = DB.savings.filter(x=>x.id!==d.delSave); save(); renderAll(); return toast(t('removed')); }
@@ -3938,12 +3979,8 @@ const MENU = [
   { go:'reports',                      icon:'chart',    t:'mTracker'   },
   { go:'loans',    focus:'chitList',   icon:'refresh',  t:'mChits'     },
   { go:'loans',    focus:'loanList',   icon:'handshake',t:'mVaddi'     },
-  { go:'save',     focus:'moyiList',   icon:'gift',     t:'mGift'      },
-  { go:'save',                         icon:'piggy',    t:'mSavings'   },
   { go:'budget',                       icon:'coin',     t:'mBudget'    },
   { go:'family',                       icon:'people',   t:'mFamily'    },
-  { go:'credit',                       icon:'trend',    t:'mCredit'    },
-  { go:'tax',                          icon:'receipt',  t:'mTax'       },
   { act:'statement',                   icon:'doc',      t:'mStatement' },
   { go:'search',                       icon:'search',   t:'mSearch'    },
   { act:'settings',                    icon:'gear',     t:'mSettings'  }
@@ -4422,4 +4459,177 @@ window.panchangam = panchangam;
 /* this block loads last, so paint the calendar again now that the
    panchangam is available */
 if(typeof renderCalendar === 'function') renderCalendar();
+</script>
+
+<script>
+'use strict';
+/* =========================================================================
+   Appearance switch, and the owner panel
+   ------------------------------------------------------------------------
+   The passcode HIDES the panel; it does not secure it. Anyone can read a
+   static site's source, so nothing secret belongs in here. Real publishing
+   happens by committing config.json to the repo, which every phone then
+   reads — the same pattern as rates.json.
+   ========================================================================= */
+let THEME = localStorage.getItem('pocketseeds.theme') || 'auto';
+function applyTheme(){
+  const r = document.documentElement;
+  if(THEME === 'auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', THEME);
+  const dark = THEME === 'dark' ||
+    (THEME === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const meta = document.querySelector('meta[name=theme-color]');
+  if(meta) meta.setAttribute('content', dark ? '#0A120E' : (CONFIG.theme?.brand || '#0B7A43'));
+}
+function setTheme(v){
+  THEME = v; localStorage.setItem('pocketseeds.theme', v); applyTheme();
+}
+
+/* ---------- published config ---------- */
+let CONFIG = { theme:{}, ad:{} };
+function applyConfig(){
+  const r = document.documentElement;
+  const th = CONFIG.theme || {};
+  if(th.brand)  r.style.setProperty('--brand',  th.brand);
+  if(th.brand2) r.style.setProperty('--brand-2', th.brand2);
+  if(th.accent){ r.style.setProperty('--amber', th.accent);
+                 r.style.setProperty('--amber-2', th.accent); }
+  applyTheme();
+  if(typeof mountAd === 'function') mountAd();
+}
+async function loadConfig(){
+  try{
+    const r = await fetch('config.json?d=' + new Date().toISOString().slice(0,10), {cache:'no-store'});
+    if(r.ok){ const j = await r.json(); if(j && typeof j === 'object') CONFIG = Object.assign(CONFIG, j); }
+  }catch(e){}
+  const local = localStorage.getItem('pocketseeds.cfgDraft');
+  if(local){ try{ CONFIG = Object.assign(CONFIG, JSON.parse(local)); }catch(e){} }
+  applyConfig();
+}
+
+/* the owner's banner, when one is published, wins over the house ads */
+(function(){
+  const houseOf = window.mountAd;
+  if(!houseOf) return;
+  window.mountAd = function(){
+    const ad = CONFIG.ad || {};
+    if(ad.title && !DB.settings.adClient){
+      const slot = $('#adSlot'); if(!slot) return;
+      $('#adHouse').innerHTML = `<div class="house-ad" data-ad-url="${esc(ad.url||'#')}">
+        <div class="ha-ic">${ic('trend','i-lg')}</div>
+        <div><h4>${esc(ad.title)}</h4><p>${esc(ad.text||'')}</p>
+        ${ad.cta?`<span class="ha-cta">${esc(ad.cta)} →</span>`:''}</div></div>`;
+      return;
+    }
+    houseOf();
+  };
+})();
+
+/* ---------- owner panel ---------- */
+const OWNER_CODE = 'seeds2026';          // hides the panel; not a secret
+let OWNER = sessionStorage.getItem('pocketseeds.owner') === '1';
+let logoTaps = 0, tapTimer = null;
+
+function ownerGate(){
+  if(OWNER) return sheetOwner();
+  openSheet(`
+    <h3>${L('admin')}</h3>
+    <div class="sheet-sub">${t('adminHint')}</div>
+    <div class="field"><label>${t('adminLocked')}</label>
+      <input id="ownCode" type="password" autocomplete="off"></div>
+    <button class="btn btn-p btn-block" id="ownGo">${t('adminOpen')}</button>`);
+  const go = () => {
+    if($('#ownCode').value.trim() !== OWNER_CODE) return toast(t('adminWrong'));
+    OWNER = true; sessionStorage.setItem('pocketseeds.owner','1');
+    toast(t('adminIn')); sheetOwner();
+  };
+  $('#ownGo').addEventListener('click', go);
+  $('#ownCode').addEventListener('keydown', e => { if(e.key === 'Enter') go(); });
+}
+
+function sheetOwner(){
+  const ad = CONFIG.ad || {}, th = CONFIG.theme || {};
+  openSheet(`
+    <h3>${L('admin')}</h3>
+    <div class="sheet-sub">${t('livePreview')}</div>
+
+    <div class="sec-head" style="margin:6px 0 8px"><h3 style="font-size:14px">${L('adBanner')}</h3></div>
+    <div class="field"><label>${t('adTitle')}</label><input id="ovT" type="text" value="${esc(ad.title||'')}"></div>
+    <div class="field"><label>${t('adText')}</label><input id="ovX" type="text" value="${esc(ad.text||'')}"></div>
+    <div class="grid2">
+      <div class="field"><label>${t('adCta')}</label><input id="ovC" type="text" value="${esc(ad.cta||'')}"></div>
+      <div class="field"><label>${t('adUrl')}</label><input id="ovU" type="url" value="${esc(ad.url||'')}"></div>
+    </div>
+
+    <div class="sec-head" style="margin:6px 0 8px"><h3 style="font-size:14px">${L('brandColour')}</h3></div>
+    <div class="grid3">
+      <div class="field"><label>${t('brandColour')}</label>
+        <input id="ovB" type="color" value="${th.brand||'#0B7A43'}" style="height:44px;padding:4px"></div>
+      <div class="field"><label>2</label>
+        <input id="ovB2" type="color" value="${th.brand2||'#16A34A'}" style="height:44px;padding:4px"></div>
+      <div class="field"><label>${t('accentColour')}</label>
+        <input id="ovA" type="color" value="${th.accent||'#F0A93B'}" style="height:44px;padding:4px"></div>
+    </div>
+    <button class="btn btn-g btn-block btn-sm" id="ovReset">${t('resetColours')}</button>
+
+    <div class="sec-head" style="margin:14px 0 8px"><h3 style="font-size:14px">${L('publish')}</h3></div>
+    <div class="hint" style="margin:0 0 8px">${t('publishHow')}</div>
+    <textarea id="ovJson" readonly style="font-family:ui-monospace,monospace;font-size:11.5px;min-height:120px"></textarea>
+    <div class="grid2" style="margin-top:8px">
+      <button class="btn btn-p" id="ovCopy">${t('copied').replace(/.*/, 'Copy')}</button>
+      <button class="btn btn-g" id="ovDown">${t('downloadCfg')}</button>
+    </div>
+    <button class="btn btn-g btn-block" style="margin-top:8px;color:var(--out)" id="ovOut">${t('adminOut')}</button>`);
+
+  const read = () => ({
+    theme: { brand:$('#ovB').value, brand2:$('#ovB2').value, accent:$('#ovA').value },
+    ad: { title:$('#ovT').value.trim(), text:$('#ovX').value.trim(),
+          cta:$('#ovC').value.trim(), url:$('#ovU').value.trim() }
+  });
+  const sync = () => {
+    CONFIG = Object.assign(CONFIG, read());
+    localStorage.setItem('pocketseeds.cfgDraft', JSON.stringify(read()));
+    applyConfig();
+    $('#ovJson').value = JSON.stringify(read(), null, 2);
+  };
+  ['ovT','ovX','ovC','ovU','ovB','ovB2','ovA'].forEach(id => $('#'+id).addEventListener('input', sync));
+  sync();
+
+  $('#ovReset').addEventListener('click', () => {
+    $('#ovB').value = '#0B7A43'; $('#ovB2').value = '#16A34A'; $('#ovA').value = '#F0A93B'; sync();
+  });
+  $('#ovCopy').addEventListener('click', async () => {
+    try{ await navigator.clipboard.writeText($('#ovJson').value); toast(t('copied')); }
+    catch(e){ $('#ovJson').select(); }
+  });
+  $('#ovDown').addEventListener('click', () => {
+    const b = new Blob([$('#ovJson').value], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = 'config.json'; a.click(); URL.revokeObjectURL(a.href);
+  });
+  $('#ovOut').addEventListener('click', () => {
+    OWNER = false; sessionStorage.removeItem('pocketseeds.owner');
+    localStorage.removeItem('pocketseeds.cfgDraft');
+    closeSheet(); loadConfig(); toast(t('adminOut'));
+  });
+}
+
+/* five taps on the mark opens the gate */
+document.addEventListener('click', e => {
+  const set = e.target.closest('[data-theme-set]');
+  if(set){
+    setTheme(set.dataset.themeSet);
+    document.querySelectorAll('[data-theme-set]').forEach(b =>
+      b.setAttribute('aria-pressed', String(b.dataset.themeSet === THEME)));
+    return;
+  }
+  if(e.target.closest('.brand')){
+    logoTaps++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => { logoTaps = 0; }, 1600);
+    if(logoTaps >= 5){ logoTaps = 0; ownerGate(); }
+  }
+});
+
+applyTheme();
+loadConfig();
 </script>
