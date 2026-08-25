@@ -1,9 +1,9 @@
 {
   "city": "Hyderabad",
-  "gold24": 0,
-  "gold22": 0,
-  "silver": 0,
-  "updated": "",
-  "source": "not set up yet",
-  "note": "Filled daily by .github/workflows/rates.yml once GOLDAPI_KEY is set. Until then the app uses the rate you enter by hand."
+  "gold24": 14289,
+  "gold22": 13098,
+  "silver": 209260,
+  "updated": "2026-08-25",
+  "source": "goldapi.io",
+  "note": "Indicative rates. Local jewellers add making charges and GST."
 }
