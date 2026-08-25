@@ -240,6 +240,38 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 }
 @media (max-width:339px){ .brand span,.brand{font-size:0} .brand .logo{font-size:16px} }
 
+/* holidays */
+.cal-cell.pub{background:var(--out-bg)}
+.cal-cell.pub .d{color:var(--out)}
+.cal-cell.opt{background:#E3F2FD}
+.cal-cell.opt .d{color:#0B69C7}
+:root[data-theme="dark"] .cal-cell.opt{background:#132A40}
+:root[data-theme="dark"] .cal-cell.opt .d{color:#7FC0F5}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .cal-cell.opt{background:#132A40}
+  :root:not([data-theme="light"]) .cal-cell.opt .d{color:#7FC0F5}
+}
+.cal-cell.today{background:var(--brand) !important}
+.cal-cell.today .d{color:#fff !important}
+.hol-legend{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--muted);font-weight:600}
+.hol-legend i{width:9px;height:9px;border-radius:3px;display:inline-block}
+.hol-legend .lg-p{background:var(--out)} .hol-legend .lg-o{background:#0B69C7}
+.hol-row{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:10px 12px;
+  border-radius:12px;border:1px solid var(--line);background:var(--surface);margin-bottom:7px;
+  cursor:pointer;font-family:inherit;box-shadow:var(--shadow)}
+.hol-row .hol-d{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;
+  font-size:13.5px;font-weight:800}
+.hol-row.pub .hol-d{background:var(--out-bg);color:var(--out)}
+.hol-row.opt .hol-d{background:#E3F2FD;color:#0B69C7}
+:root[data-theme="dark"] .hol-row.opt .hol-d{background:#132A40;color:#7FC0F5}
+.hol-row .hol-b{flex:1;min-width:0}
+.hol-row .hol-n{display:block;font-size:13.5px;font-weight:700;line-height:1.3}
+.hol-row .hol-t{display:block;font-size:11px;color:var(--muted);margin-top:1px}
+.hol-tag{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;margin-top:5px;margin-right:5px}
+.hol-tag.pub{background:var(--out-bg);color:var(--out)}
+.hol-tag.opt{background:#E3F2FD;color:#0B69C7}
+:root[data-theme="dark"] .hol-tag.opt{background:#132A40;color:#7FC0F5}
+
 /* panchangam */
 .cal-cell{aspect-ratio:auto;min-height:52px;padding:5px 2px}
 .cal-cell .t{font-size:8.5px;line-height:1.1;color:var(--muted);margin-top:2px;max-width:100%;
@@ -791,6 +823,13 @@ table.sip tbody tr:last-child td{font-size:15px}
     </div>
     <div class="sec"><div class="card" style="padding:15px" id="calDetail"></div></div>
     <div class="sec">
+      <div class="sec-head"><h3 data-i18n="holidays">Holidays</h3>
+        <span class="hol-legend"><i class="lg-p"></i><i class="lg-o"></i>
+          <span data-i18n="holLegend">Public · Optional</span></span></div>
+      <div id="holidayList"></div>
+    </div>
+
+    <div class="sec">
       <div class="sec-head"><h3 data-i18n="calFestivals">Festivals &amp; important days</h3>
         <button class="link" id="btnAddDay" data-i18n="calAdd">+ Add day</button></div>
       <div class="sub" data-i18n="calFestNote"></div>
@@ -1123,6 +1162,8 @@ const STR = {
     brandColour:'Brand colour', accentColour:'Accent colour', resetColours:'Back to default colours',
     publish:'Publish to everyone', publishHow:'Copy this into config.json in your repo, commit, and every phone picks it up on the next open.',
     copied:'Copied', downloadCfg:'Download config.json', livePreview:'Changes show here at once',
+    holidays:'Holidays', holPublic:'Public holiday', holOptional:'Optional holiday',
+    holNone:'No listed holidays this month', holLegend:'Public · Optional',
     navMore:'More',
     // budget 50/30/20
     budget:'Budget', budget503020:'50 / 30 / 20 budget', monthlyIncomeL:'My monthly income',
@@ -1369,6 +1410,8 @@ const STR = {
     brandColour:'ప్రధాన రంగు', accentColour:'రెండో రంగు', resetColours:'మామూలు రంగులకు',
     publish:'అందరికీ ప్రచురించు', publishHow:'దీన్ని మీ repo లోని config.json లో పెట్టి commit చేయండి — తర్వాత తెరిచినప్పుడు అందరి ఫోన్‌లోనూ కనిపిస్తుంది.',
     copied:'కాపీ అయ్యింది', downloadCfg:'config.json దించు', livePreview:'మార్పులు వెంటనే ఇక్కడ కనిపిస్తాయి',
+    holidays:'సెలవులు', holPublic:'ప్రభుత్వ సెలవు', holOptional:'ఐచ్ఛిక సెలవు',
+    holNone:'ఈ నెలలో సెలవులు లేవు', holLegend:'ప్రభుత్వ · ఐచ్ఛిక',
     navMore:'మరిన్ని',
     budget:'బడ్జెట్', budget503020:'50 / 30 / 20 బడ్జెట్', monthlyIncomeL:'నా నెల ఆదాయం',
     needs:'అవసరాలు', wants:'కోరికలు', savingsPart:'పొదుపు',
@@ -4198,6 +4241,8 @@ function renderCalDetail(){
   box.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:${rows.length?'11px':'0'}">
       <div><div style="font-size:15px;font-weight:800">${shortDate(CAL_SEL)}${CAL_SEL===ymd(new Date())?' · '+t('calToday'):''}</div>
+        ${(typeof holidaysOn === 'function' ? holidaysOn(CAL_SEL) : []).map(h =>
+          `<div class="hol-tag ${h.type==='p'?'pub':'opt'}">${esc(holidayName(h))}</div>`).join('')}
         ${day?`<div style="font-size:12.5px;color:var(--amber-2);font-weight:700;margin-top:2px">${esc(day.name)}</div>`:''}</div>
       ${spent?`<div style="text-align:right"><div style="font-size:11px;color:var(--muted)">${t('calSpent')}</div>
         <div style="font-size:16px;font-weight:800;color:var(--out)">${money(spent)}</div></div>`:''}
@@ -4632,4 +4677,111 @@ document.addEventListener('click', e => {
 
 applyTheme();
 loadConfig();
+</script>
+
+<script>
+'use strict';
+/* =========================================================================
+   Telangana holidays. Dates are lunar for many of these, so they move every
+   year — each year needs its own list. Every date below was checked against
+   its weekday before being entered.
+   p = public (red), o = optional (light blue). A date can carry both.
+   ========================================================================= */
+const HOLIDAYS = {
+  2026: [
+    ['01-01','p','New Year','నూతన సంవత్సరం'],
+    ['01-03','o','Birthday of Hazrath Ali','హజ్రత్ అలీ జయంతి'],
+    ['01-14','p','Bhogi','భోగి'],
+    ['01-15','p','Sankranti / Pongal','సంక్రాంతి'],
+    ['01-16','p','Kanumu','కనుమ'],
+    ['01-17','o','Shab-e-Meraj','షబ్-ఎ-మేరాజ్'],
+    ['01-23','o','Sri Panchami','శ్రీ పంచమి'],
+    ['01-26','p','Republic Day','గణతంత్ర దినోత్సవం'],
+    ['02-04','o','Shab-e-Barat','షబ్-ఎ-బరాత్'],
+    ['02-15','p','Mahashivarathri','మహాశివరాత్రి'],
+    ['03-03','p','Holi','హోళి'],
+    ['03-10','o','Shahadat HZT Ali (R.A.)','షహాదత్ హజ్రత్ అలీ'],
+    ['03-13','o','Jumatul-Vida','జుమాతుల్ విదా'],
+    ['03-17','o','Shab-e-Qader','షబ్-ఎ-ఖదర్'],
+    ['03-19','p','Ugadi','ఉగాది'],
+    ['03-21','p','Ramzan (Eid-ul-Fitr)','రంజాన్'],
+    ['03-22','p','Following Day of Ramzan','రంజాన్ మరుసటి రోజు'],
+    ['03-27','p','Sri Rama Navami','శ్రీరామ నవమి'],
+    ['03-31','p','Mahaveer Jayanthi','మహావీర్ జయంతి'],
+    ['04-03','p','Good Friday','గుడ్ ఫ్రైడే'],
+    ['04-05','o',"Babu Jagjivan Ram's Birthday",'బాబు జగ్జీవన్ రామ్ జయంతి'],
+    ['04-14','p',"Dr. B.R. Ambedkar's Birthday",'డా. బి.ఆర్. అంబేద్కర్ జయంతి'],
+    ['04-14','o',"Tamil New Year's Day",'తమిళ నూతన సంవత్సరం'],
+    ['04-20','p','Basava Jayanthi','బసవ జయంతి'],
+    ['05-01','p','Buddha Purnima','బుద్ధ పూర్ణిమ'],
+    ['05-27','p','Eid-ul-Azha (Bakrid)','బక్రీద్'],
+    ['06-04','o','Eid-e-Ghadeer','ఈద్-ఎ-గదీర్'],
+    ['06-25','o','9th Moharram','9వ మొహర్రం'],
+    ['06-26','p','Moharram','మొహర్రం'],
+    ['07-16','o','Ratha Yathra','రథ యాత్ర'],
+    ['08-04','o','Arbayeen','అర్బయీన్'],
+    ['08-10','o','Bonalu','బోనాలు'],
+    ['08-15','p','Independence Day','స్వాతంత్ర్య దినోత్సవం'],
+    ['08-15','o','Parsi New Year','పార్సీ నూతన సంవత్సరం'],
+    ['08-21','o','Varalakshmi Vratham','వరలక్ష్మీ వ్రతం'],
+    ['08-26','p','Eid Milad-un-Nabi','మిలాద్-ఉన్-నబీ'],
+    ['08-28','o','Sravana Purnima & Rakhi Purnima','శ్రావణ పూర్ణిమ & రాఖీ'],
+    ['09-04','o','Sri Krishnashtami','శ్రీ కృష్ణాష్టమి'],
+    ['09-14','p','Vinayaka Chavithi','వినాయక చవితి'],
+    ['09-23','o','Yazdahum Shareef','యజ్దహుమ్ షరీఫ్'],
+    ['10-02','p','Mahatma Gandhi Jayanthi','మహాత్మా గాంధీ జయంతి'],
+    ['10-18','p','Saddula Bathukamma','సద్దుల బతుకమ్మ'],
+    ['10-19','p','Maharnavami','మహర్నవమి'],
+    ['10-20','p','Vijaya Dasami','విజయ దశమి'],
+    ['10-21','p','Following Day of Vijaya Dasami','విజయదశమి మరుసటి రోజు'],
+    ['10-26','o','Birthday of Hazrath Syed Mohd. Juvanpuri','హజ్రత్ సయ్యద్ మొహ్మద్ జువాన్‌పురి జయంతి'],
+    ['11-08','p','Naraka Chathurdhi & Deepavali','నరక చతుర్దశి & దీపావళి'],
+    ['11-24','o','Karthika Pournami','కార్తీక పౌర్ణమి'],
+    ['12-24','o','Christmas Eve','క్రిస్మస్ ఈవ్'],
+    ['12-25','p','Christmas','క్రిస్మస్'],
+    ['12-26','o','Boxing Day','బాక్సింగ్ డే'],
+    ['12-26','o','Hazrath Ali Birthday','హజ్రత్ అలీ జయంతి']
+  ]
+};
+/* date -> [{type, en, te}] */
+function holidaysOn(date){
+  const [y, ...rest] = date.split('-');
+  const md = rest.join('-');
+  return (HOLIDAYS[y] || []).filter(h => h[0] === md)
+    .map(h => ({ type:h[1], en:h[2], te:h[3] }));
+}
+const holidayName = h => (LMODE === 'en' ? h.en : (h.te || h.en));
+
+/* paint the grid and list once the data is in */
+(function(){
+  const prevCal = window.renderCalendar;
+  if(!prevCal) return;
+  window.renderCalendar = function(){
+    prevCal();
+    /* colour the cells */
+    document.querySelectorAll('.cal-cell[data-cal]').forEach(cell => {
+      const list = holidaysOn(cell.dataset.cal);
+      if(!list.length) return;
+      cell.classList.add(list.some(h => h.type === 'p') ? 'pub' : 'opt');
+      cell.title = list.map(holidayName).join(' · ');
+    });
+    renderHolidayList();
+  };
+  window.renderCalendar();
+})();
+
+function renderHolidayList(){
+  const box = $('#holidayList'); if(!box) return;
+  const y = CAL_VIEW.getFullYear(), m = pad(CAL_VIEW.getMonth()+1);
+  const rows = (HOLIDAYS[y] || []).filter(h => h[0].startsWith(m + '-'));
+  box.innerHTML = rows.length ? rows.map(h => {
+    const date = `${y}-${h[0]}`;
+    const pub = h[1] === 'p';
+    return `<button class="hol-row ${pub?'pub':'opt'}" data-cal="${date}">
+      <span class="hol-d">${Number(h[0].slice(3))}</span>
+      <span class="hol-b"><span class="hol-n">${esc(LMODE==='en'?h[2]:h[3])}</span>
+        <span class="hol-t">${pub ? t('holPublic') : t('holOptional')}</span></span>
+    </button>`;
+  }).join('') : `<div class="hint" style="text-align:center;padding:8px">${t('holNone')}</div>`;
+}
 </script>
