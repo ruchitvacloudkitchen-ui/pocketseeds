@@ -2,7 +2,7 @@
 
 తెలుగు వారి కోసం డబ్బు యాప్ — a Telugu-first money app for Indian households.
 
-**Live:** https://ruchitvacloudkitchen-ui.github.io/pocketseeds/
+**Live:** https://pocketseeds.online
 
 Open it on a phone and use "Add to Home Screen". It works offline and all data
 stays on the device — no account, no server, nothing uploaded.
@@ -56,11 +56,37 @@ If you host your own copy on a different address, create your own client ID:
 3. **APIs & Services → Credentials → Create credentials → OAuth client ID**
    → *Web application*
 4. Under **Authorised JavaScript origins** add the site address, e.g.
-   `https://ruchitvacloudkitchen-ui.github.io`
+   `https://pocketseeds.online`
 5. Copy the client ID and paste it in the app: Save my data → the setup sheet
 
 While the Google Cloud project is in **Testing**, only accounts listed as test
 users can sign in. Publish the app when you are ready for real users.
+
+## Custom domain
+
+The site is served from GitHub Pages on **pocketseeds.online**. The `CNAME`
+file in this repo tells Pages which domain to answer for — do not delete it,
+and do not edit it by hand in a commit if you have changed the domain in the
+Pages settings UI (the UI rewrites this file).
+
+DNS is managed at Hostinger. The zone needs these records, and no other A or
+AAAA record on the apex:
+
+| Type  | Name | Value |
+|-------|------|-------|
+| A     | @    | 185.199.108.153 |
+| A     | @    | 185.199.109.153 |
+| A     | @    | 185.199.110.153 |
+| A     | @    | 185.199.111.153 |
+| AAAA  | @    | 2606:50c0:8000::153 |
+| AAAA  | @    | 2606:50c0:8001::153 |
+| AAAA  | @    | 2606:50c0:8002::153 |
+| AAAA  | @    | 2606:50c0:8003::153 |
+| CNAME | www  | ruchitvacloudkitchen-ui.github.io |
+
+After DNS propagates, turn on **Enforce HTTPS** in Settings → Pages. The
+certificate is issued by GitHub and renews itself; Hostinger's SSL products
+are not needed and must not be pointed at this domain.
 
 ## Editing the fund list
 
