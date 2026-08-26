@@ -158,6 +158,7 @@ html[lang="te"] .tile .t-lbl{text-transform:none;letter-spacing:0;font-size:14px
 .btn-save{background:var(--save);color:#fff} .btn-plum{background:var(--plum);color:#fff}
 .btn-sm{padding:7px 11px;font-size:14px;border-radius:10px}
 .btn-block{width:100%}
+.btn[href]{text-decoration:none}
 .field{margin-bottom:12px}
 .field label{display:block;font-size:14px;font-weight:700;color:var(--muted);margin-bottom:6px}
 input,select,textarea{width:100%;font-family:inherit;font-size:17.5px;color:var(--ink);background:var(--surface-2);
@@ -847,6 +848,13 @@ table.sip tbody tr:last-child td{font-size:15px}
     </div>
   </section>
 
+  <!-- ===================== GOLD ===================== -->
+  <section class="page" id="page-gold">
+    <button class="btn btn-g btn-sm" data-go="more" style="margin-bottom:12px" data-icon="back"></button>
+    <div class="sec-head"><h3 data-i18n="goldTitle">Gold rates</h3></div>
+    <div class="card" style="padding:16px" id="goldBox"></div>
+  </section>
+
   <!-- ===================== BUDGET 50/30/20 ===================== -->
   <section class="page" id="page-budget">
     <button class="btn btn-g btn-sm" data-go="more" style="margin-bottom:12px" data-icon="back"></button>
@@ -1157,6 +1165,10 @@ const STR = {
     mReminders:'Reminders', mTracker:'Monthly tracker', mChits:'Chits', mVaddi:'Hand loans',
     mGift:'Gift book', mSavings:'Savings', mBudget:'Budget', mFamily:'Family',
     mCredit:'Credit', mTax:'Tax', mStatement:'Statement', mSearch:'Search', mSettings:'Settings',
+    mGold:'Gold',
+    goldTitle:'Gold rates', goldToday:'Today in Hyderabad', goldBuy:'Buy digital gold',
+    goldBuySoon:'Buying link coming soon',
+    goldNote:'Rates are for Hyderabad and refresh once a day. A jeweller adds making charges and GST on top of these.',
     menuTitle:'Everything else',
     panTithi:'Tithi', panNak:'Nakshatra', panYoga:'Yoga', panMasa:'Month', panPaksha:'Paksha',
     panSunrise:'Sunrise', panSunset:'Sunset', panRahu:'Rahu kalam', panYama:'Yamagandam',
@@ -1405,6 +1417,10 @@ const STR = {
     mReminders:'గుర్తుంపులు', mTracker:'నెల లెక్క', mChits:'చిట్టీలు', mVaddi:'చేతి అప్పులు',
     mGift:'మొయి పుస్తకం', mSavings:'పొదుపు', mBudget:'బడ్జెట్', mFamily:'కుటుంబం',
     mCredit:'క్రెడిట్', mTax:'పన్ను', mStatement:'స్టేట్‌మెంట్', mSearch:'వెతుకు', mSettings:'సెట్టింగ్‌లు',
+    mGold:'బంగారం',
+    goldTitle:'బంగారం ధరలు', goldToday:'ఈరోజు హైదరాబాద్‌లో', goldBuy:'డిజిటల్ బంగారం కొనండి',
+    goldBuySoon:'కొనుగోలు లింక్ త్వరలో',
+    goldNote:'ధరలు హైదరాబాద్‌వి, రోజుకు ఒకసారి మారతాయి. నగల షాపులో మజూరీ, GST వీటికి అదనం.',
     menuTitle:'మిగతావన్నీ',
     panTithi:'తిథి', panNak:'నక్షత్రం', panYoga:'యోగం', panMasa:'మాసం', panPaksha:'పక్షం',
     panSunrise:'సూర్యోదయం', panSunset:'సూర్యాస్తమయం', panRahu:'రాహుకాలం', panYama:'యమగండం',
@@ -1904,6 +1920,7 @@ const ICON = {
   temple:'<path d="M12 2.6 16.2 7H7.8z"/><path d="M6 7h12v4H6z"/><path d="M4.4 11h15.2v9.4H4.4z"/><path d="M10 20.4v-5h4v5"/>',
   atm:'<rect x="3.4" y="4" width="17.2" height="16" rx="2.4"/><path d="M3.4 9.4h17.2"/><path d="M7 13h4M7 16.4h7"/><circle cx="17" cy="15" r="1.4"/>',
   coin:'<circle cx="12" cy="12" r="8.6"/><path d="M12 7.4v9.2"/><path d="M14.4 9.6a2.6 2.6 0 0 0-2.4-1.4c-1.5 0-2.6.9-2.6 2.1s1 1.8 2.6 2.1 2.6.9 2.6 2.1-1.1 2.1-2.6 2.1a2.6 2.6 0 0 1-2.4-1.4"/>',
+  goldbar:'<path d="M4.4 12.6h15.2v6.2H4.4z"/><path d="M4.4 12.6 7.7 8.1h8.6l3.3 4.5"/>',
   dot:'<circle cx="12" cy="12" r="3.4"/>',
   check:'<path d="M4.6 12.6 9.6 17.6 19.4 6.8"/>',
   x:'<path d="M6 6 18 18M18 6 6 18"/>',
@@ -4048,7 +4065,7 @@ const MENU = [
   { go:'budget',                       icon:'coin',     t:'mBudget'    },
   { go:'family',                       icon:'people',   t:'mFamily'    },
   { act:'statement',                   icon:'doc',      t:'mStatement' },
-  { go:'search',                       icon:'search',   t:'mSearch'    },
+  { go:'gold',                         icon:'goldbar',  t:'mGold'      },
   { act:'settings',                    icon:'gear',     t:'mSettings'  }
 ];
 
@@ -4158,7 +4175,7 @@ async function loadRates(){
     if(r.ok){ const j = await r.json(); if(j && (j.gold24 || j.gold22 || j.silver)) RATES = j; }
   }catch(e){ /* offline or not set up yet */ }
   if(!RATES && DB.rates) RATES = DB.rates;
-  renderRates();
+  renderRates(); renderGold();
 }
 function renderRates(){
   const box = $('#rateBar'); if(!box) return;
@@ -4179,6 +4196,44 @@ function renderRates(){
     ${item(t('silverR'), RATES.silver, t('perKg'))}
     <span class="rate-when ${stale?'stale':''}">${t('asOn',{d:shortDate(RATES.updated||today)})}${stale?' · '+t('ratesStale'):''}</span>`;
 }
+/* The Gold page shows the same figures as the home rate strip. RATES is
+   already filled by loadRates() from rates.json, so nothing is fetched twice.
+   The buy link is a config value: publish {"goldBuyUrl":"https://..."} in
+   config.json and every phone picks it up, no code change. */
+const GOLD_BUY_URL = '';
+function goldBuyUrl(){
+  try{ return (CONFIG && CONFIG.goldBuyUrl) || GOLD_BUY_URL; }
+  catch(e){ return GOLD_BUY_URL; }   // CONFIG loads in a later block
+}
+function renderGold(){
+  const box = $('#goldBox'); if(!box) return;
+  const url = goldBuyUrl();
+  const buy = url
+    ? `<a class="btn btn-p btn-block" href="${esc(url)}" target="_blank" rel="noopener">${t('goldBuy')}</a>`
+    : `<button class="btn btn-p btn-block" disabled style="opacity:.5">${t('goldBuySoon')}</button>`;
+
+  if(!RATES || (!RATES.gold24 && !RATES.gold22)){
+    box.innerHTML = `<div class="sub">${t('ratesNone')}</div>
+      <button class="btn btn-g btn-block" id="goldRate" style="margin-top:12px">${t('ratesEdit')}</button>
+      <div style="margin-top:10px">${buy}</div>`;
+    const b = $('#goldRate'); if(b) b.addEventListener('click', sheetRates);
+    return;
+  }
+  const today = ymd(new Date());
+  const stale = RATES.updated !== today;
+  const row = (label, value) => value ? `
+    <div class="kv"><span>${label} · ${t('perGram')}</span><b>${money(value)}</b></div>` : '';
+  box.innerHTML = `
+    <div class="t-lbl" style="font-size:14px;font-weight:700;color:var(--muted)">${t('goldToday')}</div>
+    <div style="margin-top:8px">
+      ${row(t('gold22'), RATES.gold22)}
+      ${row(t('gold24'), RATES.gold24)}
+    </div>
+    <div class="rate-when ${stale?'stale':''}" style="display:block;margin-top:8px">${t('asOn',{d:shortDate(RATES.updated||today)})}${stale?' · '+t('ratesStale'):''}</div>
+    <div style="margin-top:14px">${buy}</div>
+    <div class="hint">${t('goldNote')}</div>`;
+}
+
 function sheetRates(){
   const r = RATES || {};
   openSheet(`
@@ -4196,7 +4251,7 @@ function sheetRates(){
   $('#rtSave').addEventListener('click', () => {
     DB.rates = { gold24:Number($('#rt24').value)||0, gold22:Number($('#rt22').value)||0,
                  silver:Number($('#rtag').value)||0, updated:ymd(new Date()), source:'manual' };
-    RATES = DB.rates; save(); renderRates(); closeSheet(); toast(t('ratesSaved'));
+    RATES = DB.rates; save(); renderRates(); renderGold(); closeSheet(); toast(t('ratesSaved'));
   });
 }
 
@@ -4331,7 +4386,7 @@ $('#btnAddDay').addEventListener('click', sheetDay);
   const prev = window.renderAll;
   window.renderAll = function(){
     prev();
-    try{ renderShop(); renderRates(); renderCalendar(); }catch(e){ console.error(e); }
+    try{ renderShop(); renderRates(); renderGold(); renderCalendar(); }catch(e){ console.error(e); }
   };
   renderShop(); renderCalendar(); loadRates();
 })();
