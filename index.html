@@ -216,6 +216,10 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .catbar .cb-track{flex:1;height:8px;border-radius:999px;background:var(--surface-2);overflow:hidden}
 .catbar .cb-track > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--brand-2))}
 .catbar .cb-amt{font-size:14px;font-weight:700;color:var(--muted);width:72px;text-align:right;flex:0 0 auto}
+.catbar .cb-track > i.ex{background:linear-gradient(90deg,var(--out),var(--out))}
+.tmonth{margin-bottom:15px}.tmonth:last-child{margin-bottom:0}
+.tm-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:7px}
+.tm-head span{font-size:15px;font-weight:700}.tm-head b{font-size:15px;font-weight:800}
 .swipe-del{background:none;border:0;color:var(--muted);font-size:17.5px;cursor:pointer;padding:4px 2px;flex:0 0 auto}
 .kv{display:flex;justify-content:space-between;gap:10px;font-size:15px;padding:6px 0;border-bottom:1px dashed var(--line)}
 .kv:last-child{border-bottom:0}
@@ -848,6 +852,20 @@ table.sip tbody tr:last-child td{font-size:15px}
     </div>
   </section>
 
+  <!-- ===================== INSIGHTS ===================== -->
+  <section class="page" id="page-insights">
+    <button class="btn btn-g btn-sm" data-go="more" style="margin-bottom:12px" data-icon="back"></button>
+    <div class="sec-head"><h3 data-i18n="insTitle">Insights</h3></div>
+    <div id="insBox"></div>
+  </section>
+
+  <!-- ===================== REFER & EARN ===================== -->
+  <section class="page" id="page-invite">
+    <button class="btn btn-g btn-sm" data-go="more" style="margin-bottom:12px" data-icon="back"></button>
+    <div class="sec-head"><h3 data-i18n="invTitle">Invite friends</h3></div>
+    <div class="card" style="padding:16px" id="invBox"></div>
+  </section>
+
   <!-- ===================== GOLD ===================== -->
   <section class="page" id="page-gold">
     <button class="btn btn-g btn-sm" data-go="more" style="margin-bottom:12px" data-icon="back"></button>
@@ -1165,7 +1183,16 @@ const STR = {
     mReminders:'Reminders', mTracker:'Monthly tracker', mChits:'Chits', mVaddi:'Hand loans',
     mGift:'Gift book', mSavings:'Savings', mBudget:'Budget', mFamily:'Family',
     mCredit:'Credit', mTax:'Tax', mStatement:'Statement', mSearch:'Search', mSettings:'Settings',
-    mGold:'Gold',
+    mGold:'Gold', mInsights:'Insights', mInvite:'Invite',
+    insTitle:'Insights', insLast:'Last {n} months', insNone:'Add a few months of entries and the trend shows up here.',
+    insAvgIncome:'Average income', insAvgSpend:'Average spend', insAvgSaved:'Average saved',
+    insRate:'Savings rate', insNet:'Net', insSpent:'Spent',
+    insBest:'Best saving month', insWorst:'Highest spending month',
+    insNote:'Months with no entries are left out of the averages.',
+    invTitle:'Invite friends', invLead:'PocketSeeds is free. If it helps you, pass it on.',
+    invShare:'Share the app', invWa:'Send on WhatsApp', invCopy:'Copy link', invCopied:'Link copied',
+    invMsg:'I use PocketSeeds to keep track of money at home — income, expenses, vaddi loans, chits, the lot. It is free and works in Telugu. {u}',
+    invWhy:'There is no reward scheme yet — that needs accounts and a server, and PocketSeeds deliberately has neither. Everything stays on your phone.',
     goldTitle:'Gold rates', goldToday:'Today in Hyderabad', goldBuy:'Buy digital gold',
     goldBuySoon:'Buying link coming soon',
     goldNote:'Rates are for Hyderabad and refresh once a day. A jeweller adds making charges and GST on top of these.',
@@ -1417,7 +1444,16 @@ const STR = {
     mReminders:'గుర్తుంపులు', mTracker:'నెల లెక్క', mChits:'చిట్టీలు', mVaddi:'చేతి అప్పులు',
     mGift:'మొయి పుస్తకం', mSavings:'పొదుపు', mBudget:'బడ్జెట్', mFamily:'కుటుంబం',
     mCredit:'క్రెడిట్', mTax:'పన్ను', mStatement:'స్టేట్‌మెంట్', mSearch:'వెతుకు', mSettings:'సెట్టింగ్‌లు',
-    mGold:'బంగారం',
+    mGold:'బంగారం', mInsights:'విశ్లేషణ', mInvite:'ఆహ్వానం',
+    insTitle:'విశ్లేషణ', insLast:'గత {n} నెలలు', insNone:'కొన్ని నెలల వివరాలు చేర్చిన తర్వాత ఇక్కడ తీరు కనిపిస్తుంది.',
+    insAvgIncome:'సగటు ఆదాయం', insAvgSpend:'సగటు ఖర్చు', insAvgSaved:'సగటు పొదుపు',
+    insRate:'పొదుపు శాతం', insNet:'మిగిలింది', insSpent:'ఖర్చు',
+    insBest:'ఎక్కువ పొదుపు చేసిన నెల', insWorst:'ఎక్కువ ఖర్చైన నెల',
+    insNote:'ఏ వివరాలూ లేని నెలలను సగటులో లెక్కించలేదు.',
+    invTitle:'స్నేహితులను ఆహ్వానించండి', invLead:'PocketSeeds ఉచితం. మీకు ఉపయోగపడితే మీ వాళ్లకూ చెప్పండి.',
+    invShare:'యాప్ షేర్ చేయండి', invWa:'WhatsAppలో పంపండి', invCopy:'లింక్ కాపీ', invCopied:'లింక్ కాపీ అయ్యింది',
+    invMsg:'ఇంటి డబ్బు లెక్కలు — ఆదాయం, ఖర్చులు, వడ్డీ అప్పులు, చిట్టీలు — అన్నీ చూసుకోవడానికి నేను PocketSeeds వాడుతున్నాను. ఉచితం, తెలుగులో ఉంటుంది. {u}',
+    invWhy:'ఇప్పటికి బహుమతి పథకం లేదు — దానికి ఖాతాలు, సర్వర్ కావాలి. PocketSeedsలో అవి ఉద్దేశపూర్వకంగా లేవు. మీ వివరాలు మీ ఫోన్‌లోనే ఉంటాయి.',
     goldTitle:'బంగారం ధరలు', goldToday:'ఈరోజు హైదరాబాద్‌లో', goldBuy:'డిజిటల్ బంగారం కొనండి',
     goldBuySoon:'కొనుగోలు లింక్ త్వరలో',
     goldNote:'ధరలు హైదరాబాద్‌వి, రోజుకు ఒకసారి మారతాయి. నగల షాపులో మజూరీ, GST వీటికి అదనం.',
@@ -3233,6 +3269,102 @@ function renderReport(){
       </div>
     </div>`;
 }
+/* ---------------- INSIGHTS ----------------
+   The month report answers "how was August". This answers "how are we doing",
+   which only shows up across months. Everything is derived from stats(), so
+   there is one definition of income, spend and saved in the app, not two. */
+const INSIGHT_MONTHS = 6;
+function insightData(){
+  const rows = [];
+  const base = new Date(VIEW.getFullYear(), VIEW.getMonth(), 1);
+  for(let i = INSIGHT_MONTHS - 1; i >= 0; i--){
+    const d = new Date(base.getFullYear(), base.getMonth() - i, 1);
+    const st = stats(d);
+    rows.push({ d, label: fmtMonth(d), income: st.income, expense: st.expense,
+                saved: st.savedM, net: st.income - st.expense });
+  }
+  const live = rows.filter(r => r.income || r.expense || r.saved);
+  const avg = k => live.length ? Math.round(live.reduce((a,r)=>a+r[k],0)/live.length) : 0;
+  const avgIncome = avg('income'), avgSpend = avg('expense'), avgSaved = avg('saved');
+  const best  = live.slice().sort((a,b)=> b.saved - a.saved)[0] || null;
+  const worst = live.slice().sort((a,b)=> b.expense - a.expense)[0] || null;
+  const peak  = Math.max(1, ...rows.map(r => Math.max(r.income, r.expense)));
+  return { rows, live, avgIncome, avgSpend, avgSaved, best, worst, peak,
+           rate: avgIncome ? Math.round((avgSaved / avgIncome) * 100) : 0 };
+}
+function renderInsights(){
+  const box = $('#insBox'); if(!box) return;
+  const d = insightData();
+  if(!d.live.length){
+    box.innerHTML = `<div class="card" style="padding:16px"><div class="sub">${t('insNone')}</div></div>`;
+    return;
+  }
+  const pct = v => Math.max(v > 0 ? 4 : 0, Math.round((v / d.peak) * 100));
+  const months = d.rows.map(r => `
+    <div class="tmonth">
+      <div class="tm-head"><span>${esc(r.label)}</span>
+        <b style="color:var(--${r.net < 0 ? 'out' : 'in'})">${money(r.net)}</b></div>
+      <div class="catbar" style="margin-bottom:5px">
+        <div class="cb-name" style="width:62px">${t('income')}</div>
+        <div class="cb-track"><i style="width:${pct(r.income)}%"></i></div>
+        <div class="cb-amt">${money(r.income)}</div></div>
+      <div class="catbar" style="margin-bottom:0">
+        <div class="cb-name" style="width:62px">${t('insSpent')}</div>
+        <div class="cb-track"><i class="ex" style="width:${pct(r.expense)}%"></i></div>
+        <div class="cb-amt">${money(r.expense)}</div></div>
+    </div>`).join('');
+
+  box.innerHTML = `
+    <div class="card" style="padding:17px">
+      <div style="font-size:14px;font-weight:700;color:var(--muted)">${t('insLast',{n:INSIGHT_MONTHS})}</div>
+      <div style="margin-top:10px">
+        <div class="kv"><span>${t('insAvgIncome')}</span><b>${money(d.avgIncome)}</b></div>
+        <div class="kv"><span>${t('insAvgSpend')}</span><b>${money(d.avgSpend)}</b></div>
+        <div class="kv"><span>${t('insAvgSaved')}</span><b>${money(d.avgSaved)}</b></div>
+        <div class="kv"><span>${t('insRate')}</span><b>${d.rate}%</b></div>
+      </div>
+      <div class="hint">${t('insNote')}</div>
+    </div>
+    <div class="sec"><div class="card" style="padding:16px">${months}</div></div>
+    ${d.best || d.worst ? `<div class="sec"><div class="card" style="padding:16px">
+      ${d.best  ? `<div class="kv"><span>${t('insBest')}</span><b>${esc(d.best.label)} · ${money(d.best.saved)}</b></div>` : ''}
+      ${d.worst ? `<div class="kv"><span>${t('insWorst')}</span><b>${esc(d.worst.label)} · ${money(d.worst.expense)}</b></div>` : ''}
+    </div></div>` : ''}`;
+}
+
+/* ---------------- REFER & EARN ----------------
+   A share sheet, not a rewards scheme: rewards need accounts and a server to
+   verify who invited whom, and this app has neither by design. The link is a
+   config value so it can move without a code change. */
+const APP_URL = 'https://pocketseeds.online';
+function appUrl(){
+  try{ return (CONFIG && CONFIG.appUrl) || APP_URL; }catch(e){ return APP_URL; }
+}
+function inviteText(){ return t('invMsg', {u: appUrl()}); }
+function renderInvite(){
+  const box = $('#invBox'); if(!box) return;
+  box.innerHTML = `
+    <div class="sub">${t('invLead')}</div>
+    <div class="card" style="padding:13px;margin-top:12px;background:var(--surface-2);
+      font-size:15px;line-height:1.5;box-shadow:none">${esc(inviteText())}</div>
+    ${navigator.share ? `<button class="btn btn-p btn-block" id="invShare" style="margin-top:12px">${t('invShare')}</button>` : ''}
+    <button class="btn ${navigator.share ? 'btn-g' : 'btn-p'} btn-block" id="invWa" style="margin-top:8px">${t('invWa')}</button>
+    <button class="btn btn-g btn-block" id="invCopy" style="margin-top:8px">${t('invCopy')}</button>
+    <div class="hint">${t('invWhy')}</div>`;
+
+  const share = $('#invShare');
+  if(share) share.addEventListener('click', () => {
+    navigator.share({ title:'PocketSeeds', text: inviteText() }).catch(()=>{});
+  });
+  $('#invWa').addEventListener('click', () => {
+    window.open('https://wa.me/?text=' + encodeURIComponent(inviteText()), '_blank', 'noopener');
+  });
+  $('#invCopy').addEventListener('click', async () => {
+    try{ await navigator.clipboard.writeText(appUrl()); toast(t('invCopied')); }
+    catch(e){ toast(appUrl()); }
+  });
+}
+
 function reportText(){
   const r = reportData();
   const lines = [
@@ -3380,6 +3512,7 @@ function voiceConfirm(said, p){
     try{
       renderMore(); renderBudget(); renderFamily(); renderCredit(); renderTax();
       renderSearch(); renderReport(); renderEmergency();
+      renderInsights(); renderInvite();
       const st = $('#syncStatus'); if(st) st.textContent = syncStatusText();
       if(typeof renderSaveBar === 'function') renderSaveBar();
       renderReview();
@@ -4066,6 +4199,8 @@ const MENU = [
   { go:'family',                       icon:'people',   t:'mFamily'    },
   { act:'statement',                   icon:'doc',      t:'mStatement' },
   { go:'gold',                         icon:'goldbar',  t:'mGold'      },
+  { go:'insights',                     icon:'trend',    t:'mInsights'  },
+  { go:'invite',                       icon:'gift',     t:'mInvite'    },
   { act:'settings',                    icon:'gear',     t:'mSettings'  }
 ];
 
