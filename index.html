@@ -104,8 +104,13 @@
 .splash.has-art .sp-brand,
 .splash.has-art h2,
 .splash.has-art p,
-.splash.has-art .sp-skip{display:none}
-.splash.has-art .sp-go{box-shadow:0 10px 28px rgba(0,0,0,.45)}
+.splash.has-art .sp-skip,
+.splash.has-art .sp-go{display:none}
+/* The artwork paints its own Get Started button. Drawing a second, real one
+   underneath leaves a control that looks tappable and does nothing, so with
+   artwork the whole screen becomes the target and the painted button is the
+   affordance. */
+.splash.has-art{cursor:pointer}
 @media (max-height:680px){
   .splash h2{font-size:25px} .sp-art{height:50%}
   .sp-1{width:160px;height:140px} .sp-2{width:124px;height:110px} .sp-3{width:118px;height:104px}
@@ -3070,7 +3075,11 @@ function dismissWelcome(){
 document.addEventListener('click', e => {
   /* "Enter now" does exactly that — a splash's job is to get out of the way,
      not to hand the user a form before they have seen the app. */
-  if(e.target.closest('#wcGo') || e.target.closest('#wcSkip')) dismissWelcome();
+  if(e.target.closest('#wcGo') || e.target.closest('#wcSkip')) return dismissWelcome();
+  /* with artwork the painted button is the only one on screen, so any tap on
+     the splash has to work */
+  const sp = e.target.closest('#splash');
+  if(sp && sp.classList.contains('has-art')) dismissWelcome();
 });
 
 /* =========================== AD =========================== */
