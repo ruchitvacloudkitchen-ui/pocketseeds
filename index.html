@@ -65,56 +65,14 @@
 .inc-banner img{display:block;width:100%;height:auto;aspect-ratio:1456/745;object-fit:cover}
 
 /* ---------- first-run splash ----------
-   A full screen, shown once. The three discs are pure CSS: a radial gradient
-   with an off-centre white hotspot is what reads as a glossy 3D object, so
-   there is no image to download and the page stays offline-capable. */
-.splash{position:fixed;inset:0;z-index:90;display:none;flex-direction:column;
-  justify-content:flex-end;padding:0 22px calc(30px + env(safe-area-inset-bottom));
-  background:radial-gradient(120% 70% at 50% 0%, #14261D 0%, #0A150F 46%, #050B08 100%);
-  color:#F2F8F4;overflow:hidden}
-.splash.on{display:flex}
-.sp-art{position:absolute;left:0;right:0;top:0;height:56%;pointer-events:none}
-.sp-blob{position:absolute;border-radius:50%;
-  box-shadow:0 26px 60px rgba(0,0,0,.5), inset 0 -12px 26px rgba(0,0,0,.34)}
-.sp-1{width:196px;height:170px;left:-34px;top:26%;transform:rotate(-16deg);
-  background:radial-gradient(circle at 34% 26%, #FFFFFF 0%, #C9A6F5 16%, #8B5CF6 46%, #4C1D95 84%)}
-.sp-2{width:150px;height:132px;right:8%;top:6%;transform:rotate(14deg);
-  background:radial-gradient(circle at 36% 26%, #FFFFFF 0%, #A7F3D0 16%, #16A34A 48%, #064E2B 86%)}
-.sp-3{width:142px;height:126px;right:-16px;top:46%;transform:rotate(-8deg);
-  background:radial-gradient(circle at 34% 28%, #FFFFFF 0%, #FBD9A8 16%, #F0A93B 46%, #7A4B12 86%)}
-.sp-brand{position:absolute;top:calc(20px + env(safe-area-inset-top));left:22px;
-  display:flex;align-items:center;gap:9px;font-weight:800;font-size:17px;letter-spacing:-.02em}
-/* the mark fills with currentColor, so it must not inherit the splash's
-   near-white or the white S inside it disappears */
-.sp-brand .sp-mk{width:31px;height:31px;display:block;color:#12A05B}
-.sp-brand .sp-mk svg{width:100%;height:100%;display:block}
-.splash h2{position:relative;font-size:29px;line-height:1.2;letter-spacing:-.03em;margin:0 0 10px}
-.splash p{position:relative;font-size:15px;line-height:1.55;color:#A9C3B5;margin:0 0 22px}
-.splash .btn{position:relative;border-radius:14px;padding:15px}
-.sp-go{background:#FFFFFF;color:#0A150F}
-.sp-skip{background:transparent;color:#8FAB9D;margin-top:6px}
-
-/* When splash.jpg is in the repo it carries the whole design — wordmark,
-   headline and tagline are already inside the picture — so the CSS discs and
-   the text on top of them step aside rather than printing everything twice.
-   Without the file the app keeps the drawn version, so a missing upload is
-   never a blank screen. */
-.splash.has-art{background:#04120C url('splash.jpg') center/cover no-repeat}
-.splash.has-art .sp-art,
-.splash.has-art .sp-brand,
-.splash.has-art h2,
-.splash.has-art p,
-.splash.has-art .sp-skip,
-.splash.has-art .sp-go{display:none}
-/* The artwork paints its own Get Started button. Drawing a second, real one
-   underneath leaves a control that looks tappable and does nothing, so with
-   artwork the whole screen becomes the target and the painted button is the
-   affordance. */
-.splash.has-art{cursor:pointer}
-@media (max-height:680px){
-  .splash h2{font-size:25px} .sp-art{height:50%}
-  .sp-1{width:160px;height:140px} .sp-2{width:124px;height:110px} .sp-3{width:118px;height:104px}
-}
+   Nothing is drawn here any more: the splash is splash.jpg and only that. The
+   artwork carries its own wordmark, headline and Get Started button, so
+   anything painted on top of it was either a duplicate control or a second
+   design competing with the first. No file, no splash — never a half-drawn
+   stand-in. */
+.splash{position:fixed;inset:0;z-index:90;display:none;cursor:pointer;
+  background:#04120C url('splash.jpg') center/cover no-repeat}
+.splash.on{display:block}
 
 /* ---------- reels ---------- */
 /* ---------- saving coach ----------
@@ -1145,20 +1103,7 @@ table.sip tbody tr:last-child td{font-size:15px}
   </div>
 </nav>
 
-<div class="splash" id="splash">
-  <div class="sp-art" aria-hidden="true">
-    <span class="sp-blob sp-1"></span>
-    <span class="sp-blob sp-2"></span>
-    <span class="sp-blob sp-3"></span>
-  </div>
-  <div class="sp-brand" aria-hidden="true">
-    <span class="sp-mk" id="spMark"></span><span>PocketSeeds</span>
-  </div>
-  <h2 id="wcTitle">Welcome to PocketSeeds</h2>
-  <p id="wcSub"></p>
-  <button class="btn btn-block sp-go" id="wcGo">Get started</button>
-  <button class="btn btn-block sp-skip" id="wcSkip">Later</button>
-</div>
+<div class="splash" id="splash" role="button" tabindex="0" aria-label="PocketSeeds"></div>
 
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
@@ -1349,9 +1294,6 @@ const STR = {
     mGift:'Gift book', mSavings:'Savings', mBudget:'Budget', mFamily:'Family',
     mCredit:'Credit', mTax:'Tax', mStatement:'Statement', mSearch:'Search', mSettings:'Settings',
     mGold:'Gold', mInsights:'Insights', mInvite:'Invite',
-    wcTitle:'Welcome to PocketSeeds',
-    wcSub:'Income, expenses and the money Telugu homes actually deal with — vaddi loans, chits, the moyi book. Everything stays on this phone.',
-    wcGo:'Enter now', wcSkip:'Later',
     scTitle:'Saving coach', scSetAside:'Set aside this month', scOfIncome:'30% of {a} income',
     scEmergency:'Emergency fund', scHealth:'Health cover', scGold:'Gold',
     scEach:'10% each',
@@ -1624,9 +1566,6 @@ const STR = {
     mGift:'మొయి పుస్తకం', mSavings:'పొదుపు', mBudget:'బడ్జెట్', mFamily:'కుటుంబం',
     mCredit:'క్రెడిట్', mTax:'పన్ను', mStatement:'స్టేట్‌మెంట్', mSearch:'వెతుకు', mSettings:'సెట్టింగ్‌లు',
     mGold:'బంగారం', mInsights:'విశ్లేషణ', mInvite:'ఆహ్వానం',
-    wcTitle:'PocketSeedsకి స్వాగతం',
-    wcSub:'ఆదాయం, ఖర్చులు — వడ్డీ అప్పులు, చిట్టీలు, మొయి పుస్తకం వరకు. అన్నీ ఈ ఫోన్‌లోనే ఉంటాయి.',
-    wcGo:'ఇప్పుడే ప్రవేశించండి', wcSkip:'తర్వాత',
     scTitle:'పొదుపు కోచ్', scSetAside:'ఈ నెల పక్కన పెట్టాల్సింది', scOfIncome:'{a} ఆదాయంలో 30%',
     scEmergency:'అత్యవసర నిధి', scHealth:'ఆరోగ్య బీమా', scGold:'బంగారం',
     scEach:'ఒక్కొక్కటి 10%',
@@ -2949,13 +2888,14 @@ function startVoice(){
   try{ REC.start(); }catch(e){ toast(t('voiceFail')); }
 }
 
-/* A CSS background fires no load event, so the artwork is probed with an
-   Image() and the class is only added once it has really decoded. */
+/* A CSS background fires no load event, so the artwork is probed separately.
+   The splash only appears once that image has really decoded — an empty dark
+   rectangle while it loads would be worse than showing nothing at all. */
 const SPLASH_ART = 'splash.jpg';
+let SPLASH_READY = false;
 (function(){
-  const box = document.getElementById('splash'); if(!box) return;
   const im = new Image();
-  im.addEventListener('load', () => box.classList.add('has-art'), {once:true});
+  im.addEventListener('load', () => { SPLASH_READY = true; renderWelcome(); }, {once:true});
   im.src = SPLASH_ART;
 })();
 
@@ -3054,32 +2994,28 @@ function renderReels(){
 const WELCOME_KEY = 'pocketseeds.welcomeSeen';
 function renderWelcome(){
   const box = $('#splash'); if(!box) return;
-  const done = localStorage.getItem(WELCOME_KEY) === '1';
+  const done  = localStorage.getItem(WELCOME_KEY) === '1';
   const fresh = !DB.tx.length && !DB.sources.length;
-  box.classList.toggle('on', !done && fresh);
+  const show  = SPLASH_READY && !done && fresh;
+  box.classList.toggle('on', show);
   /* a full-screen overlay must not leave the page behind it scrollable */
-  document.body.style.overflow = box.classList.contains('on') ? 'hidden' : '';
-  if(!box.classList.contains('on')) return;
-
-  $('#wcTitle').textContent = t('wcTitle');
-  $('#wcSub').textContent   = t('wcSub');
-  $('#wcGo').textContent    = t('wcGo');
-  $('#wcSkip').textContent  = t('wcSkip');
-  const mk = $('#spMark'); if(mk) mk.innerHTML = MARK_SVG || '';
+  document.body.style.overflow = show ? 'hidden' : '';
 }
 function dismissWelcome(){
   try{ localStorage.setItem(WELCOME_KEY, '1'); }catch(e){}
   const box = $('#splash'); if(box) box.classList.remove('on');
   document.body.style.overflow = '';
 }
+/* The only control is the one painted into the artwork, so the whole screen
+   is the target — and a keyboard has to be able to reach it too. */
 document.addEventListener('click', e => {
-  /* "Enter now" does exactly that — a splash's job is to get out of the way,
-     not to hand the user a form before they have seen the app. */
-  if(e.target.closest('#wcGo') || e.target.closest('#wcSkip')) return dismissWelcome();
-  /* with artwork the painted button is the only one on screen, so any tap on
-     the splash has to work */
-  const sp = e.target.closest('#splash');
-  if(sp && sp.classList.contains('has-art')) dismissWelcome();
+  if(e.target.closest('#splash')) dismissWelcome();
+});
+document.addEventListener('keydown', e => {
+  if((e.key === 'Enter' || e.key === ' ') &&
+     document.activeElement && document.activeElement.id === 'splash'){
+    e.preventDefault(); dismissWelcome();
+  }
 });
 
 /* =========================== AD =========================== */
