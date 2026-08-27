@@ -77,6 +77,42 @@
 .welcome .btn:last-child{margin-bottom:0}
 @media (max-width:359px){.wc-card{width:186px;margin-left:-93px}}
 
+/* ---------- reels ---------- */
+/* ---------- saving coach ---------- */
+.sc-top{border-radius:20px;padding:17px 18px;color:#20180A;position:relative;overflow:hidden;
+  background:linear-gradient(140deg,#FFD979 0%,#F5C255 55%,#EBAE33 100%);
+  box-shadow:0 8px 24px rgba(214,158,40,.24)}
+.sc-top .sc-k{font-size:13.5px;font-weight:700;opacity:.72}
+.sc-top .sc-amt{font-size:31px;font-weight:800;letter-spacing:-.02em;margin:2px 0 1px}
+.sc-top .sc-of{font-size:14px;font-weight:600;opacity:.78}
+.sc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
+.sc-cell{border-radius:16px;padding:13px 11px;background:var(--surface);border:1px solid var(--line);
+  box-shadow:var(--shadow);text-align:center;min-width:0}
+.sc-cell .sc-ic{width:34px;height:34px;border-radius:50%;background:var(--in-bg);color:var(--brand);
+  display:grid;place-items:center;margin:0 auto 7px}
+.sc-cell .sc-ic .i{width:17px;height:17px}
+.sc-cell b{display:block;font-size:15px;font-weight:800;letter-spacing:-.01em}
+.sc-cell span{display:block;font-size:11.5px;font-weight:600;color:var(--muted);line-height:1.25;margin-top:3px}
+.sc-note{margin-top:10px;border-radius:14px;padding:11px 13px;font-size:14px;line-height:1.45}
+.sc-ok{background:var(--in-bg);color:var(--in)}
+.sc-short{background:var(--warn-bg);color:var(--warn)}
+
+.reels{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.reel{position:relative;aspect-ratio:9/16;border-radius:18px;overflow:hidden;display:flex;
+  flex-direction:column;justify-content:flex-end;padding:13px;text-decoration:none;
+  border:1px solid var(--line);box-shadow:var(--shadow);color:#fff}
+.reel-a{background:linear-gradient(160deg,#065F38 0%,#0B7A43 55%,#16A34A 100%)}
+.reel-b{background:linear-gradient(160deg,#7A4B12 0%,#B5761F 52%,#E8A33A 100%)}
+.reel::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(80% 55% at 78% 12%, rgba(255,255,255,.22), rgba(255,255,255,0) 60%)}
+.reel > *{position:relative}
+.reel .r-play{position:absolute;top:13px;left:13px;width:32px;height:32px;border-radius:50%;
+  display:grid;place-items:center;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.32)}
+.reel .r-play svg{width:15px;height:15px}
+.reel h4{font-size:15px;font-weight:800;line-height:1.3;letter-spacing:-.01em;margin:0}
+.reel p{font-size:12.5px;line-height:1.35;opacity:.85;margin:5px 0 0}
+.reel[aria-disabled="true"]{opacity:.72}
+
 .policy-row{text-align:center;padding-top:2px}
 .policy-row a{display:inline-block;color:var(--muted);font-size:14px;font-weight:600;
   text-decoration:none;line-height:1.35;padding:8px 14px}
@@ -605,7 +641,12 @@ table.sip tbody tr:last-child td{font-size:15px}
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="quickAdd">Quick add</h3></div>
       <div class="grid3" id="quickTiles"></div>
-      <div class="hint" data-i18n="quickAddHint">Tap once for the things you buy every day.</div>
+      <div class="hint" data-i18n="quickAddHint">Tap a category and enter the amount.</div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><h3 data-i18n="scTitle">Saving coach</h3></div>
+      <div id="scBox"></div>
     </div>
 
     <div id="monthBanner"></div>
@@ -614,14 +655,6 @@ table.sip tbody tr:last-child td{font-size:15px}
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="sipTitle">SIP &amp; mutual funds</h3></div>
       <div class="card" style="padding:15px" id="sipBox"></div>
-    </div>
-
-    <div class="sec">
-      <div class="sec-head">
-        <h3 data-i18n="recentActivity">Recent activity</h3>
-        <button class="link" data-go="expense" data-i18n="seeAll">See all →</button>
-      </div>
-      <div class="list" id="recentList"></div>
     </div>
 
     <div class="sec">
@@ -699,6 +732,11 @@ table.sip tbody tr:last-child td{font-size:15px}
       <div class="t-lbl"><i class="dot d-out"></i><span data-i18n="expenseThisMonth">Expenditure this month</span></div>
       <div class="t-amt" style="font-size:33.5px" id="eTotal">₹0</div>
       <div class="hint" id="eUpiNote"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><h3 data-i18n="recentActivity">Recent activity</h3></div>
+      <div class="list" id="recentList"></div>
     </div>
 
     <div class="sec">
@@ -886,6 +924,11 @@ table.sip tbody tr:last-child td{font-size:15px}
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="menuTitle">Everything else</h3></div>
       <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><h3 data-i18n="reelsTitle">Worth two minutes</h3></div>
+      <div class="reels" id="reelBox"></div>
     </div>
 
     <div class="sec">
@@ -1083,7 +1126,7 @@ const STR = {
   en: {
     currentBalance:'Current Balance', safeToSpend:'Safe to spend', perDay:'Per day',
     income:'Income', expenditure:'Expenditure', savingsCoach:'Savings coach',
-    quickAdd:'Quick add', quickAddHint:'Tap once for the things you buy every day.',
+    quickAdd:'Quick add', quickAddHint:'Tap a category and enter the amount.',
     recentActivity:'Recent activity', seeAll:'See all →', whereMoneyWent:'Where the money went',
     incomeThisMonth:'Income this month', autoIncome:'Auto monthly income (1st–7th)', add:'+ Add',
     autoIncomeHint:'Salary and fixed income are credited automatically on your chosen day between the 1st and 7th.',
@@ -1260,6 +1303,16 @@ const STR = {
     wcTitle:'Welcome to PocketSeeds',
     wcSub:'Income, expenses and the money Telugu homes actually deal with — vaddi loans, chits, the moyi book. Everything stays on this phone.',
     wcGo:'Get started', wcSkip:'Later',
+    scTitle:'Saving coach', scSetAside:'Set aside this month', scOfIncome:'30% of {a} income',
+    scEmergency:'Emergency fund', scHealth:'Health cover', scGold:'Gold',
+    scEach:'10% each',
+    scOk:'Your balance covers all three. Move the money before it gets spent.',
+    scShort:'You are {a} short of the full 30%. Start with the emergency fund — it is the one that stops a bad month turning into a loan.',
+    scNoIncome:'Add this month\u2019s income and the coach works out what to set aside.',
+    reelsTitle:'Worth two minutes',
+    reelSoon:'Coming soon',
+    reel1t:'How vaddi actually adds up', reel1s:'Rupees per hundred, per month — what it costs over a year.',
+    reel2t:'Chits: the real cost', reel2s:'What you get, what you pay, and when it is worth it.',
     wcTags:['Vaddi','Chits','Moyi'],
     insTitle:'Insights', insLast:'Last {n} months', insNone:'Add a few months of entries and the trend shows up here.',
     insAvgIncome:'Average income', insAvgSpend:'Average spend', insAvgSaved:'Average saved',
@@ -1355,7 +1408,7 @@ const STR = {
   te: {
     currentBalance:'ప్రస్తుత నిల్వ', safeToSpend:'ఖర్చుకు సురక్షితం', perDay:'రోజుకు',
     income:'ఆదాయం', expenditure:'ఖర్చు', savingsCoach:'పొదుపు సలహా',
-    quickAdd:'త్వరిత ఖర్చు', quickAddHint:'రోజూ కొనే వాటికి ఒక్క నొక్కు చాలు.',
+    quickAdd:'త్వరిత ఖర్చు', quickAddHint:'కేటగిరీ నొక్కి మొత్తం టైప్ చేయండి.',
     recentActivity:'ఇటీవలి లావాదేవీలు', seeAll:'అన్నీ చూడు →', whereMoneyWent:'డబ్బు ఎక్కడికి పోయింది',
     incomeThisMonth:'ఈ నెల ఆదాయం', autoIncome:'ఆటో నెలవారీ ఆదాయం (1–7 తేదీ)', add:'+ చేర్చు',
     autoIncomeHint:'జీతం, స్థిర ఆదాయం మీరు ఎంచుకున్న 1–7 తేదీన దానంతట అదే జమ అవుతుంది.',
@@ -1525,6 +1578,16 @@ const STR = {
     wcTitle:'PocketSeedsకి స్వాగతం',
     wcSub:'ఆదాయం, ఖర్చులు — వడ్డీ అప్పులు, చిట్టీలు, మొయి పుస్తకం వరకు. అన్నీ ఈ ఫోన్‌లోనే ఉంటాయి.',
     wcGo:'మొదలుపెట్టు', wcSkip:'తర్వాత',
+    scTitle:'పొదుపు కోచ్', scSetAside:'ఈ నెల పక్కన పెట్టాల్సింది', scOfIncome:'{a} ఆదాయంలో 30%',
+    scEmergency:'అత్యవసర నిధి', scHealth:'ఆరోగ్య బీమా', scGold:'బంగారం',
+    scEach:'ఒక్కొక్కటి 10%',
+    scOk:'మూడింటికీ మీ నిల్వ సరిపోతుంది. ఖర్చైపోకముందే పక్కన పెట్టండి.',
+    scShort:'పూర్తి 30% కి {a} తక్కువ. ముందు అత్యవసర నిధితో మొదలుపెట్టండి — కష్ట కాలంలో అప్పు తప్పించేది అదే.',
+    scNoIncome:'ఈ నెల ఆదాయం చేర్చండి, ఎంత పక్కన పెట్టాలో కోచ్ చెబుతుంది.',
+    reelsTitle:'రెండు నిమిషాలు చాలు',
+    reelSoon:'త్వరలో',
+    reel1t:'వడ్డీ ఎలా పెరుగుతుంది', reel1s:'వందకు ఇంత, నెలకు — ఏడాదికి ఎంత అవుతుందో.',
+    reel2t:'చిట్టీలు — నిజమైన ఖర్చు', reel2s:'ఎంత వస్తుంది, ఎంత కడతారు, ఎప్పుడు లాభం.',
     wcTags:['వడ్డీ','చిట్టీలు','మొయి'],
     insTitle:'విశ్లేషణ', insLast:'గత {n} నెలలు', insNone:'కొన్ని నెలల వివరాలు చేర్చిన తర్వాత ఇక్కడ తీరు కనిపిస్తుంది.',
     insAvgIncome:'సగటు ఆదాయం', insAvgSpend:'సగటు ఖర్చు', insAvgSaved:'సగటు పొదుపు',
@@ -1933,6 +1996,7 @@ const CATS = [
   {k:'Vaddi',     te:'వడ్డీ',          en:'Interest',    ic:'trend'},
   {k:'Chit',      te:'చిట్టీ',         en:'Chit',        ic:'refresh'},
   {k:'Cash',      te:'నగదు తీత',      en:'Cash withdrawal', ic:'atm'},
+  {k:'Outing',    te:'వీకెండ్ పార్టీ', en:'Weekend party', ic:'party'},
   {k:'Other',     te:'ఇతరం',         en:'Other',       ic:'dot'}
 ];
 const catLabel = k => { const c = CATS.find(c=>c.k===k); return c ? (LANG==='te'?c.te:c.en) : k; };
@@ -1972,13 +2036,20 @@ function guessCategory(s){
 }
 
 /* quick-add tiles: the six things bought every single day */
+/* These are the big monthly items, so no default amount is offered — rent and
+   a school fee vary far too much for a preset to be anything but a wrong
+   number waiting to be saved by accident. Tapping opens the sheet with the
+   category already chosen. */
 const QUICK = [
-  {cat:'Milk',      te:'పాలు',      en:'Milk',    ic:'glass', amt:30},
-  {cat:'Vegetables',te:'కూరగాయలు', en:'Veg',     ic:'leafy', amt:100},
-  {cat:'Food',      te:'టీ/టిఫిన్', en:'Tea',     ic:'food', amt:20},
-  {cat:'Travel',    te:'ప్రయాణం',   en:'Travel',  ic:'bus', amt:50},
-  {cat:'Fuel',      te:'పెట్రోల్',   en:'Petrol',  ic:'fuel', amt:200},
-  {cat:'Recharge',  te:'రీఛార్జ్',   en:'Recharge',ic:'phone', amt:239}
+  {cat:'Rent',      te:'అద్దె',           en:'Rent',          ic:'house',   amt:0},
+  {cat:'Bills',     te:'కరెంట్ బిల్లు',    en:'Electricity',   ic:'bulb',    amt:0},
+  {cat:'Chit',      te:'చిట్టీ',           en:'Chits',         ic:'refresh', amt:0},
+  {cat:'EMI',       te:'లోన్ EMI',        en:'Loan EMI',      ic:'bank',    amt:0},
+  {cat:'Health',    te:'ఆరోగ్యం',         en:'Health',        ic:'pill',    amt:0},
+  {cat:'Education', te:'స్కూల్ ఫీజు',     en:'School fee',    ic:'book',    amt:0},
+  {cat:'Groceries', te:'కిరాణం',          en:'Kiranam',       ic:'basket',  amt:0},
+  {cat:'Outing',    te:'వీకెండ్ పార్టీ',   en:'Weekend party', ic:'party',   amt:0},
+  {cat:'Other',     te:'ఇతర ఖర్చులు',     en:'Other',         ic:'dot',     amt:0}
 ];
 </script>
 
@@ -2066,7 +2137,7 @@ const emptyBox = (icon,msg) => `<div class="empty"><span class="e-ic">${ic(icon,
 function renderAll(){
   applyLang(); paintIcons();
   $('#mLabel').textContent = fmtMonth(VIEW);
-  renderWelcome();
+  renderWelcome(); renderSavingCoach(); renderReels();
   renderHome(); renderIncome(); renderExpense(); renderLoans(); renderSave();
 }
 
@@ -2093,11 +2164,11 @@ function renderHome(){
     <button class="card" data-quick="${i}" style="padding:11px 8px;text-align:center;cursor:pointer;border:1px solid var(--line);font-family:inherit">
       <div style="color:var(--brand)">${ic(q.ic,'i-lg')}</div>
       <div style="font-size:13.5px;font-weight:700;margin-top:3px">${LANG==='te'?q.te:q.en}</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:1px">₹${q.amt}</div>
+      ${q.amt ? `<div style="font-size:13px;color:var(--muted);margin-top:1px">₹${q.amt}</div>` : ''}
     </button>`).join('');
 
   const k = mKey(VIEW);
-  const rows = [...inMonth(DB.tx,k)].sort((a,b)=>(b.date+b.id).localeCompare(a.date+a.id)).slice(0,6);
+  const rows = [...inMonth(DB.tx,k)].sort((a,b)=>(b.date+b.id).localeCompare(a.date+a.id)).slice(0,12);
   $('#recentList').innerHTML = rows.length ? rows.map(txRow).join('') : emptyBox('receipt', t('emptyTx',{m:fmtMonth(VIEW)}));
 
   const exp = inMonth(DB.tx.filter(x=>x.type==='expense'), k);
@@ -2820,6 +2891,76 @@ function startVoice(){
     sheetTx('expense', null, { amount:p.amount||'', note:p.note, category:p.category });
   };
   try{ REC.start(); }catch(e){ toast(t('voiceFail')); }
+}
+
+/* =========================== SAVING COACH ===========================
+   Thirty per cent of the month's income, split three ways. The order is
+   deliberate: an emergency fund first, because the whole point of it is to
+   stop one bad month turning into a vaddi loan; health cover second; gold
+   last, because it is the one that can wait. */
+const SC_PARTS = [
+  { key:'scEmergency', icon:'piggy' },
+  { key:'scHealth',    icon:'pill'  },
+  { key:'scGold',      icon:'goldbar' }
+];
+const SC_SHARE = 0.10;                       // each bucket
+function coachPlan(){
+  const st = stats();
+  const each  = Math.round(st.income * SC_SHARE);
+  const total = each * SC_PARTS.length;
+  return { income: st.income, balance: st.balance, each, total,
+           short: Math.max(0, total - st.balance) };
+}
+function renderSavingCoach(){
+  const box = $('#scBox'); if(!box) return;
+  const c = coachPlan();
+  if(!c.income){
+    box.innerHTML = `<div class="card" style="padding:16px"><div class="sub">${t('scNoIncome')}</div></div>`;
+    return;
+  }
+  const cells = SC_PARTS.map(part => `
+    <div class="sc-cell">
+      <span class="sc-ic">${ic(part.icon)}</span>
+      <b>${money(c.each)}</b>
+      <span>${t(part.key)}</span>
+    </div>`).join('');
+  box.innerHTML = `
+    <div class="sc-top">
+      <div class="sc-k">${t('scSetAside')}</div>
+      <div class="sc-amt">${money(c.total)}</div>
+      <div class="sc-of">${t('scOfIncome',{a:money(c.income)})} · ${t('scEach')}</div>
+    </div>
+    <div class="sc-grid">${cells}</div>
+    <div class="sc-note ${c.short ? 'sc-short' : 'sc-ok'}">
+      ${c.short ? t('scShort',{a:money(c.short)}) : t('scOk')}</div>`;
+}
+
+/* =========================== REELS ===========================
+   Two vertical cards on the More tab. The links are config values so they can
+   be pointed at real videos without a code change; until then the cards are
+   inert rather than links to nowhere. */
+const REELS = [
+  { cls:'reel-a', t:'reel1t', s:'reel1s' },
+  { cls:'reel-b', t:'reel2t', s:'reel2s' }
+];
+function reelLinks(){
+  try{ return (CONFIG && Array.isArray(CONFIG.reels)) ? CONFIG.reels : []; }
+  catch(e){ return []; }
+}
+function renderReels(){
+  const box = $('#reelBox'); if(!box) return;
+  const urls = reelLinks();
+  box.innerHTML = REELS.map((r,i) => {
+    const url = urls[i] && urls[i].url;
+    const title = (urls[i] && urls[i].title) || t(r.t);
+    const sub   = (urls[i] && urls[i].text)  || t(r.s);
+    const inner = `<span class="r-play">${ic('up')}</span>
+      <h4>${esc(title)}</h4><p>${esc(sub)}</p>`;
+    return url
+      ? `<a class="reel ${r.cls}" href="${esc(url)}" target="_blank" rel="noopener">${inner}</a>`
+      : `<div class="reel ${r.cls}" aria-disabled="true"><span class="r-play">${ic('up')}</span>
+          <h4>${esc(title)}</h4><p>${esc(t('reelSoon'))}</p></div>`;
+  }).join('');
 }
 
 /* =========================== WELCOME ===========================
@@ -4302,13 +4443,8 @@ function renderFunds(){
 const MENU = [
   { go:'loans',    focus:'remindList', icon:'bell',     t:'mReminders' },
   { go:'reports',                      icon:'chart',    t:'mTracker'   },
-  { go:'loans',    focus:'chitList',   icon:'refresh',  t:'mChits'     },
-  { go:'loans',    focus:'loanList',   icon:'handshake',t:'mVaddi'     },
-  { go:'budget',                       icon:'coin',     t:'mBudget'    },
   { go:'family',                       icon:'people',   t:'mFamily'    },
   { act:'statement',                   icon:'doc',      t:'mStatement' },
-  { go:'gold',                         icon:'goldbar',  t:'mGold'      },
-  { go:'insights',                     icon:'trend',    t:'mInsights'  },
   { go:'invite',                       icon:'gift',     t:'mInvite'    },
   { act:'settings',                    icon:'gear',     t:'mSettings'  }
 ];
