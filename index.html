@@ -14,8 +14,13 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#F5F7F6; --surface:#FFFFFF; --surface-2:#F2F6F3;
-  --ink:#0E1B14; --muted:#6B7A72; --line:#E4EBE6;
+  --bg:#EDF5F0; --surface:rgba(255,255,255,.74); --surface-2:rgba(11,122,67,.055);
+  --solid:#FFFFFF; --chrome:rgba(237,245,240,.78); --glass-hi:rgba(255,255,255,.85);
+  --bg-layer:radial-gradient(125% 85% at 8% -12%, #A9DCC0 0%, rgba(169,220,192,0) 58%),
+             radial-gradient(110% 75% at 100% 2%, #C9E9A6 0%, rgba(201,233,166,0) 52%),
+             radial-gradient(90% 60% at 50% 108%, #BFE3CE 0%, rgba(191,227,206,0) 60%),
+             linear-gradient(180deg,#E9F3ED 0%,#DFEDE4 100%);
+  --ink:#0E1B14; --muted:#61756B; --line:rgba(11,122,67,.14);
   --brand:#0B7A43; --brand-2:#16A34A; --amber:#F0A93B; --amber-2:#E89425;
   --in:#0B7A43; --in-bg:#E6F4EC;
   --out:#DC2626; --out-bg:#FDECEC;
@@ -28,20 +33,40 @@
 /* Dark tokens live in one place and are applied three ways: the system
    preference, and either explicit choice from the theme switch. */
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--bg:#0A120E;--surface:#121D17;--surface-2:#0E1712;--ink:#E7F0EA;--muted:#8FA398;--line:#1F2E26;
-  --in:#34D399;--in-bg:#0C2A1D;--out:#F87171;--out-bg:#2E1416;--warn-bg:#2E2410;--save:#34D399;--save-bg:#0C2A1D;
-  --plum:#C4B5FD;--plum-bg:#221A3A;--shadow:0 2px 12px rgba(0,0,0,.45)}
+  :root:not([data-theme="light"]){--bg:#04120C;--surface:rgba(255,255,255,.062);--surface-2:rgba(255,255,255,.035);
+  --solid:#0C1F16;--chrome:rgba(4,18,12,.72);--glass-hi:rgba(255,255,255,.14);
+  --bg-layer:radial-gradient(125% 85% at 6% -14%, #1B7A4E 0%, rgba(27,122,78,0) 60%),
+             radial-gradient(105% 70% at 100% 0%, #0E8A54 0%, rgba(14,138,84,0) 52%),
+             radial-gradient(95% 62% at 50% 110%, #0B4F33 0%, rgba(11,79,51,0) 62%),
+             linear-gradient(180deg,#06180F 0%,#04120C 55%,#03100A 100%);
+  --ink:#E9F3EC;--muted:#93AC9E;--line:rgba(255,255,255,.11);
+  --in:#5BE49B;--in-bg:rgba(52,211,153,.14);--out:#FF8A8A;--out-bg:rgba(248,113,113,.14);
+  --warn:#FCD34D;--warn-bg:rgba(252,211,77,.13);--save:#5BE49B;--save-bg:rgba(52,211,153,.14);
+  --plum:#C4B5FD;--plum-bg:rgba(196,181,253,.14);--shadow:0 2px 16px rgba(0,0,0,.5)}
 }
-:root[data-theme="dark"]{--bg:#0A120E;--surface:#121D17;--surface-2:#0E1712;--ink:#E7F0EA;--muted:#8FA398;--line:#1F2E26;
-  --in:#34D399;--in-bg:#0C2A1D;--out:#F87171;--out-bg:#2E1416;--warn-bg:#2E2410;--save:#34D399;--save-bg:#0C2A1D;
-  --plum:#C4B5FD;--plum-bg:#221A3A;--shadow:0 2px 12px rgba(0,0,0,.45)}
+:root[data-theme="dark"]{--bg:#04120C;--surface:rgba(255,255,255,.062);--surface-2:rgba(255,255,255,.035);
+  --solid:#0C1F16;--chrome:rgba(4,18,12,.72);--glass-hi:rgba(255,255,255,.14);
+  --bg-layer:radial-gradient(125% 85% at 6% -14%, #1B7A4E 0%, rgba(27,122,78,0) 60%),
+             radial-gradient(105% 70% at 100% 0%, #0E8A54 0%, rgba(14,138,84,0) 52%),
+             radial-gradient(95% 62% at 50% 110%, #0B4F33 0%, rgba(11,79,51,0) 62%),
+             linear-gradient(180deg,#06180F 0%,#04120C 55%,#03100A 100%);
+  --ink:#E9F3EC;--muted:#93AC9E;--line:rgba(255,255,255,.11);
+  --in:#5BE49B;--in-bg:rgba(52,211,153,.14);--out:#FF8A8A;--out-bg:rgba(248,113,113,.14);
+  --warn:#FCD34D;--warn-bg:rgba(252,211,77,.13);--save:#5BE49B;--save-bg:rgba(52,211,153,.14);
+  --plum:#C4B5FD;--plum-bg:rgba(196,181,253,.14);--shadow:0 2px 16px rgba(0,0,0,.5)}
 }
 .policy-row{text-align:center;padding-top:2px}
 .policy-row a{display:inline-block;color:var(--muted);font-size:14px;font-weight:600;
   text-decoration:none;line-height:1.35;padding:8px 14px}
 .policy-row a span{display:block}
 .policy-row a:active{opacity:.6}
-html,body{background:var(--bg)}
+/* One fixed layer carries the gradient wash. A scrolling background would band
+   on long pages and background-attachment:fixed misbehaves on iOS, so it is a
+   fixed pseudo-element instead. body itself must stay transparent or it paints
+   over that layer. */
+html{background:var(--bg)}
+body{background:transparent}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:var(--bg-layer);pointer-events:none}
 body{font-family:'Plus Jakarta Sans','Noto Sans Telugu',system-ui,-apple-system,sans-serif;color:var(--ink);
   -webkit-font-smoothing:antialiased;padding-bottom:92px}
 html[lang="te"] body{font-family:'Noto Sans Telugu','Plus Jakarta Sans',system-ui,sans-serif;line-height:1.45}
@@ -49,7 +74,8 @@ html[lang="te"] .balance-amt,html[lang="te"] .t-amt,html[lang="te"] .amt,html[la
   font-family:'Plus Jakarta Sans',sans-serif}
 .app{max-width:520px;margin:0 auto;padding:0 14px}
 /* ---------- header ---------- */
-.top{position:sticky;top:0;z-index:40;background:var(--bg);padding:12px 0 8px}
+.top{position:sticky;top:0;z-index:40;background:var(--chrome);padding:12px 0 8px;
+  backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4)}
 .top-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;letter-spacing:-.02em}
 .logo{width:33px;height:33px;display:grid;place-items:center;flex:0 0 auto;color:#0A8A66}
@@ -64,10 +90,16 @@ html[lang="te"] .balance-amt,html[lang="te"] .t-amt,html[lang="te"] .amt,html[la
   color:var(--ink);font-size:17.5px;cursor:pointer;box-shadow:var(--shadow);flex:0 0 auto}
 .lang-btn{width:auto;padding:0 11px;font-weight:800;font-size:15px;font-family:'Noto Sans Telugu',sans-serif}
 /* ---------- cards ---------- */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+  position:relative;overflow:hidden}
+/* the hairline highlight is what sells glass; blur is reserved for the few
+   fixed elements, since backdrop-filter on every card is slow on budget phones */
+.card::after{content:'';position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
 .balance-card{min-height:var(--card-h);padding:18px;color:#fff;border:0;position:relative;overflow:hidden;
   display:flex;flex-direction:column;justify-content:space-between;
-  background:linear-gradient(140deg,#0B7A43 0%,#12924F 58%,#16A34A 100%)}
+  background:linear-gradient(140deg,#065F38 0%,#0B7A43 46%,#16A34A 100%);
+  box-shadow:0 10px 30px rgba(6,95,56,.28), inset 0 1px 0 rgba(255,255,255,.22)}
 .balance-card::after{content:"";position:absolute;right:-38px;top:-52px;width:170px;height:170px;border-radius:50%;
   background:rgba(255,255,255,.10)}
 .balance-card .lbl{font-size:13.5px;text-transform:uppercase;letter-spacing:.09em;opacity:.85;font-weight:700;position:relative;z-index:1}
@@ -173,7 +205,8 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
 .hint{font-size:13.5px;color:var(--muted);line-height:1.5;margin-top:6px}
 /* ---------- nav ---------- */
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-top:1px solid var(--line);
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--chrome);border-top:1px solid var(--line);
+  backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
   padding:7px 0 max(7px,env(safe-area-inset-bottom))}
 .nav-in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
 .nav button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0;
@@ -183,7 +216,7 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .fab{position:fixed;right:calc(50% - 260px + 16px);bottom:88px;z-index:45;width:56px;height:56px;border-radius:50%;
   border:0;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;font-size:29px;cursor:pointer;
   box-shadow:0 8px 22px rgba(11,122,67,.4)}
-.fab.mic{bottom:152px;width:48px;height:48px;font-size:22.5px;background:var(--surface);color:var(--brand);
+.fab.mic{bottom:152px;width:48px;height:48px;font-size:22.5px;background:var(--solid);color:var(--brand);
   border:1px solid var(--line);box-shadow:var(--shadow)}
 .fab.mic.live{background:var(--out);color:#fff;border-color:transparent;animation:pulse 1.1s infinite}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
@@ -193,7 +226,8 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 /* ---------- sheet ---------- */
 .scrim{position:fixed;inset:0;background:rgba(14,27,20,.5);z-index:60;display:none;backdrop-filter:blur(2px)}
 .scrim.on{display:block}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;background:var(--surface);border-radius:22px 22px 0 0;
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;background:var(--solid);border-radius:22px 22px 0 0;
+  border-top:1px solid var(--glass-hi);
   max-width:520px;margin:0 auto;max-height:92vh;overflow-y:auto;transform:translateY(100%);transition:transform .26s ease;
   padding:8px 16px calc(22px + env(safe-area-inset-bottom))}
 .sheet.on{transform:none}
@@ -206,7 +240,7 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
   font-family:inherit;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
 .toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,20px);z-index:80;background:var(--ink);
-  color:var(--bg);padding:11px 17px;border-radius:12px;font-size:15.5px;font-weight:600;opacity:0;pointer-events:none;
+  color:var(--solid);padding:11px 17px;border-radius:12px;font-size:15.5px;font-weight:600;opacity:0;pointer-events:none;
   transition:.25s;max-width:88vw;text-align:center;line-height:1.4}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .banner{display:flex;gap:10px;align-items:flex-start;padding:12px 13px;border-radius:14px;background:var(--warn-bg);
@@ -226,8 +260,10 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 @media print{
   .nav,.fab,.top,.sheet,.scrim,.toast,.ad-wrap,.sec-head .link,#btnPdf,#btnWa,[data-go]{display:none !important}
   body{padding:0;background:#fff}
+  body::before{display:none !important}      /* the gradient wash must not print */
   .page{display:none !important} .page#page-reports{display:block !important}
-  .card{break-inside:avoid;box-shadow:none;border:1px solid #ddd}
+  .card{break-inside:avoid;box-shadow:none;border:1px solid #ddd;background:#fff}
+  .card::after{display:none}
 }
 .kv span{color:var(--muted)} .kv b{font-weight:700}
 
