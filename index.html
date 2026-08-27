@@ -55,6 +55,28 @@
   --warn:#FCD34D;--warn-bg:rgba(252,211,77,.13);--save:#5BE49B;--save-bg:rgba(52,211,153,.14);
   --plum:#C4B5FD;--plum-bg:rgba(196,181,253,.14);--shadow:0 2px 16px rgba(0,0,0,.5)}
 }
+/* ---------- first-run welcome ---------- */
+.welcome{margin:2px 0 14px;padding:20px 18px 18px;border-radius:22px;position:relative;overflow:hidden;
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+.welcome::after{content:'';position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
+.wc-stack{position:relative;height:162px;margin:0 0 16px}
+.wc-card{position:absolute;left:50%;top:22px;width:212px;height:116px;margin-left:-106px;border-radius:16px;
+  box-shadow:0 10px 26px rgba(6,60,36,.22);display:block}
+.wc-3{transform:rotate(-11deg) translateY(4px);background:linear-gradient(140deg,#7C5CD8,#B07BE0);opacity:.85}
+.wc-2{transform:rotate(6deg) translateY(2px);background:linear-gradient(140deg,#E4713F,#F0A93B);opacity:.9}
+.wc-1{transform:none;background:linear-gradient(140deg,#065F38,#0B7A43 52%,#16A34A);
+  padding:15px 16px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
+.wc-1 .wc-k{font-size:15.5px;font-weight:800;letter-spacing:-.01em}
+.wc-1 .wc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.wc-1 .wc-tags i{font-style:normal;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px;
+  background:rgba(255,255,255,.19);border:1px solid rgba(255,255,255,.24)}
+.welcome h2{font-size:23px;line-height:1.25;letter-spacing:-.02em;margin:0 0 6px}
+.welcome p{font-size:15px;line-height:1.5;color:var(--muted);margin:0 0 15px}
+.welcome .btn{margin-bottom:8px}
+.welcome .btn:last-child{margin-bottom:0}
+@media (max-width:359px){.wc-card{width:186px;margin-left:-93px}}
+
 .policy-row{text-align:center;padding-top:2px}
 .policy-row a{display:inline-block;color:var(--muted);font-size:14px;font-weight:600;
   text-decoration:none;line-height:1.35;padding:8px 14px}
@@ -530,6 +552,21 @@ table.sip tbody tr:last-child td{font-size:15px}
 
   <!-- ===================== HOME ===================== -->
   <section class="page on" id="page-home">
+    <div class="welcome" id="welcome" hidden>
+      <div class="wc-stack" aria-hidden="true">
+        <span class="wc-card wc-3"></span>
+        <span class="wc-card wc-2"></span>
+        <span class="wc-card wc-1">
+          <span class="wc-k">PocketSeeds</span>
+          <span class="wc-tags" id="wcTags"></span>
+        </span>
+      </div>
+      <h2 id="wcTitle">Welcome to PocketSeeds</h2>
+      <p id="wcSub"></p>
+      <button class="btn btn-p btn-block" id="wcGo">Get started</button>
+      <button class="btn btn-g btn-block" id="wcSkip">Later</button>
+    </div>
+
     <button class="save-bar" id="btnSaveData">
       <span class="sb-ic" data-icon="cloud"></span>
       <span class="sb-txt"><b id="sbTitle">Save my data</b><i id="sbSub">Sign in with Google</i></span>
@@ -1220,6 +1257,10 @@ const STR = {
     mGift:'Gift book', mSavings:'Savings', mBudget:'Budget', mFamily:'Family',
     mCredit:'Credit', mTax:'Tax', mStatement:'Statement', mSearch:'Search', mSettings:'Settings',
     mGold:'Gold', mInsights:'Insights', mInvite:'Invite',
+    wcTitle:'Welcome to PocketSeeds',
+    wcSub:'Income, expenses and the money Telugu homes actually deal with — vaddi loans, chits, the moyi book. Everything stays on this phone.',
+    wcGo:'Get started', wcSkip:'Later',
+    wcTags:['Vaddi','Chits','Moyi'],
     insTitle:'Insights', insLast:'Last {n} months', insNone:'Add a few months of entries and the trend shows up here.',
     insAvgIncome:'Average income', insAvgSpend:'Average spend', insAvgSaved:'Average saved',
     insRate:'Savings rate', insNet:'Net', insSpent:'Spent',
@@ -1481,6 +1522,10 @@ const STR = {
     mGift:'మొయి పుస్తకం', mSavings:'పొదుపు', mBudget:'బడ్జెట్', mFamily:'కుటుంబం',
     mCredit:'క్రెడిట్', mTax:'పన్ను', mStatement:'స్టేట్‌మెంట్', mSearch:'వెతుకు', mSettings:'సెట్టింగ్‌లు',
     mGold:'బంగారం', mInsights:'విశ్లేషణ', mInvite:'ఆహ్వానం',
+    wcTitle:'PocketSeedsకి స్వాగతం',
+    wcSub:'ఆదాయం, ఖర్చులు — వడ్డీ అప్పులు, చిట్టీలు, మొయి పుస్తకం వరకు. అన్నీ ఈ ఫోన్‌లోనే ఉంటాయి.',
+    wcGo:'మొదలుపెట్టు', wcSkip:'తర్వాత',
+    wcTags:['వడ్డీ','చిట్టీలు','మొయి'],
     insTitle:'విశ్లేషణ', insLast:'గత {n} నెలలు', insNone:'కొన్ని నెలల వివరాలు చేర్చిన తర్వాత ఇక్కడ తీరు కనిపిస్తుంది.',
     insAvgIncome:'సగటు ఆదాయం', insAvgSpend:'సగటు ఖర్చు', insAvgSaved:'సగటు పొదుపు',
     insRate:'పొదుపు శాతం', insNet:'మిగిలింది', insSpent:'ఖర్చు',
@@ -2021,6 +2066,7 @@ const emptyBox = (icon,msg) => `<div class="empty"><span class="e-ic">${ic(icon,
 function renderAll(){
   applyLang(); paintIcons();
   $('#mLabel').textContent = fmtMonth(VIEW);
+  renderWelcome();
   renderHome(); renderIncome(); renderExpense(); renderLoans(); renderSave();
 }
 
@@ -2775,6 +2821,33 @@ function startVoice(){
   };
   try{ REC.start(); }catch(e){ toast(t('voiceFail')); }
 }
+
+/* =========================== WELCOME ===========================
+   Shown on a first run only. A permanent banner would push the balance —
+   the number people open the app for — below the fold every single day.
+   It leaves as soon as there is a transaction, or when it is dismissed. */
+const WELCOME_KEY = 'pocketseeds.welcomeSeen';
+function renderWelcome(){
+  const box = $('#welcome'); if(!box) return;
+  const done = localStorage.getItem(WELCOME_KEY) === '1';
+  const fresh = !DB.tx.length && !DB.sources.length;
+  box.hidden = done || !fresh;
+  if(box.hidden) return;
+
+  $('#wcTitle').textContent = t('wcTitle');
+  $('#wcSub').textContent   = t('wcSub');
+  $('#wcGo').textContent    = t('wcGo');
+  $('#wcSkip').textContent  = t('wcSkip');
+  $('#wcTags').innerHTML    = (t('wcTags') || []).map(x => `<i>${esc(x)}</i>`).join('');
+}
+function dismissWelcome(){
+  try{ localStorage.setItem(WELCOME_KEY, '1'); }catch(e){}
+  const box = $('#welcome'); if(box) box.hidden = true;
+}
+document.addEventListener('click', e => {
+  if(e.target.closest('#wcGo')){ dismissWelcome(); sheetTx('income'); }
+  if(e.target.closest('#wcSkip')) dismissWelcome();
+});
 
 /* =========================== AD =========================== */
 const HOUSE_ADS = [
