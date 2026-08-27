@@ -641,7 +641,7 @@ table.sip tbody tr:last-child td{font-size:15px}
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="quickAdd">Quick add</h3></div>
       <div class="grid3" id="quickTiles"></div>
-      <div class="hint" data-i18n="quickAddHint">Tap a category and enter the amount.</div>
+      <div class="hint" data-i18n="quickAddHint">Tap one — change the amount if yours is different.</div>
     </div>
 
     <div class="sec">
@@ -1126,7 +1126,7 @@ const STR = {
   en: {
     currentBalance:'Current Balance', safeToSpend:'Safe to spend', perDay:'Per day',
     income:'Income', expenditure:'Expenditure', savingsCoach:'Savings coach',
-    quickAdd:'Quick add', quickAddHint:'Tap a category and enter the amount.',
+    quickAdd:'Quick add', quickAddHint:'Tap one — change the amount if yours is different.',
     recentActivity:'Recent activity', seeAll:'See all →', whereMoneyWent:'Where the money went',
     incomeThisMonth:'Income this month', autoIncome:'Auto monthly income (1st–7th)', add:'+ Add',
     autoIncomeHint:'Salary and fixed income are credited automatically on your chosen day between the 1st and 7th.',
@@ -1408,7 +1408,7 @@ const STR = {
   te: {
     currentBalance:'ప్రస్తుత నిల్వ', safeToSpend:'ఖర్చుకు సురక్షితం', perDay:'రోజుకు',
     income:'ఆదాయం', expenditure:'ఖర్చు', savingsCoach:'పొదుపు సలహా',
-    quickAdd:'త్వరిత ఖర్చు', quickAddHint:'కేటగిరీ నొక్కి మొత్తం టైప్ చేయండి.',
+    quickAdd:'త్వరిత ఖర్చు', quickAddHint:'ఒకటి నొక్కండి — మీ మొత్తం వేరైతే మార్చుకోండి.',
     recentActivity:'ఇటీవలి లావాదేవీలు', seeAll:'అన్నీ చూడు →', whereMoneyWent:'డబ్బు ఎక్కడికి పోయింది',
     incomeThisMonth:'ఈ నెల ఆదాయం', autoIncome:'ఆటో నెలవారీ ఆదాయం (1–7 తేదీ)', add:'+ చేర్చు',
     autoIncomeHint:'జీతం, స్థిర ఆదాయం మీరు ఎంచుకున్న 1–7 తేదీన దానంతట అదే జమ అవుతుంది.',
@@ -2036,20 +2036,26 @@ function guessCategory(s){
 }
 
 /* quick-add tiles: the six things bought every single day */
-/* These are the big monthly items, so no default amount is offered — rent and
-   a school fee vary far too much for a preset to be anything but a wrong
-   number waiting to be saved by accident. Tapping opens the sheet with the
-   category already chosen. */
+/* Daily items first, since those are the ones tapped most often, then the
+   monthly bills. The amount on each tile is a starting figure that lands in
+   the sheet for editing — nothing is saved until Save is pressed, so a rent
+   that is not 5,000 costs one correction, not a wrong entry. */
 const QUICK = [
-  {cat:'Rent',      te:'అద్దె',           en:'Rent',          ic:'house',   amt:0},
-  {cat:'Bills',     te:'కరెంట్ బిల్లు',    en:'Electricity',   ic:'bulb',    amt:0},
-  {cat:'Chit',      te:'చిట్టీ',           en:'Chits',         ic:'refresh', amt:0},
-  {cat:'EMI',       te:'లోన్ EMI',        en:'Loan EMI',      ic:'bank',    amt:0},
-  {cat:'Health',    te:'ఆరోగ్యం',         en:'Health',        ic:'pill',    amt:0},
-  {cat:'Education', te:'స్కూల్ ఫీజు',     en:'School fee',    ic:'book',    amt:0},
-  {cat:'Groceries', te:'కిరాణం',          en:'Kiranam',       ic:'basket',  amt:0},
-  {cat:'Outing',    te:'వీకెండ్ పార్టీ',   en:'Weekend party', ic:'party',   amt:0},
-  {cat:'Other',     te:'ఇతర ఖర్చులు',     en:'Other',         ic:'dot',     amt:0}
+  {cat:'Milk',      te:'పాలు',            en:'Milk',          ic:'glass',   amt:30},
+  {cat:'Vegetables',te:'కూరగాయలు',       en:'Veg',           ic:'leafy',   amt:100},
+  {cat:'Food',      te:'టీ/టిఫిన్',        en:'Tea',           ic:'food',    amt:20},
+  {cat:'Travel',    te:'ప్రయాణం',         en:'Travel',        ic:'bus',     amt:50},
+  {cat:'Fuel',      te:'పెట్రోల్',         en:'Petrol',        ic:'fuel',    amt:200},
+  {cat:'Recharge',  te:'రీఛార్జ్',         en:'Recharge',      ic:'phone',   amt:239},
+  {cat:'Rent',      te:'అద్దె',           en:'Rent',          ic:'house',   amt:5000},
+  {cat:'Bills',     te:'కరెంట్ బిల్లు',    en:'Electricity',   ic:'bulb',    amt:800},
+  {cat:'Chit',      te:'చిట్టీ',           en:'Chits',         ic:'refresh', amt:2000},
+  {cat:'EMI',       te:'లోన్ EMI',        en:'Loan EMI',      ic:'bank',    amt:3000},
+  {cat:'Health',    te:'ఆరోగ్యం',         en:'Health',        ic:'pill',    amt:500},
+  {cat:'Education', te:'స్కూల్ ఫీజు',     en:'School fee',    ic:'book',    amt:2000},
+  {cat:'Groceries', te:'కిరాణం',          en:'Kiranam',       ic:'basket',  amt:1500},
+  {cat:'Outing',    te:'వీకెండ్ పార్టీ',   en:'Weekend party', ic:'party',   amt:800},
+  {cat:'Other',     te:'ఇతర ఖర్చులు',     en:'Other',         ic:'dot',     amt:200}
 ];
 </script>
 
@@ -2164,7 +2170,7 @@ function renderHome(){
     <button class="card" data-quick="${i}" style="padding:11px 8px;text-align:center;cursor:pointer;border:1px solid var(--line);font-family:inherit">
       <div style="color:var(--brand)">${ic(q.ic,'i-lg')}</div>
       <div style="font-size:13.5px;font-weight:700;margin-top:3px">${LANG==='te'?q.te:q.en}</div>
-      ${q.amt ? `<div style="font-size:13px;color:var(--muted);margin-top:1px">₹${q.amt}</div>` : ''}
+      <div style="font-size:13px;color:var(--muted);margin-top:1px">₹${q.amt.toLocaleString('en-IN')}</div>
     </button>`).join('');
 
   const k = mKey(VIEW);
