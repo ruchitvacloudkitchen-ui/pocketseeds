@@ -93,6 +93,19 @@
 .splash .btn{position:relative;border-radius:14px;padding:15px}
 .sp-go{background:#FFFFFF;color:#0A150F}
 .sp-skip{background:transparent;color:#8FAB9D;margin-top:6px}
+
+/* When splash.jpg is in the repo it carries the whole design — wordmark,
+   headline and tagline are already inside the picture — so the CSS discs and
+   the text on top of them step aside rather than printing everything twice.
+   Without the file the app keeps the drawn version, so a missing upload is
+   never a blank screen. */
+.splash.has-art{background:#04120C url('splash.jpg') center/cover no-repeat}
+.splash.has-art .sp-art,
+.splash.has-art .sp-brand,
+.splash.has-art h2,
+.splash.has-art p,
+.splash.has-art .sp-skip{display:none}
+.splash.has-art .sp-go{box-shadow:0 10px 28px rgba(0,0,0,.45)}
 @media (max-height:680px){
   .splash h2{font-size:25px} .sp-art{height:50%}
   .sp-1{width:160px;height:140px} .sp-2{width:124px;height:110px} .sp-3{width:118px;height:104px}
@@ -1333,7 +1346,7 @@ const STR = {
     mGold:'Gold', mInsights:'Insights', mInvite:'Invite',
     wcTitle:'Welcome to PocketSeeds',
     wcSub:'Income, expenses and the money Telugu homes actually deal with — vaddi loans, chits, the moyi book. Everything stays on this phone.',
-    wcGo:'Get started', wcSkip:'Later',
+    wcGo:'Enter now', wcSkip:'Later',
     scTitle:'Saving coach', scSetAside:'Set aside this month', scOfIncome:'30% of {a} income',
     scEmergency:'Emergency fund', scHealth:'Health cover', scGold:'Gold',
     scEach:'10% each',
@@ -1608,7 +1621,7 @@ const STR = {
     mGold:'బంగారం', mInsights:'విశ్లేషణ', mInvite:'ఆహ్వానం',
     wcTitle:'PocketSeedsకి స్వాగతం',
     wcSub:'ఆదాయం, ఖర్చులు — వడ్డీ అప్పులు, చిట్టీలు, మొయి పుస్తకం వరకు. అన్నీ ఈ ఫోన్‌లోనే ఉంటాయి.',
-    wcGo:'మొదలుపెట్టు', wcSkip:'తర్వాత',
+    wcGo:'ఇప్పుడే ప్రవేశించండి', wcSkip:'తర్వాత',
     scTitle:'పొదుపు కోచ్', scSetAside:'ఈ నెల పక్కన పెట్టాల్సింది', scOfIncome:'{a} ఆదాయంలో 30%',
     scEmergency:'అత్యవసర నిధి', scHealth:'ఆరోగ్య బీమా', scGold:'బంగారం',
     scEach:'ఒక్కొక్కటి 10%',
@@ -2931,6 +2944,16 @@ function startVoice(){
   try{ REC.start(); }catch(e){ toast(t('voiceFail')); }
 }
 
+/* A CSS background fires no load event, so the artwork is probed with an
+   Image() and the class is only added once it has really decoded. */
+const SPLASH_ART = 'splash.jpg';
+(function(){
+  const box = document.getElementById('splash'); if(!box) return;
+  const im = new Image();
+  im.addEventListener('load', () => box.classList.add('has-art'), {once:true});
+  im.src = SPLASH_ART;
+})();
+
 /* The banner is optional. It cannot start hidden and reveal itself on load —
    a lazy image inside a hidden box never loads, so it would wait forever on
    visibility that only arrives after loading. Instead aspect-ratio holds the
@@ -3045,8 +3068,9 @@ function dismissWelcome(){
   document.body.style.overflow = '';
 }
 document.addEventListener('click', e => {
-  if(e.target.closest('#wcGo')){ dismissWelcome(); sheetTx('income'); }
-  if(e.target.closest('#wcSkip')) dismissWelcome();
+  /* "Enter now" does exactly that — a splash's job is to get out of the way,
+     not to hand the user a form before they have seen the app. */
+  if(e.target.closest('#wcGo') || e.target.closest('#wcSkip')) dismissWelcome();
 });
 
 /* =========================== AD =========================== */
