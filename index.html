@@ -55,6 +55,15 @@
   --warn:#FCD34D;--warn-bg:rgba(252,211,77,.13);--save:#5BE49B;--save-bg:rgba(52,211,153,.14);
   --plum:#C4B5FD;--plum-bg:rgba(196,181,253,.14);--shadow:0 2px 16px rgba(0,0,0,.5)}
 
+/* ---------- income banner ----------
+   The artwork is optional: if income-banner.jpg is not in the repo the <img>
+   fails and the whole block removes itself, rather than leaving a broken
+   image on the page. aspect-ratio holds the space so nothing jumps when the
+   picture arrives late. */
+.inc-banner{margin:0 0 13px;border-radius:18px;overflow:hidden;line-height:0;
+  box-shadow:var(--shadow);border:1px solid var(--line)}
+.inc-banner img{display:block;width:100%;height:auto;aspect-ratio:1456/745;object-fit:cover}
+
 /* ---------- first-run splash ----------
    A full screen, shown once. The three discs are pure CSS: a radial gradient
    with an off-centre white hotspot is what reads as a glossy 3D object, so
@@ -688,6 +697,10 @@ table.sip tbody tr:last-child td{font-size:15px}
 
   <!-- ===================== INCOME ===================== -->
   <section class="page" id="page-income">
+    <div class="inc-banner" id="incBanner">
+      <img id="incBannerImg" src="income-banner.jpg" alt="" loading="lazy" decoding="async">
+    </div>
+
     <div class="card tile t-in" style="padding:16px">
       <div class="t-lbl"><i class="dot d-in"></i><span data-i18n="incomeThisMonth">Income this month</span></div>
       <div class="t-amt" style="font-size:33.5px" id="iTotal">₹0</div>
@@ -2917,6 +2930,17 @@ function startVoice(){
   };
   try{ REC.start(); }catch(e){ toast(t('voiceFail')); }
 }
+
+/* The banner is optional. It cannot start hidden and reveal itself on load —
+   a lazy image inside a hidden box never loads, so it would wait forever on
+   visibility that only arrives after loading. Instead aspect-ratio holds the
+   space and the block deletes itself if the file is not there. */
+(function(){
+  const img = document.getElementById('incBannerImg');
+  const box = document.getElementById('incBanner');
+  if(!img || !box) return;
+  img.addEventListener('error', () => box.remove(), {once:true});
+})();
 
 /* =========================== SAVING COACH ===========================
    Thirty per cent of the month's income, split three ways. The order is
