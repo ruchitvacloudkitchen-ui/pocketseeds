@@ -78,22 +78,40 @@
 @media (max-width:359px){.wc-card{width:186px;margin-left:-93px}}
 
 /* ---------- reels ---------- */
-/* ---------- saving coach ---------- */
-.sc-top{border-radius:20px;padding:17px 18px;color:#20180A;position:relative;overflow:hidden;
-  background:linear-gradient(140deg,#FFD979 0%,#F5C255 55%,#EBAE33 100%);
-  box-shadow:0 8px 24px rgba(214,158,40,.24)}
-.sc-top .sc-k{font-size:13.5px;font-weight:700;opacity:.72}
-.sc-top .sc-amt{font-size:31px;font-weight:800;letter-spacing:-.02em;margin:2px 0 1px}
-.sc-top .sc-of{font-size:14px;font-weight:600;opacity:.78}
-.sc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
-.sc-cell{border-radius:16px;padding:13px 11px;background:var(--surface);border:1px solid var(--line);
-  box-shadow:var(--shadow);text-align:center;min-width:0}
-.sc-cell .sc-ic{width:34px;height:34px;border-radius:50%;background:var(--in-bg);color:var(--brand);
-  display:grid;place-items:center;margin:0 auto 7px}
-.sc-cell .sc-ic .i{width:17px;height:17px}
-.sc-cell b{display:block;font-size:15px;font-weight:800;letter-spacing:-.01em}
-.sc-cell span{display:block;font-size:11.5px;font-weight:600;color:var(--muted);line-height:1.25;margin-top:3px}
-.sc-note{margin-top:10px;border-radius:14px;padding:11px 13px;font-size:14px;line-height:1.45}
+/* ---------- saving coach ----------
+   A bento: the month's total on top, then the three buckets as coloured
+   blocks. Each block carries its own background and ink, so it reads the same
+   in both themes without a second palette. */
+.sc-top{border-radius:22px;padding:18px 19px;color:#EAF7EF;position:relative;overflow:hidden;
+  background:linear-gradient(140deg,#04371F 0%,#0A6A3C 52%,#12A05B 100%);
+  box-shadow:0 10px 28px rgba(6,80,45,.3)}
+.sc-top::after{content:'';position:absolute;right:-38px;top:-46px;width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,.17), rgba(255,255,255,0) 68%)}
+.sc-top .sc-k{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.72}
+.sc-top .sc-amt{font-size:36px;font-weight:800;letter-spacing:-.03em;margin:3px 0 2px;line-height:1.05}
+.sc-top .sc-of{font-size:14px;font-weight:600;opacity:.82}
+
+.sc-bento{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.sc-b{position:relative;overflow:hidden;border-radius:20px;padding:15px 16px;min-height:118px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:0 6px 18px rgba(14,27,20,.12)}
+.sc-b.wide{grid-column:1 / -1;min-height:104px}
+.sc-b::after{content:'';position:absolute;right:-30px;top:-34px;width:118px;height:118px;border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,.34), rgba(255,255,255,0) 66%)}
+.sc-b > *{position:relative}
+.sc-b .sc-h{display:flex;align-items:center;gap:8px}
+.sc-b .sc-ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.42)}
+.sc-b .sc-ic .i{width:16px;height:16px}
+.sc-b .sc-nm{font-size:14px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.sc-b .sc-pc{margin-left:auto;font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:999px;
+  background:rgba(255,255,255,.46)}
+.sc-b .sc-v{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-top:10px}
+.sc-pink {background:linear-gradient(140deg,#F9A8CB 0%,#F084B4 100%); color:#3D1027}
+.sc-amber{background:linear-gradient(140deg,#FBD97A 0%,#EFB63F 100%); color:#3B2A08}
+.sc-green{background:linear-gradient(140deg,#93E0B4 0%,#63C88C 100%); color:#0A3A22}
+
+.sc-note{margin-top:10px;border-radius:16px;padding:12px 14px;font-size:14px;line-height:1.45;font-weight:600}
 .sc-ok{background:var(--in-bg);color:var(--in)}
 .sc-short{background:var(--warn-bg);color:var(--warn)}
 
@@ -2904,10 +2922,14 @@ function startVoice(){
    deliberate: an emergency fund first, because the whole point of it is to
    stop one bad month turning into a vaddi loan; health cover second; gold
    last, because it is the one that can wait. */
+/* Health takes the wide block, gold and the emergency fund sit beneath it,
+   matching the layout asked for. The advice line still points at the
+   emergency fund first — that ordering is about which to fill, not which
+   block is biggest. */
 const SC_PARTS = [
-  { key:'scEmergency', icon:'piggy' },
-  { key:'scHealth',    icon:'pill'  },
-  { key:'scGold',      icon:'goldbar' }
+  { key:'scHealth',    icon:'pill',    cls:'sc-pink',  wide:true },
+  { key:'scGold',      icon:'goldbar', cls:'sc-amber' },
+  { key:'scEmergency', icon:'piggy',   cls:'sc-green' }
 ];
 const SC_SHARE = 0.10;                       // each bucket
 function coachPlan(){
@@ -2925,10 +2947,13 @@ function renderSavingCoach(){
     return;
   }
   const cells = SC_PARTS.map(part => `
-    <div class="sc-cell">
-      <span class="sc-ic">${ic(part.icon)}</span>
-      <b>${money(c.each)}</b>
-      <span>${t(part.key)}</span>
+    <div class="sc-b ${part.cls}${part.wide ? ' wide' : ''}">
+      <div class="sc-h">
+        <span class="sc-ic">${ic(part.icon)}</span>
+        <span class="sc-nm">${t(part.key)}</span>
+        <span class="sc-pc">10%</span>
+      </div>
+      <div class="sc-v">${money(c.each)}</div>
     </div>`).join('');
   box.innerHTML = `
     <div class="sc-top">
@@ -2936,7 +2961,7 @@ function renderSavingCoach(){
       <div class="sc-amt">${money(c.total)}</div>
       <div class="sc-of">${t('scOfIncome',{a:money(c.income)})} · ${t('scEach')}</div>
     </div>
-    <div class="sc-grid">${cells}</div>
+    <div class="sc-bento">${cells}</div>
     <div class="sc-note ${c.short ? 'sc-short' : 'sc-ok'}">
       ${c.short ? t('scShort',{a:money(c.short)}) : t('scOk')}</div>`;
 }
