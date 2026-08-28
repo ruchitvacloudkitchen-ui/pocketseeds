@@ -127,6 +127,37 @@
 .sc-amber{background:linear-gradient(140deg,#FBD97A 0%,#EFB63F 100%); color:#3B2A08}
 .sc-green{background:linear-gradient(140deg,#93E0B4 0%,#63C88C 100%); color:#0A3A22}
 
+/* Each bucket carries its own two starting points, in a panel tucked under the
+   coloured box so the pair reads as one unit rather than a loose list. */
+/* Emergency help. The SOS button is the one place in the app that uses a loud
+   red: it has to be findable by someone who is panicking, and it must not read
+   as any of the money-coloured buttons. */
+.sos-big{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;
+  border-radius:18px;padding:19px 16px;font-family:inherit;font-size:19px;font-weight:800;cursor:pointer;
+  color:#fff;background:linear-gradient(135deg,#D32F2F,#B71C1C);box-shadow:0 8px 22px rgba(183,28,28,.35)}
+.sos-big .i{width:24px;height:24px;stroke-width:2.2}
+.sos-row{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.sos-row .ic{width:38px;height:38px;border-radius:12px;flex:0 0 auto;display:grid;place-items:center;
+  background:var(--out-bg);color:var(--out)}
+.sos-row .ic .i{width:19px;height:19px}
+.sos-row .body{flex:1;min-width:0}
+/* spans, so they need telling to stack */
+.sos-row .title{display:block;font-size:15.5px;font-weight:700;line-height:1.25}
+.sos-row .meta{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.sos-row .num{font-size:19px;font-weight:800;color:var(--out);white-space:nowrap;letter-spacing:-.01em}
+.sos-del{border:0;background:none;color:var(--muted);font-family:inherit;font-size:13px;
+  font-weight:700;cursor:pointer;padding:6px 8px;flex:0 0 auto}
+.sc-cell{display:flex;flex-direction:column;min-width:0}
+.sc-cell.wide{grid-column:1 / -1}
+.sc-cell .sc-b{z-index:1}
+.sc-where{background:var(--surface);border:1px solid var(--line);border-top:0;
+  border-radius:0 0 18px 18px;margin:-15px 7px 0;padding:22px 11px 11px}
+.sc-wl{font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:7px}
+.sc-links{display:flex;flex-wrap:wrap;gap:6px}
+.sc-links a{flex:0 1 auto;min-width:0;text-decoration:none;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:999px;padding:6px 11px;
+  font-size:12.5px;font-weight:700;color:var(--ink);white-space:nowrap}
 .sc-note{margin-top:10px;border-radius:16px;padding:12px 14px;font-size:14px;line-height:1.45;font-weight:600}
 .sc-ok{background:var(--in-bg);color:var(--in)}
 .sc-short{background:var(--warn-bg);color:var(--warn)}
@@ -169,8 +200,12 @@
 html{background:var(--bg)}
 body{background:transparent}
 body::before{content:'';position:fixed;inset:0;z-index:-1;background:var(--bg-layer);pointer-events:none}
+/* The bottom padding has to clear the nav bar AND the two floating buttons
+   stacked above it (the mic tops out 200px from the bottom). At 92px the last
+   section's right-aligned "+ Add" link came to rest underneath the mic at
+   maximum scroll, with no way to scroll it free — untappable, not just ugly. */
 body{font-family:'Plus Jakarta Sans','Noto Sans Telugu',system-ui,-apple-system,sans-serif;color:var(--ink);
-  -webkit-font-smoothing:antialiased;padding-bottom:92px}
+  -webkit-font-smoothing:antialiased;padding-bottom:212px}
 html[lang="te"] body{font-family:'Noto Sans Telugu','Plus Jakarta Sans',system-ui,sans-serif;line-height:1.45}
 html[lang="te"] .balance-amt,html[lang="te"] .t-amt,html[lang="te"] .amt,html[lang="te"] .coach .big{
   font-family:'Plus Jakarta Sans',sans-serif}
@@ -186,7 +221,7 @@ html[lang="te"] .balance-amt,html[lang="te"] .t-amt,html[lang="te"] .amt,html[la
 .mark-fallback{display:block;width:100%;height:100%;color:var(--brand)}
 .mark-fallback svg{width:100%;height:100%;display:block}
 /* Two targets in the footprint the single cycling button used to take.
-   Either language can be switched off, never both — the last one on stays on. */
+   The app shows one language at a time; tapping a pill switches to it. */
 .lang-pick{display:flex;background:var(--surface);border:1px solid var(--line);
   border-radius:11px;overflow:hidden;box-shadow:var(--shadow);flex:0 0 auto}
 .lang-pick button{border:0;background:none;font-family:inherit;font-size:13px;font-weight:800;
@@ -328,8 +363,16 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .nav-in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
 .nav button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0;
   color:var(--muted);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;line-height:1.2}
-.nav button span{font-size:22.5px;line-height:1}
+/* The tapped tab gets a filled pill behind its icon, in the same green as the
+   buttons, so the change is obvious at a glance. The label underneath stays
+   dark green rather than going pale — it is 12px, and white-on-#56C596 would
+   not be readable at that size the way it is on a full-size button. */
+.nav button span{font-size:22.5px;line-height:1;width:52px;height:30px;border-radius:999px;
+  display:grid;place-items:center;transition:background .16s ease,color .16s ease}
 .nav button[aria-selected="true"]{color:var(--brand)}
+.nav button[aria-selected="true"] span{background:var(--btn);color:var(--on-btn)}
+.nav button:active span{background:var(--surface-2)}
+.nav button[aria-selected="true"]:active span{background:var(--btn)}
 .fab{position:fixed;right:calc(50% - 260px + 16px);bottom:88px;z-index:45;width:56px;height:56px;border-radius:50%;
   border:0;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:var(--on-brand);font-size:29px;cursor:pointer;
   box-shadow:0 8px 22px rgba(11,122,67,.4)}
@@ -981,7 +1024,7 @@ table.sip tbody tr:last-child td{font-size:15px}
 
     <div class="sec policy-row">
       <a href="privacy/" target="_blank" rel="noopener">
-        <span>గోప్యతా విధానం</span><span>Privacy policy</span></a>
+        <span data-i18n="privacyLink">Privacy policy</span></a>
     </div>
   </section>
 
@@ -1024,6 +1067,13 @@ table.sip tbody tr:last-child td{font-size:15px}
     <button class="btn btn-g btn-sm" data-go="more" style="margin-bottom:12px" data-icon="back"></button>
     <div class="sec-head"><h3 data-i18n="invTitle">Invite friends</h3></div>
     <div class="card" style="padding:16px" id="invBox"></div>
+  </section>
+
+  <!-- ===================== EMERGENCY HELP ===================== -->
+  <section class="page" id="page-sos">
+    <button class="btn btn-g btn-sm" data-go="more" style="margin-bottom:12px" data-icon="back"></button>
+    <div class="sec-head"><h3 data-i18n="sosTitle">Emergency help</h3></div>
+    <div id="sosBox"></div>
   </section>
 
   <!-- ===================== GOLD ===================== -->
@@ -1322,6 +1372,26 @@ const STR = {
     sipExpected:'Expected return', sipProjected:'Projected value', sipYouPlant:'You plant',
     sipGlance:'Same amount, longer', sipYr:'yr',
     funds:'Fund categories to explore', fundsSub:'A research starting point for long-term SIP investors — not a recommendation.',
+    mSOS:'Emergency help',
+    sosTitle:'Emergency help',
+    sosSub:'Free, 24x7, from any phone — including one with no balance or no SIM.',
+    sosBig:'SOS — call for help',
+    sosPickSub:'Tap a number to call. Police and ambulance answer first.',
+    sosNational:'National helplines',
+    sosMine:'My emergency contacts',
+    sosMineSub:'Add the numbers no national line can give you — your hospital casualty desk, blood bank, family, neighbour.',
+    sosAdd:'Add a contact',
+    sosName:'Name', sosPhone:'Phone number',
+    sosNone:'No contacts yet. Add your hospital and one family member.',
+    sosCall:'Call',
+    sosVerify:'Numbers are the national ones published by the Government of India and were correct when this app was built. If one does not connect, dial 112 — it reaches police, ambulance and fire together.',
+    sosPolice:'Police emergency', sosAmbulance:'Ambulance', sosFire:'Fire service',
+    sosControl:'Police control room', sosWomen:'Women helpline',
+    sosSenior:'Senior citizen helpline', sosChild:'Child helpline',
+    sosSeniorNote:'some states use their own number',
+    scWhere:'Where to start',
+    scWhereNote:'Well-known providers, listed alphabetically. PocketSeeds is not affiliated with any of them and earns nothing from these links. Compare cover, charges and terms yourself before you buy.',
+    privacyLink:'Privacy policy',
     brokers:'Where to start an SIP',
     brokersNote:'Well-known platforms, listed alphabetically. PocketSeeds is not affiliated with any of them, earns nothing from these links and does not rate one above another. Compare charges and read the terms yourself before opening an account.',
     fundsHow:'How this list is built', fundsCriteria:'Chosen only as well-known, long-running schemes across different categories, so you can compare like with like. No ranking, no performance claim.',
@@ -1600,6 +1670,26 @@ const STR = {
     sipExpected:'ఆశించే రాబడి', sipProjected:'అంచనా విలువ', sipYouPlant:'మీరు వేసేది',
     sipGlance:'అదే మొత్తం, ఎక్కువ కాలం', sipYr:'ఏళ్లు',
     funds:'చూడదగ్గ ఫండ్ రకాలు', fundsSub:'దీర్ఘకాల SIP కోసం పరిశోధన మొదలుపెట్టే చోటు — సిఫారసు కాదు.',
+    mSOS:'అత్యవసర సాయం',
+    sosTitle:'అత్యవసర సాయం',
+    sosSub:'ఉచితం, 24x7 — బ్యాలెన్స్ లేకపోయినా, సిమ్ లేకపోయినా కలుస్తుంది.',
+    sosBig:'SOS — సాయం కోసం కాల్',
+    sosPickSub:'నంబర్ నొక్కితే కాల్ వెళ్తుంది. పోలీస్, అంబులెన్స్ ముందు కలుస్తాయి.',
+    sosNational:'జాతీయ హెల్ప్‌లైన్‌లు',
+    sosMine:'నా అత్యవసర నంబర్లు',
+    sosMineSub:'జాతీయ నంబర్లలో దొరకనివి ఇక్కడ చేర్చండి — మీ ఆసుపత్రి, బ్లడ్ బ్యాంక్, ఇంట్లోవాళ్లు, పక్కింటివాళ్లు.',
+    sosAdd:'నంబర్ చేర్చు',
+    sosName:'పేరు', sosPhone:'ఫోన్ నంబర్',
+    sosNone:'ఇంకా ఏమీ లేవు. మీ ఆసుపత్రి, ఒక ఇంటి నంబర్ చేర్చండి.',
+    sosCall:'కాల్',
+    sosVerify:'ఇవి భారత ప్రభుత్వం ప్రకటించిన జాతీయ నంబర్లు, యాప్ తయారుచేసేటప్పుడు సరైనవి. ఏదైనా కలవకపోతే 112 కి కాల్ చేయండి — పోలీస్, అంబులెన్స్, ఫైర్ అన్నీ కలుస్తాయి.',
+    sosPolice:'పోలీస్ అత్యవసరం', sosAmbulance:'అంబులెన్స్', sosFire:'ఫైర్ సర్వీస్',
+    sosControl:'పోలీస్ కంట్రోల్ రూమ్', sosWomen:'మహిళా హెల్ప్‌లైన్',
+    sosSenior:'వృద్ధుల హెల్ప్‌లైన్', sosChild:'చిన్నారుల హెల్ప్‌లైన్',
+    sosSeniorNote:'కొన్ని రాష్ట్రాల్లో వేరే నంబర్ ఉంటుంది',
+    scWhere:'ఎక్కడ మొదలుపెట్టాలి',
+    scWhereNote:'ఇవి బాగా తెలిసిన సంస్థలు, అక్షర క్రమంలో ఇచ్చాం. PocketSeedsకు వీటితో సంబంధం లేదు, ఈ లింకుల ద్వారా ఏమీ రాదు. కొనే ముందు కవర్, ఛార్జీలు, నిబంధనలు మీరే పోల్చి చూసుకోండి.',
+    privacyLink:'గోప్యతా విధానం',
     brokers:'SIP ఎక్కడ మొదలుపెట్టాలి',
     brokersNote:'బాగా తెలిసిన యాప్‌లు, అక్షర క్రమంలో ఇచ్చాం. PocketSeedsకు వీటితో ఎలాంటి సంబంధం లేదు, ఈ లింకుల ద్వారా ఏమీ రాదు, ఏదో ఒకటి మంచిదని చెప్పడం లేదు. ఖాతా తెరిచే ముందు ఛార్జీలు, నిబంధనలు మీరే చూసుకోండి.',
     fundsHow:'ఈ జాబితా ఎలా తయారైంది', fundsCriteria:'వేర్వేరు రకాల్లో చాలా కాలంగా నడుస్తున్న, అందరికీ తెలిసిన స్కీమ్‌లను మాత్రమే పోల్చి చూడటానికి పెట్టాం. ర్యాంకింగ్ కాదు, రాబడి హామీ అంతకన్నా కాదు.',
@@ -1726,15 +1816,16 @@ const STR = {
 };
 
 let LANG = localStorage.getItem('pocketseeds.lang') || 'te';
-/* Display mode: 'both' shows Telugu | English together (default), or a single language. */
-let LMODE = localStorage.getItem('pocketseeds.lmode') || 'both';
-/* L() = short label. In 'both' mode it renders "తెలుగు | English" on one line.
-   t() = full sentence; always one language, because doubling prose is unreadable. */
+/* Display mode: one language at a time — 'te' or 'en'. Labels used to be able
+   to show "తెలుగు | English" side by side; that doubled the width of every
+   heading and tile, so the app now commits to whichever the reader picked.
+   Anything stored from the old bilingual mode falls back to Telugu. */
+let LMODE = localStorage.getItem('pocketseeds.lmode') === 'en' ? 'en' : 'te';
+/* L() = short label, t() = full sentence. Both render a single language now;
+   L() stays a separate call because headings and prose are looked up the same
+   way but read differently, and the split is worth keeping. */
 function L(key, vars){
-  const te = one('te', key, vars), en = one('en', key, vars);
-  if(LMODE === 'en') return en;
-  if(LMODE === 'te') return te;
-  return (te === en) ? te : te + ' | ' + en;
+  return one(LMODE === 'en' ? 'en' : 'te', key, vars);
 }
 function one(lang, key, vars){
   let s = (STR[lang] && STR[lang][key] != null) ? STR[lang][key] : STR.en[key];
@@ -1783,10 +1874,8 @@ function applyLang(){
     const prose = el.classList.contains('hint') || el.classList.contains('sub') || el.classList.contains('sheet-sub');
     el.textContent = prose ? t(el.dataset.i18n) : L(el.dataset.i18n);
   });
-  document.querySelectorAll('#langPick button[data-lang]').forEach(b => {
-    const on = b.dataset.lang === 'te' ? LMODE !== 'en' : LMODE !== 'te';
-    b.setAttribute('aria-pressed', String(on));
-  });
+  document.querySelectorAll('#langPick button[data-lang]').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.dataset.lang === LMODE)));
   if(typeof paintThemeButton === 'function') paintThemeButton();
   const ph = {
     dayNote: LANG==='te' ? 'పాలు, కూలి, షాపు' : 'Milk, wage, shop',
@@ -1818,7 +1907,8 @@ const DEFAULTS = {
   chits:[],     // {id,name,instal,months,paid,taken,prize,day}
   fests:[],     // {id,name,target,date,saved}
   moyi:[],      // {id,person,event,type:'given'|'received',amount,date}
-  udhaar:[]     // {id,shop,amount,date}
+  udhaar:[],    // {id,shop,amount,date}
+  sos:[]        // {id,name,phone}                       own emergency contacts
 };
 
 let DB = load();
@@ -2132,6 +2222,7 @@ const ICON = {
   cardout:'<rect x="2.6" y="6" width="18.8" height="13" rx="2.5"/><path d="M2.6 10.5h18.8"/><path d="M6.5 15h4"/>',
   handshake:'<path d="M3 11.5 7 8l3.2 2.6L13 8l4 3.5"/><path d="M3 11.5V16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4.5"/><path d="M10.2 18v-2.4h3.6V18"/>',
   dots:'<circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/>',
+  shield:'<path d="M12 3.2 20 6v6.3c0 4.3-3.3 7.5-8 8.9-4.7-1.4-8-4.6-8-8.9V6z"/><path d="M12 8.6v4"/><circle cx="12" cy="15.4" r=".9"/>',
   plus:'<path d="M12 5.5v13M5.5 12h13"/>',
   minus:'<path d="M5.5 12h13"/>',
   mic:'<rect x="9" y="2.8" width="6" height="11" rx="3"/><path d="M5.2 11.2a6.8 6.8 0 0 0 13.6 0"/><path d="M12 18v3.2"/>',
@@ -2841,7 +2932,6 @@ function sheetSettings(){
     <h3>${t('settings')}</h3>
     <div class="field"><label>${L('language')}</label>
       <select id="cLang">
-        <option value="both" ${LMODE==='both'?'selected':''}>తెలుగు | English</option>
         <option value="te" ${LMODE==='te'?'selected':''}>తెలుగు</option>
         <option value="en" ${LMODE==='en'?'selected':''}>English</option></select></div>
     <div class="field"><label>${L('theme')}</label>
@@ -2989,11 +3079,30 @@ let SPLASH_READY = false;
    matching the layout asked for. The advice line still points at the
    emergency fund first — that ordering is about which to fill, not which
    block is biggest. */
+/* Each bucket names two places to actually start. Alphabetical on purpose — the
+   order is not a ranking, and the note under the bento says so. Same config
+   pattern as the broker row: publish
+   {"coachWhere":{"gold":[{"name":"…","url":"https://…"}]}} in config.json to
+   change a row without shipping code. */
 const SC_PARTS = [
-  { key:'scHealth',    icon:'pill',    cls:'sc-pink',  wide:true },
-  { key:'scGold',      icon:'goldbar', cls:'sc-amber' },
-  { key:'scEmergency', icon:'piggy',   cls:'sc-green' }
+  { key:'scHealth', icon:'pill', cls:'sc-pink', wide:true, id:'health', where:[
+      { name:'Ditto Insurance', url:'https://joinditto.in/' },
+      { name:'Policybazaar',    url:'https://www.policybazaar.com/health-insurance/' } ] },
+  { key:'scGold', icon:'goldbar', cls:'sc-amber', id:'gold', where:[
+      { name:'MMTC-PAMP', url:'https://www.mmtcpamp.com/' },
+      { name:'SafeGold',  url:'https://www.safegold.com/' } ] },
+  { key:'scEmergency', icon:'piggy', cls:'sc-green', id:'emergency', where:[
+      { name:'Liquid funds',   url:'https://groww.in/mutual-funds/category/best-liquid-mutual-funds' },
+      { name:'Post Office RD', url:'https://www.indiapost.gov.in/Financial/Pages/Content/Post-Office-Saving-Schemes.aspx' } ] }
 ];
+function coachWhere(part){
+  let rows = part.where || [];
+  try{
+    const c = CONFIG && CONFIG.coachWhere && CONFIG.coachWhere[part.id];
+    if(Array.isArray(c) && c.length) rows = c;
+  }catch(e){}                                   // CONFIG loads in a later block
+  return rows.filter(r => r && r.name && r.url);
+}
 const SC_SHARE = 0.10;                       // each bucket
 function coachPlan(){
   const st = stats();
@@ -3009,15 +3118,24 @@ function renderSavingCoach(){
     box.innerHTML = `<div class="card" style="padding:16px"><div class="sub">${t('scNoIncome')}</div></div>`;
     return;
   }
-  const cells = SC_PARTS.map(part => `
-    <div class="sc-b ${part.cls}${part.wide ? ' wide' : ''}">
-      <div class="sc-h">
-        <span class="sc-ic">${ic(part.icon)}</span>
-        <span class="sc-nm">${t(part.key)}</span>
-        <span class="sc-pc">10%</span>
+  const cells = SC_PARTS.map(part => {
+    const rows = coachWhere(part);
+    return `
+    <div class="sc-cell${part.wide ? ' wide' : ''}">
+      <div class="sc-b ${part.cls}">
+        <div class="sc-h">
+          <span class="sc-ic">${ic(part.icon)}</span>
+          <span class="sc-nm">${t(part.key)}</span>
+          <span class="sc-pc">10%</span>
+        </div>
+        <div class="sc-v">${money(c.each)}</div>
       </div>
-      <div class="sc-v">${money(c.each)}</div>
-    </div>`).join('');
+      ${rows.length ? `<div class="sc-where">
+        <div class="sc-wl">${t('scWhere')}</div>
+        <div class="sc-links">${rows.map(r =>
+          `<a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.name)}</a>`).join('')}</div>
+      </div>` : ''}
+    </div>`; }).join('');
   box.innerHTML = `
     <div class="sc-top">
       <div class="sc-k">${t('scSetAside')}</div>
@@ -3025,17 +3143,19 @@ function renderSavingCoach(){
       <div class="sc-of">${t('scOfIncome',{a:money(c.income)})} · ${t('scEach')}</div>
     </div>
     <div class="sc-bento">${cells}</div>
+    <div class="hint" style="margin-top:9px">${t('scWhereNote')}</div>
     <div class="sc-note ${c.short ? 'sc-short' : 'sc-ok'}">
       ${c.short ? t('scShort',{a:money(c.short)}) : t('scOk')}</div>`;
 }
 
 /* =========================== REELS ===========================
-   Two vertical cards on the More tab. The links are config values so they can
-   be pointed at real videos without a code change; until then the cards are
-   inert rather than links to nowhere. */
+   Two vertical cards on the More tab, now pointing at the two YouTube shorts.
+   The URLs ship as defaults so they work with no network on first open;
+   CONFIG.reels still overrides both the link and the copy, which is how the
+   titles get changed without a release. */
 const REELS = [
-  { cls:'reel-a', t:'reel1t', s:'reel1s' },
-  { cls:'reel-b', t:'reel2t', s:'reel2s' }
+  { cls:'reel-a', t:'reel1t', s:'reel1s', url:'https://www.youtube.com/shorts/HyhTn1u42Ho' },
+  { cls:'reel-b', t:'reel2t', s:'reel2s', url:'https://www.youtube.com/shorts/VYOtr8lgXMw' }
 ];
 function reelLinks(){
   try{ return (CONFIG && Array.isArray(CONFIG.reels)) ? CONFIG.reels : []; }
@@ -3045,13 +3165,13 @@ function renderReels(){
   const box = $('#reelBox'); if(!box) return;
   const urls = reelLinks();
   box.innerHTML = REELS.map((r,i) => {
-    const url = urls[i] && urls[i].url;
+    const url = (urls[i] && urls[i].url) || r.url;
     const title = (urls[i] && urls[i].title) || t(r.t);
     const sub   = (urls[i] && urls[i].text)  || t(r.s);
     const inner = `<span class="r-play">${ic('up')}</span>
       <h4>${esc(title)}</h4><p>${esc(sub)}</p>`;
     return url
-      ? `<a class="reel ${r.cls}" href="${esc(url)}" target="_blank" rel="noopener">${inner}</a>`
+      ? `<a class="reel ${r.cls}" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${inner}</a>`
       : `<div class="reel ${r.cls}" aria-disabled="true"><span class="r-play">${ic('up')}</span>
           <h4>${esc(title)}</h4><p>${esc(t('reelSoon'))}</p></div>`;
   }).join('');
@@ -3246,11 +3366,7 @@ function setLangMode(m){
 }
 $('#langPick').addEventListener('click', e => {
   const b = e.target.closest('button[data-lang]'); if(!b) return;
-  const want = b.dataset.lang;
-  const on = { te: LMODE !== 'en', en: LMODE !== 'te' };
-  on[want] = !on[want];
-  if(!on.te && !on.en) return;                 // never both off
-  setLangMode(on.te && on.en ? 'both' : (on.te ? 'te' : 'en'));
+  if(b.dataset.lang !== LMODE) setLangMode(b.dataset.lang);
 });
 
 /* Read the theme from storage, not from the THEME variable: this paints during
@@ -4619,17 +4735,13 @@ const MENU = [
   { go:'reports',                      icon:'chart',    t:'mTracker'   },
   { go:'family',                       icon:'people',   t:'mFamily'    },
   { act:'statement',                   icon:'doc',      t:'mStatement' },
+  { go:'sos',                          icon:'shield',   t:'mSOS'       },
   { go:'invite',                       icon:'gift',     t:'mInvite'    },
   { act:'settings',                    icon:'gear',     t:'mSettings'  }
 ];
 
-/* Tiles are narrow, so the two languages stack rather than sitting on one
-   line with a divider the way headings do. */
 function tileLabel(key){
-  const te = one('te', key), en = one('en', key);
-  if(LMODE === 'te') return `<span class="mt-t">${esc(te)}</span>`;
-  if(LMODE === 'en') return `<span class="mt-t">${esc(en)}</span>`;
-  return `<span class="mt-t">${esc(te)}</span>` + (te === en ? '' : `<span class="mt-s">${esc(en)}</span>`);
+  return `<span class="mt-t">${esc(one(LMODE === 'en' ? 'en' : 'te', key))}</span>`;
 }
 
 function renderMenu(){
@@ -5416,3 +5528,117 @@ function renderHolidayList(){
   }).join('') : `<div class="hint" style="text-align:center;padding:8px">${t('holNone')}</div>`;
 }
 </script>
+
+<script>
+/* =========================== EMERGENCY HELP ===========================
+   The national helplines, plus the numbers no national line can give you —
+   your own hospital casualty desk, blood bank, family. Every number is a
+   plain tel: link, so it works offline and needs no permission.
+
+   IMPORTANT, for whoever edits this list: these are the numbers published by
+   the Government of India. Do not add a number you have not dialled or seen on
+   an official page — a wrong number here costs someone minutes they do not
+   have. 112 is the single emergency number and reaches police, ambulance and
+   fire together; it is deliberately first. 14567 is the national senior-citizen
+   line, but several states run their own, which is why it carries a note.
+   ===================================================================== */
+const SOS_LINES = [
+  { n:'112',   k:'sosPolice'    },
+  { n:'108',   k:'sosAmbulance' },
+  { n:'101',   k:'sosFire'      },
+  { n:'100',   k:'sosControl'   },
+  { n:'181',   k:'sosWomen'     },
+  { n:'14567', k:'sosSenior', note:'sosSeniorNote' },
+  { n:'1098',  k:'sosChild'     }
+];
+const telHref = n => 'tel:' + String(n).replace(/[^0-9+]/g, '');
+
+function sosLineRow(l){
+  return `<a class="sos-row" href="${telHref(l.n)}">
+    <span class="ic">${ic('phone')}</span>
+    <span class="body"><span class="title">${t(l.k)}</span>
+      ${l.note ? `<span class="meta">${t(l.note)}</span>` : ''}</span>
+    <span class="num">${esc(l.n)}</span></a>`;
+}
+
+function renderSOS(){
+  const box = $('#sosBox'); if(!box) return;
+  const mine = DB.sos || [];
+  box.innerHTML = `
+    <button class="sos-big" id="sosGo">${ic('shield')}${t('sosBig')}</button>
+    <div class="sub" style="margin-top:10px">${t('sosSub')}</div>
+
+    <div class="sec">
+      <div class="sec-head"><h3>${L('sosNational')}</h3></div>
+      <div class="list">${SOS_LINES.map(sosLineRow).join('')}</div>
+      <div class="hint" style="margin-top:9px">${t('sosVerify')}</div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><h3>${L('sosMine')}</h3>
+        <button class="link" id="sosAdd">${t('sosAdd')}</button></div>
+      <div class="sub">${t('sosMineSub')}</div>
+      <div class="list">${
+        mine.length ? mine.map(c => `<div class="sos-row">
+            <span class="ic">${ic('people')}</span>
+            <span class="body"><span class="title">${esc(c.name)}</span>
+              <span class="meta">${esc(c.phone)}</span></span>
+            <a class="btn btn-out btn-sm" href="${telHref(c.phone)}"
+               style="text-decoration:none">${t('sosCall')}</a>
+            <button class="sos-del" data-sos-del="${c.id}" aria-label="remove">${ic('x')}</button>
+          </div>`).join('')
+          : `<div class="hint" style="text-align:center;padding:10px">${t('sosNone')}</div>`}</div>
+    </div>`;
+  $('#sosGo').addEventListener('click', sheetSOS);
+  $('#sosAdd').addEventListener('click', () => sheetSOSContact());
+}
+
+/* The modal is the panic path: the two numbers that answer first, then the
+   people this phone's owner chose, and nothing else to read. */
+function sheetSOS(){
+  const mine = DB.sos || [];
+  const quick = SOS_LINES.slice(0, 2);
+  openSheet(`
+    <h3>${L('sosBig')}</h3>
+    <div class="sheet-sub">${t('sosPickSub')}</div>
+    <div class="list">
+      ${quick.map(sosLineRow).join('')}
+      ${mine.map(c => `<a class="sos-row" href="${telHref(c.phone)}">
+        <span class="ic">${ic('people')}</span>
+        <span class="body"><span class="title">${esc(c.name)}</span></span>
+        <span class="num">${esc(c.phone)}</span></a>`).join('')}
+    </div>
+    ${mine.length ? '' : `<div class="hint" style="margin-top:10px">${t('sosNone')}</div>`}`);
+}
+
+function sheetSOSContact(){
+  openSheet(`
+    <h3>${L('sosAdd')}</h3>
+    <div class="field"><label>${t('sosName')}</label><input id="soName" type="text"></div>
+    <div class="field"><label>${t('sosPhone')}</label>
+      <input id="soPhone" type="tel" inputmode="tel" placeholder="98xxxxxxxx"></div>
+    <button class="btn btn-p btn-block" id="soSave">${t('add')}</button>`);
+  $('#soSave').addEventListener('click', () => {
+    const name  = $('#soName').value.trim();
+    const phone = $('#soPhone').value.trim();
+    if(!name || !phone) return;                 // both matter; a nameless number helps nobody
+    DB.sos = DB.sos || [];
+    DB.sos.push({ id:uid(), name, phone });
+    save(); renderAll(); closeSheet(); toast(t('saved'));
+  });
+}
+
+document.addEventListener('click', e => {
+  const del = e.target.closest('[data-sos-del]');
+  if(!del) return;
+  DB.sos = (DB.sos || []).filter(c => c.id !== del.dataset.sosDel);
+  save(); renderAll(); toast(t('removed'));
+});
+
+(function(){
+  const prev = window.renderAll;
+  window.renderAll = function(){ prev(); try{ renderSOS(); }catch(e){ console.error(e); } };
+  renderSOS();
+})();
+</script>
+
