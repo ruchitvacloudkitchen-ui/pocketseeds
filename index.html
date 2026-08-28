@@ -179,18 +179,26 @@ html[lang="te"] .balance-amt,html[lang="te"] .t-amt,html[lang="te"] .amt,html[la
 .top{position:sticky;top:0;z-index:40;background:var(--chrome);padding:12px 0 8px;
   backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4)}
 .top-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.top-tools{display:flex;gap:7px;align-items:center}
 .brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;letter-spacing:-.02em}
 .logo{width:33px;height:33px;display:grid;place-items:center;flex:0 0 auto;color:var(--brand)}
 .mark{width:100%;height:100%;display:block;object-fit:contain}
 .mark-fallback{display:block;width:100%;height:100%;color:var(--brand)}
 .mark-fallback svg{width:100%;height:100%;display:block}
+/* Two targets in the footprint the single cycling button used to take.
+   Either language can be switched off, never both — the last one on stays on. */
+.lang-pick{display:flex;background:var(--surface);border:1px solid var(--line);
+  border-radius:11px;overflow:hidden;box-shadow:var(--shadow);flex:0 0 auto}
+.lang-pick button{border:0;background:none;font-family:inherit;font-size:13px;font-weight:800;
+  color:var(--muted);padding:0 9px;height:34px;cursor:pointer;min-width:34px}
+.lang-pick button[aria-pressed="true"]{background:var(--btn);color:var(--on-btn)}
 .month-pick{display:flex;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--line);
   border-radius:999px;padding:3px;box-shadow:var(--shadow)}
 .month-pick button{background:none;border:0;color:var(--muted);font-size:17.5px;padding:4px 8px;border-radius:999px;cursor:pointer}
 .month-label{font-weight:700;font-size:15px;min-width:74px;text-align:center}
 .icon-btn{width:34px;height:34px;border-radius:11px;border:1px solid var(--line);background:var(--surface);
   color:var(--ink);font-size:17.5px;cursor:pointer;box-shadow:var(--shadow);flex:0 0 auto}
-.lang-btn{width:auto;padding:0 11px;font-weight:800;font-size:15px;font-family:'Noto Sans Telugu',sans-serif}
+.lang-pick button{font-family:'Noto Sans Telugu','Plus Jakarta Sans',sans-serif}
 /* ---------- cards ---------- */
 /* A <button> takes the UA's own black button text and does not inherit from
    the page, so every button-shaped surface in the app rendered its label black
@@ -388,10 +396,11 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
   .top-row{gap:6px}
   .month-pick{padding:2px}
   .month-pick button{padding:3px 6px;font-size:14px}
-  .month-label{min-width:56px;font-size:11.5px}
-  .icon-btn{width:31px;height:31px;border-radius:10px}
-  .icon-btn .i{width:17px;height:17px}
-  .lang-btn{padding:0 8px;font-size:11px}
+  .month-label{min-width:44px;font-size:11.5px}
+  .icon-btn{width:29px;height:29px;border-radius:10px}
+  .icon-btn .i{width:16px;height:16px}
+  .lang-pick button{padding:0 5px;min-width:24px;height:29px;font-size:11.5px}
+  .top-tools{gap:4px}
 }
 @media (max-width:339px){ .brand span,.brand{font-size:0} .brand .logo{font-size:16px} }
 
@@ -624,13 +633,17 @@ table.sip tbody tr:last-child td{font-size:15px}
   <header class="top">
     <div class="top-row">
       <div class="brand"><div class="logo" id="logoIcon"></div>PocketSeeds</div>
-      <div style="display:flex;gap:7px;align-items:center">
+      <div class="top-tools">
         <div class="month-pick">
           <button id="mPrev" aria-label="prev">‹</button>
           <div class="month-label" id="mLabel">—</div>
           <button id="mNext" aria-label="next">›</button>
         </div>
-        <button class="icon-btn lang-btn" id="btnLang">EN</button>
+        <div class="lang-pick" id="langPick">
+          <button data-lang="te" aria-pressed="false">తె</button>
+          <button data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="icon-btn" id="btnTheme" aria-label="theme"></button>
         <button class="icon-btn" id="btnSettings" aria-label="settings" data-icon="gear"></button>
       </div>
     </div>
@@ -1754,8 +1767,11 @@ function applyLang(){
     const prose = el.classList.contains('hint') || el.classList.contains('sub') || el.classList.contains('sheet-sub');
     el.textContent = prose ? t(el.dataset.i18n) : L(el.dataset.i18n);
   });
-  const b = document.getElementById('btnLang');
-  if(b) b.textContent = LMODE === 'both' ? 'తె|EN' : (LMODE === 'te' ? 'తె' : 'EN');
+  document.querySelectorAll('#langPick button[data-lang]').forEach(b => {
+    const on = b.dataset.lang === 'te' ? LMODE !== 'en' : LMODE !== 'te';
+    b.setAttribute('aria-pressed', String(on));
+  });
+  if(typeof paintThemeButton === 'function') paintThemeButton();
   const ph = {
     dayNote: LANG==='te' ? 'పాలు, కూలి, షాపు' : 'Milk, wage, shop',
     upiNote: LANG==='te' ? 'కూరగాయలు' : 'Groceries',
@@ -2475,12 +2491,15 @@ const methodOptions = sel => ['phonepe','gpay','paytm','upi','cash','card','bank
   .map(m => `<option value="${m}" ${m===sel?'selected':''}>${UPI_LABEL[m]}</option>`).join('');
 
 /* ---- transaction ---- */
-function sheetTx(type='expense', tx=null, preset={}){
+/* `lock` hides the Expenditure/Income switch. A sheet opened from the
+   expenditure (+) or a quick-add tile is already about an expense, and
+   offering Income there is one mis-tap away from filing a bill as earnings. */
+function sheetTx(type='expense', tx=null, preset={}, lock=false){
   const x = tx || { amount:preset.amount||'', note:preset.note||'', category: preset.category || (type==='income'?'Salary':'Food'),
                     method: type==='income'?'cash':'phonepe', date: ymd(new Date()) };
   openSheet(`
     <h3>${tx ? (type==='income'?t('editIncome'):t('editExpense')) : (type==='income'?t('addIncome'):t('addExpense'))}</h3>
-    ${tx?'':`<div class="seg" id="txSeg">
+    ${(tx||lock)?'':`<div class="seg" id="txSeg">
       <button data-type="expense" aria-pressed="${type==='expense'}">💸 ${t('expenditure')}</button>
       <button data-type="income"  aria-pressed="${type==='income'}">💰 ${t('income')}</button></div>`}
     <div class="field"><label>${t('amount')}</label>
@@ -3147,7 +3166,7 @@ document.addEventListener('click', e => {
   if(d.go){ closeSheet(); return go(d.go); }
   if(d.quick){
     const q = QUICK[+d.quick];
-    return sheetTx('expense', null, { amount:q.amt, note:(LANG==='te'?q.te:q.en), category:q.cat });
+    return sheetTx('expense', null, { amount:q.amt, note:(LANG==='te'?q.te:q.en), category:q.cat }, true);
   }
   if(d.editTx){
     const rec = DB.tx.find(x => x.id === d.editTx);
@@ -3201,14 +3220,45 @@ $$('.nav button').forEach(b => b.addEventListener('click', () => go(b.dataset.go
 $('#fab').addEventListener('click', () => sheetTx(TAB === 'income' ? 'income' : 'expense'));
 $('#fabMic').addEventListener('click', startVoice);
 $('#btnSettings').addEventListener('click', sheetSettings);
-$('#btnLang').addEventListener('click', () => {
-  LMODE = LMODE === 'both' ? 'te' : (LMODE === 'te' ? 'en' : 'both');
+/* Each language is its own switch. Both on is the bilingual view; turning one
+   off leaves the other; turning off the only one left is refused, because an
+   app with no language is not a state worth reaching. */
+function setLangMode(m){
+  LMODE = m;
   localStorage.setItem('pocketseeds.lmode', LMODE);
   mountAd(); renderAll();
-  toast(LMODE === 'both' ? 'తెలుగు | English' : (LMODE === 'te' ? 'తెలుగు' : 'English'));
+}
+$('#langPick').addEventListener('click', e => {
+  const b = e.target.closest('button[data-lang]'); if(!b) return;
+  const want = b.dataset.lang;
+  const on = { te: LMODE !== 'en', en: LMODE !== 'te' };
+  on[want] = !on[want];
+  if(!on.te && !on.en) return;                 // never both off
+  setLangMode(on.te && on.en ? 'both' : (on.te ? 'te' : 'en'));
 });
-$('#btnAddIncome').addEventListener('click', () => sheetTx('income'));
-$('#btnAddExpense').addEventListener('click', () => sheetTx('expense'));
+
+/* Read the theme from storage, not from the THEME variable: this paints during
+   applyLang(), which can run before the script block that declares THEME has
+   executed. setTheme keeps storage in step, so this is never stale. */
+function isDarkTheme(){
+  const v = localStorage.getItem('pocketseeds.theme') || 'auto';
+  return v === 'dark' || (v === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+}
+/* one control, two states, as asked */
+$('#btnTheme').addEventListener('click', () => {
+  setTheme(isDarkTheme() ? 'light' : 'dark');
+  paintThemeButton();
+  document.querySelectorAll('[data-theme-set]').forEach(x =>
+    x.setAttribute('aria-pressed', String(x.dataset.themeSet === THEME)));
+});
+function paintThemeButton(){
+  const b = $('#btnTheme'); if(!b) return;
+  const dark = isDarkTheme();
+  b.innerHTML = ic(dark ? 'bulb' : 'leaf');
+  b.setAttribute('aria-label', dark ? 'switch to light mode' : 'switch to dark mode');
+}
+$('#btnAddIncome').addEventListener('click', () => sheetTx('income', null, {}, true));
+$('#btnAddExpense').addEventListener('click', () => sheetTx('expense', null, {}, true));
 $('#btnAddSource').addEventListener('click', () => sheetSource());
 $('#btnDailyEarn').addEventListener('click', () => sheetTx('income', null, { category:'DailyWage' }));
 $('#btnAddRemind').addEventListener('click', () => sheetRemind());
