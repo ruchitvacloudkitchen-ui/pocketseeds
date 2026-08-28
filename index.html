@@ -32,10 +32,11 @@
   --save:#25743D; --save-bg:#DFEFE2;
   --plum:#5B3FA8; --plum-bg:#E9E4F7; --opt:#1163A8; --opt-bg:#DCEBF8;
   --on-brand:#FFFFFF;
-  /* Buttons carry their own green so this stays a button change and does
-     not repaint links and chips. It is the quick-add family deepened to
-     #23805B: the swatch itself gives white only 2.14:1, this gives 4.87. */
-  --btn:#23805B; --btn-2:#2FA173; --on-btn:#FFFFFF;
+  /* The chosen brand green, used by the filled buttons and the quick-add
+     chips. White on it measures 2.14:1, below the 4.5:1 a label needs and the
+     3:1 an icon needs — a deliberate choice, made after being flagged. Change
+     this one value to adjust every button and chip together. */
+  --btn:#56C596; --btn-2:#7BE495; --on-btn:#FFFFFF;
   --radius:18px; --shadow:0 1px 3px rgba(34,36,46,.06),0 6px 18px rgba(34,36,46,.06);
   --card-h:154px;
 }
@@ -54,7 +55,7 @@
   --brand:#7BD189;--brand-2:#9CE0A6;--amber:#FF9163;--amber-2:#FFA87F;
   --in:#7BD189;--in-bg:rgba(99,190,113,.16);--out:#FF9163;--out-bg:rgba(242,107,58,.16);
   --warn:#F5C56B;--warn-bg:rgba(245,197,107,.14);--save:#7BD189;--save-bg:rgba(99,190,113,.16);
-  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--btn:#2FA173;--btn-2:#56C596;--on-btn:#08281F;--shadow:0 2px 16px rgba(0,0,0,.55)}
+  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--btn:#56C596;--btn-2:#7BE495;--on-btn:#FFFFFF;--shadow:0 2px 16px rgba(0,0,0,.55)}
 }
 :root[data-theme="dark"]{--bg:#1B1D25;--surface:rgba(255,255,255,.072);--surface-2:rgba(255,255,255,.042);
   --solid:#24262F;--chrome:rgba(27,29,37,.78);--glass-hi:rgba(255,255,255,.15);
@@ -68,7 +69,7 @@
   --brand:#7BD189;--brand-2:#9CE0A6;--amber:#FF9163;--amber-2:#FFA87F;
   --in:#7BD189;--in-bg:rgba(99,190,113,.16);--out:#FF9163;--out-bg:rgba(242,107,58,.16);
   --warn:#F5C56B;--warn-bg:rgba(245,197,107,.14);--save:#7BD189;--save-bg:rgba(99,190,113,.16);
-  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--btn:#2FA173;--btn-2:#56C596;--on-btn:#08281F;--shadow:0 2px 16px rgba(0,0,0,.55)}
+  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--btn:#56C596;--btn-2:#7BE495;--on-btn:#FFFFFF;--shadow:0 2px 16px rgba(0,0,0,.55)}
 
 /* ---------- income banner ----------
    The artwork is optional: if income-banner.jpg is not in the repo the <img>
