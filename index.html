@@ -90,14 +90,17 @@
    A bento: the month's total on top, then the three buckets as coloured
    blocks. Each block carries its own background and ink, so it reads the same
    in both themes without a second palette. */
-.sc-top{border-radius:22px;padding:18px 19px;color:#EAF7EF;position:relative;overflow:hidden;
-  background:linear-gradient(140deg,#04371F 0%,#0A6A3C 52%,#12A05B 100%);
-  box-shadow:0 10px 28px rgba(6,80,45,.3)}
+/* The total card is a light lavender, so its ink is dark — a near-white
+   heading would vanish on it. Like the three blocks below, it carries its own
+   background and ink and so looks the same in both themes. */
+.sc-top{border-radius:22px;padding:18px 19px;color:#2E1F47;position:relative;overflow:hidden;
+  background:linear-gradient(140deg,#CDBBEC 0%,#BFA8E4 52%,#B69EE0 100%);
+  box-shadow:0 10px 28px rgba(96,70,150,.22)}
 .sc-top::after{content:'';position:absolute;right:-38px;top:-46px;width:150px;height:150px;border-radius:50%;
-  background:radial-gradient(circle, rgba(255,255,255,.17), rgba(255,255,255,0) 68%)}
-.sc-top .sc-k{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.72}
+  background:radial-gradient(circle, rgba(255,255,255,.42), rgba(255,255,255,0) 68%)}
+.sc-top .sc-k{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.8}
 .sc-top .sc-amt{font-size:36px;font-weight:800;letter-spacing:-.03em;margin:3px 0 2px;line-height:1.05}
-.sc-top .sc-of{font-size:14px;font-weight:600;opacity:.82}
+.sc-top .sc-of{font-size:14px;font-weight:600;opacity:.88}
 
 .sc-bento{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .sc-b{position:relative;overflow:hidden;border-radius:20px;padding:15px 16px;min-height:118px;
