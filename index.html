@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#1E7A79">
+<meta name="theme-color" content="#2E8B49">
 <title>PocketSeeds — తెలుగు డబ్బు యాప్</title>
 <meta name="description" content="తెలుగు వారి కోసం డబ్బు యాప్ — ఆదాయం, ఖర్చులు, వడ్డీ అప్పులు, చిట్టీలు, మొయి పుస్తకం, పండుగ పొదుపు.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M7%200h86a7%207%200%200%201%207%207v45.5C100%2080.4%2077.6%20100%2050%20100S0%2080.4%200%2052.5V7a7%207%200%200%201%207-7z' fill='%230A8A66'/%3E%3Cpath d='M75.5%2029.5C71.2%2019.6%2061.8%2014%2049.5%2014%2034.6%2014%2024.5%2022.2%2024.5%2033.4c0%2012.4%2011.4%2017.2%2025.6%2021.2%2012.6%203.5%2020.4%206.4%2020.4%2014.2%200%208.2-8.2%2013.4-20.6%2013.4-12.8%200-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E">
@@ -14,24 +14,23 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  /* Palette ramp: #205072 navy, #329D9C teal, #56C596 sea green, #7BE495
-     light green, #CFF4D2 mint. Solid fills are darkened from the swatch
-     wherever white text sits on them — #329D9C only reaches 3.0:1 against
-     white. The ramp has no warm colour, so money out takes the navy end and
-     only genuine danger keeps a red (see --warn). */
-  --bg:#F2FAF6; --surface:rgba(255,255,255,.82); --surface-2:rgba(32,80,114,.05);
-  --solid:#FFFFFF; --chrome:rgba(242,250,246,.82); --glass-hi:rgba(255,255,255,.92);
-  --bg-layer:radial-gradient(125% 85% at 8% -12%, #CFF4D2 0%, rgba(207,244,210,0) 58%),
-             radial-gradient(110% 75% at 100% 2%, #B7E9E2 0%, rgba(183,233,226,0) 52%),
-             radial-gradient(90% 60% at 50% 108%, #DCF5E4 0%, rgba(220,245,228,0) 60%),
-             linear-gradient(180deg,#F2FAF6 0%,#E6F5EE 100%);
-  --ink:#173C55; --muted:#48697C; --line:rgba(32,80,114,.15);
-  --brand:#186D6C; --brand-2:#56C596; --amber:#205072; --amber-2:#329D9C;
-  --in:#12795C; --in-bg:#DAF3E6;
-  --out:#205072; --out-bg:#DDE9F1;
-  --warn:#A2400F; --warn-bg:#FBE6D8;
-  --save:#12795C; --save-bg:#DAF3E6;
-  --plum:#2E5E86; --plum-bg:#DFEAF3; --opt:#186B84; --opt-bg:#D8EEF2;
+  /* Reference palette: charcoal #22242E, coral #F26B3A, green #63BE71,
+     mint #CFE7D0. Solid greens are darkened from the reference swatch where
+     white text sits on them — the swatch itself only reaches 2.3:1 against
+     white, which is unreadable. Green is money in, coral is money out. */
+  --bg:#F1F6F0; --surface:rgba(255,255,255,.80); --surface-2:rgba(34,36,46,.045);
+  --solid:#FFFFFF; --chrome:rgba(241,246,240,.80); --glass-hi:rgba(255,255,255,.9);
+  --bg-layer:radial-gradient(125% 85% at 8% -12%, #CFE7D0 0%, rgba(207,231,208,0) 58%),
+             radial-gradient(110% 75% at 100% 2%, #FBDCCB 0%, rgba(251,220,203,0) 52%),
+             radial-gradient(90% 60% at 50% 108%, #D9EBDA 0%, rgba(217,235,218,0) 60%),
+             linear-gradient(180deg,#F1F6F0 0%,#E7F0E6 100%);
+  --ink:#22242E; --muted:#4F5F58; --line:rgba(34,36,46,.13);
+  --brand:#25743D; --brand-2:#63BE71; --amber:#B0431A; --amber-2:#F26B3A;
+  --in:#25743D; --in-bg:#DFEFE2;
+  --out:#B0431A; --out-bg:#FCE6DC;
+  --warn:#9A4A12; --warn-bg:#FBE7D4;
+  --save:#25743D; --save-bg:#DFEFE2;
+  --plum:#5B3FA8; --plum-bg:#E9E4F7; --opt:#1163A8; --opt-bg:#DCEBF8;
   --on-brand:#FFFFFF;
   --radius:18px; --shadow:0 1px 3px rgba(34,36,46,.06),0 6px 18px rgba(34,36,46,.06);
   --card-h:154px;
@@ -39,33 +38,33 @@
 /* Dark tokens live in one place and are applied three ways: the system
    preference, and either explicit choice from the theme switch. */
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--bg:#0E2430;--surface:rgba(255,255,255,.075);--surface-2:rgba(255,255,255,.045);
-  --solid:#15303C;--chrome:rgba(14,36,48,.80);--glass-hi:rgba(255,255,255,.16);
-  --bg-layer:radial-gradient(125% 85% at 6% -14%, #1C5A55 0%, rgba(28,90,85,0) 60%),
-             radial-gradient(105% 70% at 100% 0%, #205072 0%, rgba(32,80,114,0) 52%),
-             radial-gradient(95% 62% at 50% 110%, #174A3E 0%, rgba(23,74,62,0) 62%),
-             linear-gradient(180deg,#112A36 0%,#0E2430 55%,#0C1F2A 100%);
-  /* text is white in dark mode, as asked; the ramp's light end carries the
-     brand here — its dark end has no contrast against this background */
-  --ink:#FFFFFF;--muted:#A7C0C4;--line:rgba(255,255,255,.14);
-  --brand:#7BE495;--brand-2:#CFF4D2;--amber:#6FC9C8;--amber-2:#329D9C;
-  --in:#7BE495;--in-bg:rgba(123,228,149,.16);--out:#8FC4E8;--out-bg:rgba(143,196,232,.16);
-  --warn:#F3B77C;--warn-bg:rgba(243,183,124,.15);--save:#7BE495;--save-bg:rgba(123,228,149,.16);
-  --plum:#9DC2E8;--plum-bg:rgba(157,194,232,.15);--opt:#6FC9C8;--opt-bg:rgba(111,201,200,.16);--on-brand:#08281F;--shadow:0 2px 16px rgba(0,0,0,.55)}
+  :root:not([data-theme="light"]){--bg:#1B1D25;--surface:rgba(255,255,255,.072);--surface-2:rgba(255,255,255,.042);
+  --solid:#24262F;--chrome:rgba(27,29,37,.78);--glass-hi:rgba(255,255,255,.15);
+  --bg-layer:radial-gradient(125% 85% at 6% -14%, #2A4A34 0%, rgba(42,74,52,0) 60%),
+             radial-gradient(105% 70% at 100% 0%, #3D3327 0%, rgba(61,51,39,0) 52%),
+             radial-gradient(95% 62% at 50% 110%, #23303A 0%, rgba(35,48,58,0) 62%),
+             linear-gradient(180deg,#1E212A 0%,#1B1D25 55%,#191B22 100%);
+  /* text is white in dark mode, as asked; brand and status colours are
+     lightened here too or links and amounts sit under 4.5:1 on charcoal */
+  --ink:#FFFFFF;--muted:#AFBBB6;--line:rgba(255,255,255,.13);
+  --brand:#7BD189;--brand-2:#9CE0A6;--amber:#FF9163;--amber-2:#FFA87F;
+  --in:#7BD189;--in-bg:rgba(99,190,113,.16);--out:#FF9163;--out-bg:rgba(242,107,58,.16);
+  --warn:#F5C56B;--warn-bg:rgba(245,197,107,.14);--save:#7BD189;--save-bg:rgba(99,190,113,.16);
+  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--shadow:0 2px 16px rgba(0,0,0,.55)}
 }
-:root[data-theme="dark"]{--bg:#0E2430;--surface:rgba(255,255,255,.075);--surface-2:rgba(255,255,255,.045);
-  --solid:#15303C;--chrome:rgba(14,36,48,.80);--glass-hi:rgba(255,255,255,.16);
-  --bg-layer:radial-gradient(125% 85% at 6% -14%, #1C5A55 0%, rgba(28,90,85,0) 60%),
-             radial-gradient(105% 70% at 100% 0%, #205072 0%, rgba(32,80,114,0) 52%),
-             radial-gradient(95% 62% at 50% 110%, #174A3E 0%, rgba(23,74,62,0) 62%),
-             linear-gradient(180deg,#112A36 0%,#0E2430 55%,#0C1F2A 100%);
-  /* text is white in dark mode, as asked; the ramp's light end carries the
-     brand here — its dark end has no contrast against this background */
-  --ink:#FFFFFF;--muted:#A7C0C4;--line:rgba(255,255,255,.14);
-  --brand:#7BE495;--brand-2:#CFF4D2;--amber:#6FC9C8;--amber-2:#329D9C;
-  --in:#7BE495;--in-bg:rgba(123,228,149,.16);--out:#8FC4E8;--out-bg:rgba(143,196,232,.16);
-  --warn:#F3B77C;--warn-bg:rgba(243,183,124,.15);--save:#7BE495;--save-bg:rgba(123,228,149,.16);
-  --plum:#9DC2E8;--plum-bg:rgba(157,194,232,.15);--opt:#6FC9C8;--opt-bg:rgba(111,201,200,.16);--on-brand:#08281F;--shadow:0 2px 16px rgba(0,0,0,.55)}
+:root[data-theme="dark"]{--bg:#1B1D25;--surface:rgba(255,255,255,.072);--surface-2:rgba(255,255,255,.042);
+  --solid:#24262F;--chrome:rgba(27,29,37,.78);--glass-hi:rgba(255,255,255,.15);
+  --bg-layer:radial-gradient(125% 85% at 6% -14%, #2A4A34 0%, rgba(42,74,52,0) 60%),
+             radial-gradient(105% 70% at 100% 0%, #3D3327 0%, rgba(61,51,39,0) 52%),
+             radial-gradient(95% 62% at 50% 110%, #23303A 0%, rgba(35,48,58,0) 62%),
+             linear-gradient(180deg,#1E212A 0%,#1B1D25 55%,#191B22 100%);
+  /* text is white in dark mode, as asked; brand and status colours are
+     lightened here too or links and amounts sit under 4.5:1 on charcoal */
+  --ink:#FFFFFF;--muted:#AFBBB6;--line:rgba(255,255,255,.13);
+  --brand:#7BD189;--brand-2:#9CE0A6;--amber:#FF9163;--amber-2:#FFA87F;
+  --in:#7BD189;--in-bg:rgba(99,190,113,.16);--out:#FF9163;--out-bg:rgba(242,107,58,.16);
+  --warn:#F5C56B;--warn-bg:rgba(245,197,107,.14);--save:#7BD189;--save-bg:rgba(99,190,113,.16);
+  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--shadow:0 2px 16px rgba(0,0,0,.55)}
 
 /* ---------- income banner ----------
    The artwork is optional: if income-banner.jpg is not in the repo the <img>
@@ -197,7 +196,7 @@ button{color:var(--ink)}
   background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
 .balance-card{min-height:var(--card-h);padding:18px;color:#fff;border:0;position:relative;overflow:hidden;
   display:flex;flex-direction:column;justify-content:space-between;
-  background:linear-gradient(140deg,#205072 0%,#1E7A79 48%,#329D9C 100%);
+  background:linear-gradient(140deg,#065F38 0%,#0B7A43 46%,#16A34A 100%);
   box-shadow:0 10px 30px rgba(6,95,56,.28), inset 0 1px 0 rgba(255,255,255,.22)}
 .balance-card::after{content:"";position:absolute;right:-38px;top:-52px;width:170px;height:170px;border-radius:50%;
   background:rgba(255,255,255,.10)}
@@ -5033,7 +5032,7 @@ function applyTheme(){
   const dark = THEME === 'dark' ||
     (THEME === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const meta = document.querySelector('meta[name=theme-color]');
-  if(meta) meta.setAttribute('content', dark ? '#0E2430' : (CONFIG.theme?.brand || '#1E7A79'));
+  if(meta) meta.setAttribute('content', dark ? '#1B1D25' : (CONFIG.theme?.brand || '#2E8B49'));
 }
 function setTheme(v){
   THEME = v; localStorage.setItem('pocketseeds.theme', v); applyTheme();
