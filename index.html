@@ -128,6 +128,15 @@
 .reel p{font-size:12.5px;line-height:1.35;opacity:.85;margin:5px 0 0}
 .reel[aria-disabled="true"]{opacity:.72}
 
+/* ---------- quick add tiles ----------
+   Each glyph sits on its own coloured rounded square, the way app icons do,
+   so a category is found by colour before the label is read. The glyphs are
+   the app's own stroke set drawn in white — no second icon library. */
+.q-ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;margin:0 auto;
+  box-shadow:0 4px 10px rgba(14,27,20,.18), inset 0 1px 0 rgba(255,255,255,.28)}
+.q-ic .i{width:22px;height:22px;color:#fff;stroke-width:2}
+@media (max-width:359px){.q-ic{width:40px;height:40px;border-radius:12px}.q-ic .i{width:20px;height:20px}}
+
 .policy-row{text-align:center;padding-top:2px}
 .policy-row a{display:inline-block;color:var(--muted);font-size:14px;font-weight:600;
   text-decoration:none;line-height:1.35;padding:8px 14px}
@@ -2029,21 +2038,21 @@ function guessCategory(s){
    the sheet for editing — nothing is saved until Save is pressed, so a rent
    that is not 5,000 costs one correction, not a wrong entry. */
 const QUICK = [
-  {cat:'Milk',      te:'పాలు',            en:'Milk',          ic:'glass',   amt:30},
-  {cat:'Vegetables',te:'కూరగాయలు',       en:'Veg',           ic:'leafy',   amt:100},
-  {cat:'Food',      te:'టీ/టిఫిన్',        en:'Tea',           ic:'food',    amt:20},
-  {cat:'Travel',    te:'ప్రయాణం',         en:'Travel',        ic:'bus',     amt:50},
-  {cat:'Fuel',      te:'పెట్రోల్',         en:'Petrol',        ic:'fuel',    amt:200},
-  {cat:'Recharge',  te:'రీఛార్జ్',         en:'Recharge',      ic:'phone',   amt:239},
-  {cat:'Rent',      te:'అద్దె',           en:'Rent',          ic:'house',   amt:5000},
-  {cat:'Bills',     te:'కరెంట్ బిల్లు',    en:'Electricity',   ic:'bulb',    amt:800},
-  {cat:'Chit',      te:'చిట్టీ',           en:'Chits',         ic:'refresh', amt:2000},
-  {cat:'EMI',       te:'లోన్ EMI',        en:'Loan EMI',      ic:'bank',    amt:3000},
-  {cat:'Health',    te:'ఆరోగ్యం',         en:'Health',        ic:'pill',    amt:500},
-  {cat:'Education', te:'స్కూల్ ఫీజు',     en:'School fee',    ic:'book',    amt:2000},
-  {cat:'Groceries', te:'కిరాణం',          en:'Kiranam',       ic:'basket',  amt:1500},
-  {cat:'Outing',    te:'వీకెండ్ పార్టీ',   en:'Weekend party', ic:'party',   amt:800},
-  {cat:'Other',     te:'ఇతర ఖర్చులు',     en:'Other',         ic:'dot',     amt:200}
+  {cat:'Milk',      te:'పాలు',            en:'Milk',          ic:'glass',   amt:30,   c:'#3B82F6'},
+  {cat:'Vegetables',te:'కూరగాయలు',       en:'Veg',           ic:'leafy',   amt:100,  c:'#22A85A'},
+  {cat:'Food',      te:'టీ/టిఫిన్',        en:'Tea',           ic:'food',    amt:20,   c:'#F59E0B'},
+  {cat:'Travel',    te:'ప్రయాణం',         en:'Travel',        ic:'bus',     amt:50,   c:'#0EA5A4'},
+  {cat:'Fuel',      te:'పెట్రోల్',         en:'Petrol',        ic:'fuel',    amt:200,  c:'#EF4444'},
+  {cat:'Recharge',  te:'రీఛార్జ్',         en:'Recharge',      ic:'phone',   amt:239,  c:'#6366F1'},
+  {cat:'Rent',      te:'అద్దె',           en:'Rent',          ic:'house',   amt:5000, c:'#8B5CF6'},
+  {cat:'Bills',     te:'కరెంట్ బిల్లు',    en:'Electricity',   ic:'bulb',    amt:800,  c:'#EAB308'},
+  {cat:'Chit',      te:'చిట్టీ',           en:'Chits',         ic:'refresh', amt:2000, c:'#06B6D4'},
+  {cat:'EMI',       te:'లోన్ EMI',        en:'Loan EMI',      ic:'bank',    amt:3000, c:'#2563EB'},
+  {cat:'Health',    te:'ఆరోగ్యం',         en:'Health',        ic:'pill',    amt:500,  c:'#F43F5E'},
+  {cat:'Education', te:'స్కూల్ ఫీజు',     en:'School fee',    ic:'book',    amt:2000, c:'#F97316'},
+  {cat:'Groceries', te:'కిరాణం',          en:'Kiranam',       ic:'basket',  amt:1500, c:'#65A30D'},
+  {cat:'Outing',    te:'వీకెండ్ పార్టీ',   en:'Weekend party', ic:'party',   amt:800,  c:'#EC4899'},
+  {cat:'Other',     te:'ఇతర ఖర్చులు',     en:'Other',         ic:'dots',    amt:200,  c:'#64748B'}
 ];
 </script>
 
@@ -2156,7 +2165,7 @@ function renderHome(){
 
   $('#quickTiles').innerHTML = QUICK.map((q,i) => `
     <button class="card" data-quick="${i}" style="padding:11px 8px;text-align:center;cursor:pointer;border:1px solid var(--line);font-family:inherit">
-      <div style="color:var(--brand)">${ic(q.ic,'i-lg')}</div>
+      <span class="q-ic" style="background:${q.c}">${ic(q.ic)}</span>
       <div style="font-size:13.5px;font-weight:700;margin-top:3px">${LANG==='te'?q.te:q.en}</div>
       <div style="font-size:13px;color:var(--muted);margin-top:1px">₹${q.amt.toLocaleString('en-IN')}</div>
     </button>`).join('');
