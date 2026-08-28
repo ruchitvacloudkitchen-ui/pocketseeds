@@ -1,14 +1,10 @@
 {
-  "theme": {
-    "brand": "#0B7A43",
-    "brand2": "#16A34A",
-    "accent": "#F0A93B"
-  },
+  "theme": {},
   "ad": {
     "title": "",
     "text": "",
     "cta": "",
     "url": ""
   },
-  "note": "Edited through the owner panel in the app, then committed here. Blank ad fields mean the built-in house ads keep rotating."
+  "note": "Edited through the owner panel in the app, then committed here. Leave theme empty to use the app's own palette — a colour set here is written as an inline style on the root element and so overrides BOTH light and dark themes, which stops dark mode lightening the brand for contrast. Blank ad fields mean the built-in house ads keep rotating."
 }

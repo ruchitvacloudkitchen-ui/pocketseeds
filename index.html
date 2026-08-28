@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0B7A43">
+<meta name="theme-color" content="#2E8B49">
 <title>PocketSeeds — తెలుగు డబ్బు యాప్</title>
 <meta name="description" content="తెలుగు వారి కోసం డబ్బు యాప్ — ఆదాయం, ఖర్చులు, వడ్డీ అప్పులు, చిట్టీలు, మొయి పుస్తకం, పండుగ పొదుపు.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M7%200h86a7%207%200%200%201%207%207v45.5C100%2080.4%2077.6%20100%2050%20100S0%2080.4%200%2052.5V7a7%207%200%200%201%207-7z' fill='%230A8A66'/%3E%3Cpath d='M75.5%2029.5C71.2%2019.6%2061.8%2014%2049.5%2014%2034.6%2014%2024.5%2022.2%2024.5%2033.4c0%2012.4%2011.4%2017.2%2025.6%2021.2%2012.6%203.5%2020.4%206.4%2020.4%2014.2%200%208.2-8.2%2013.4-20.6%2013.4-12.8%200-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E">
@@ -14,46 +14,57 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#EDF5F0; --surface:rgba(255,255,255,.74); --surface-2:rgba(11,122,67,.055);
-  --solid:#FFFFFF; --chrome:rgba(237,245,240,.78); --glass-hi:rgba(255,255,255,.85);
-  --bg-layer:radial-gradient(125% 85% at 8% -12%, #A9DCC0 0%, rgba(169,220,192,0) 58%),
-             radial-gradient(110% 75% at 100% 2%, #C9E9A6 0%, rgba(201,233,166,0) 52%),
-             radial-gradient(90% 60% at 50% 108%, #BFE3CE 0%, rgba(191,227,206,0) 60%),
-             linear-gradient(180deg,#E9F3ED 0%,#DFEDE4 100%);
-  --ink:#0E1B14; --muted:#61756B; --line:rgba(11,122,67,.14);
-  --brand:#0B7A43; --brand-2:#16A34A; --amber:#F0A93B; --amber-2:#E89425;
-  --in:#0B7A43; --in-bg:#E6F4EC;
-  --out:#DC2626; --out-bg:#FDECEC;
-  --warn:#B45309; --warn-bg:#FEF3C7;
-  --save:#0B7A43; --save-bg:#E6F4EC;
-  --plum:#6D28D9; --plum-bg:#EDE9FE;
-  --radius:18px; --shadow:0 1px 3px rgba(14,27,20,.06),0 6px 18px rgba(14,27,20,.05);
+  /* Reference palette: charcoal #22242E, coral #F26B3A, green #63BE71,
+     mint #CFE7D0. Solid greens are darkened from the reference swatch where
+     white text sits on them — the swatch itself only reaches 2.3:1 against
+     white, which is unreadable. Green is money in, coral is money out. */
+  --bg:#F1F6F0; --surface:rgba(255,255,255,.80); --surface-2:rgba(34,36,46,.045);
+  --solid:#FFFFFF; --chrome:rgba(241,246,240,.80); --glass-hi:rgba(255,255,255,.9);
+  --bg-layer:radial-gradient(125% 85% at 8% -12%, #CFE7D0 0%, rgba(207,231,208,0) 58%),
+             radial-gradient(110% 75% at 100% 2%, #FBDCCB 0%, rgba(251,220,203,0) 52%),
+             radial-gradient(90% 60% at 50% 108%, #D9EBDA 0%, rgba(217,235,218,0) 60%),
+             linear-gradient(180deg,#F1F6F0 0%,#E7F0E6 100%);
+  --ink:#22242E; --muted:#4F5F58; --line:rgba(34,36,46,.13);
+  --brand:#25743D; --brand-2:#63BE71; --amber:#B0431A; --amber-2:#F26B3A;
+  --in:#25743D; --in-bg:#DFEFE2;
+  --out:#B0431A; --out-bg:#FCE6DC;
+  --warn:#9A4A12; --warn-bg:#FBE7D4;
+  --save:#25743D; --save-bg:#DFEFE2;
+  --plum:#5B3FA8; --plum-bg:#E9E4F7; --opt:#1163A8; --opt-bg:#DCEBF8;
+  --on-brand:#FFFFFF;
+  --radius:18px; --shadow:0 1px 3px rgba(34,36,46,.06),0 6px 18px rgba(34,36,46,.06);
   --card-h:154px;
 }
 /* Dark tokens live in one place and are applied three ways: the system
    preference, and either explicit choice from the theme switch. */
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--bg:#04120C;--surface:rgba(255,255,255,.062);--surface-2:rgba(255,255,255,.035);
-  --solid:#0C1F16;--chrome:rgba(4,18,12,.72);--glass-hi:rgba(255,255,255,.14);
-  --bg-layer:radial-gradient(125% 85% at 6% -14%, #1B7A4E 0%, rgba(27,122,78,0) 60%),
-             radial-gradient(105% 70% at 100% 0%, #0E8A54 0%, rgba(14,138,84,0) 52%),
-             radial-gradient(95% 62% at 50% 110%, #0B4F33 0%, rgba(11,79,51,0) 62%),
-             linear-gradient(180deg,#06180F 0%,#04120C 55%,#03100A 100%);
-  --ink:#E9F3EC;--muted:#93AC9E;--line:rgba(255,255,255,.11);
-  --in:#5BE49B;--in-bg:rgba(52,211,153,.14);--out:#FF8A8A;--out-bg:rgba(248,113,113,.14);
-  --warn:#FCD34D;--warn-bg:rgba(252,211,77,.13);--save:#5BE49B;--save-bg:rgba(52,211,153,.14);
-  --plum:#C4B5FD;--plum-bg:rgba(196,181,253,.14);--shadow:0 2px 16px rgba(0,0,0,.5)}
+  :root:not([data-theme="light"]){--bg:#1B1D25;--surface:rgba(255,255,255,.072);--surface-2:rgba(255,255,255,.042);
+  --solid:#24262F;--chrome:rgba(27,29,37,.78);--glass-hi:rgba(255,255,255,.15);
+  --bg-layer:radial-gradient(125% 85% at 6% -14%, #2A4A34 0%, rgba(42,74,52,0) 60%),
+             radial-gradient(105% 70% at 100% 0%, #3D3327 0%, rgba(61,51,39,0) 52%),
+             radial-gradient(95% 62% at 50% 110%, #23303A 0%, rgba(35,48,58,0) 62%),
+             linear-gradient(180deg,#1E212A 0%,#1B1D25 55%,#191B22 100%);
+  /* text is white in dark mode, as asked; brand and status colours are
+     lightened here too or links and amounts sit under 4.5:1 on charcoal */
+  --ink:#FFFFFF;--muted:#AFBBB6;--line:rgba(255,255,255,.13);
+  --brand:#7BD189;--brand-2:#9CE0A6;--amber:#FF9163;--amber-2:#FFA87F;
+  --in:#7BD189;--in-bg:rgba(99,190,113,.16);--out:#FF9163;--out-bg:rgba(242,107,58,.16);
+  --warn:#F5C56B;--warn-bg:rgba(245,197,107,.14);--save:#7BD189;--save-bg:rgba(99,190,113,.16);
+  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--shadow:0 2px 16px rgba(0,0,0,.55)}
 }
-:root[data-theme="dark"]{--bg:#04120C;--surface:rgba(255,255,255,.062);--surface-2:rgba(255,255,255,.035);
-  --solid:#0C1F16;--chrome:rgba(4,18,12,.72);--glass-hi:rgba(255,255,255,.14);
-  --bg-layer:radial-gradient(125% 85% at 6% -14%, #1B7A4E 0%, rgba(27,122,78,0) 60%),
-             radial-gradient(105% 70% at 100% 0%, #0E8A54 0%, rgba(14,138,84,0) 52%),
-             radial-gradient(95% 62% at 50% 110%, #0B4F33 0%, rgba(11,79,51,0) 62%),
-             linear-gradient(180deg,#06180F 0%,#04120C 55%,#03100A 100%);
-  --ink:#E9F3EC;--muted:#93AC9E;--line:rgba(255,255,255,.11);
-  --in:#5BE49B;--in-bg:rgba(52,211,153,.14);--out:#FF8A8A;--out-bg:rgba(248,113,113,.14);
-  --warn:#FCD34D;--warn-bg:rgba(252,211,77,.13);--save:#5BE49B;--save-bg:rgba(52,211,153,.14);
-  --plum:#C4B5FD;--plum-bg:rgba(196,181,253,.14);--shadow:0 2px 16px rgba(0,0,0,.5)}
+:root[data-theme="dark"]{--bg:#1B1D25;--surface:rgba(255,255,255,.072);--surface-2:rgba(255,255,255,.042);
+  --solid:#24262F;--chrome:rgba(27,29,37,.78);--glass-hi:rgba(255,255,255,.15);
+  --bg-layer:radial-gradient(125% 85% at 6% -14%, #2A4A34 0%, rgba(42,74,52,0) 60%),
+             radial-gradient(105% 70% at 100% 0%, #3D3327 0%, rgba(61,51,39,0) 52%),
+             radial-gradient(95% 62% at 50% 110%, #23303A 0%, rgba(35,48,58,0) 62%),
+             linear-gradient(180deg,#1E212A 0%,#1B1D25 55%,#191B22 100%);
+  /* text is white in dark mode, as asked; brand and status colours are
+     lightened here too or links and amounts sit under 4.5:1 on charcoal */
+  --ink:#FFFFFF;--muted:#AFBBB6;--line:rgba(255,255,255,.13);
+  --brand:#7BD189;--brand-2:#9CE0A6;--amber:#FF9163;--amber-2:#FFA87F;
+  --in:#7BD189;--in-bg:rgba(99,190,113,.16);--out:#FF9163;--out-bg:rgba(242,107,58,.16);
+  --warn:#F5C56B;--warn-bg:rgba(245,197,107,.14);--save:#7BD189;--save-bg:rgba(99,190,113,.16);
+  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--shadow:0 2px 16px rgba(0,0,0,.55)}
 
 /* ---------- income banner ----------
    The artwork is optional: if income-banner.jpg is not in the repo the <img>
@@ -160,9 +171,9 @@ html[lang="te"] .balance-amt,html[lang="te"] .t-amt,html[lang="te"] .amt,html[la
   backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4)}
 .top-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;letter-spacing:-.02em}
-.logo{width:33px;height:33px;display:grid;place-items:center;flex:0 0 auto;color:#0A8A66}
+.logo{width:33px;height:33px;display:grid;place-items:center;flex:0 0 auto;color:var(--brand)}
 .mark{width:100%;height:100%;display:block;object-fit:contain}
-.mark-fallback{display:block;width:100%;height:100%;color:#0A8A66}
+.mark-fallback{display:block;width:100%;height:100%;color:var(--brand)}
 .mark-fallback svg{width:100%;height:100%;display:block}
 .month-pick{display:flex;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--line);
   border-radius:999px;padding:3px;box-shadow:var(--shadow)}
@@ -172,6 +183,11 @@ html[lang="te"] .balance-amt,html[lang="te"] .t-amt,html[lang="te"] .amt,html[la
   color:var(--ink);font-size:17.5px;cursor:pointer;box-shadow:var(--shadow);flex:0 0 auto}
 .lang-btn{width:auto;padding:0 11px;font-weight:800;font-size:15px;font-family:'Noto Sans Telugu',sans-serif}
 /* ---------- cards ---------- */
+/* A <button> takes the UA's own black button text and does not inherit from
+   the page, so every button-shaped surface in the app rendered its label black
+   — fine in light mode, invisible once dark mode existed. Set once here;
+   .btn-p and friends override it by class specificity where they need white. */
+button{color:var(--ink)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
   position:relative;overflow:hidden}
 /* the hairline highlight is what sells glass; blur is reserved for the few
@@ -251,13 +267,13 @@ html[lang="te"] .tile .t-lbl{text-transform:none;letter-spacing:0;font-size:14px
   border:1px dashed var(--line);border-radius:15px;line-height:1.5}
 .empty .e-ic{font-size:29px;display:block;margin-bottom:6px;opacity:.75}
 /* ---------- coach ---------- */
-.coach{padding:17px;border-radius:16px;border:0;background:var(--brand);color:#fff}
-.coach h4{font-size:16.5px;font-weight:800;color:#fff;display:flex;align-items:center;gap:7px}
-.coach .big{font-size:30px;font-weight:800;color:#fff;letter-spacing:-.02em;margin:7px 0 3px}
+.coach{padding:17px;border-radius:16px;border:0;background:var(--brand);color:var(--on-brand)}
+.coach h4{font-size:16.5px;font-weight:800;color:var(--on-brand);display:flex;align-items:center;gap:7px}
+.coach .big{font-size:30px;font-weight:800;color:var(--on-brand);letter-spacing:-.02em;margin:7px 0 3px}
 .coach p{font-size:15px;color:rgba(255,255,255,.86);line-height:1.55}
-.coach p b{color:#fff}
+.coach p b{color:var(--on-brand)}
 .coach .btn-save{background:#fff;color:var(--brand)}
-.coach .btn-g{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45)}
+.coach .btn-g{background:transparent;color:var(--on-brand);border:1px solid currentColor}
 .bar{height:9px;border-radius:999px;background:rgba(255,255,255,.26);overflow:hidden;margin:11px 0 7px}
 .bar > i{display:block;height:100%;border-radius:999px;background:#fff;transition:width .45s ease}
 .coach-actions{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}
@@ -266,10 +282,10 @@ html[lang="te"] .tile .t-lbl{text-transform:none;letter-spacing:0;font-size:14px
 /* ---------- buttons / forms ---------- */
 .btn{border:0;border-radius:12px;padding:11px 15px;font-size:16px;font-weight:700;cursor:pointer;
   font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:7px}
-.btn-p{background:var(--brand);color:#fff}
+.btn-p{background:var(--brand);color:var(--on-brand)}
 .btn-g{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
-.btn-in{background:var(--in);color:#fff} .btn-out{background:var(--out);color:#fff}
-.btn-save{background:var(--save);color:#fff} .btn-plum{background:var(--plum);color:#fff}
+.btn-in{background:var(--in);color:var(--on-brand)} .btn-out{background:var(--out);color:var(--on-brand)}
+.btn-save{background:var(--save);color:var(--on-brand)} .btn-plum{background:var(--plum);color:var(--on-brand)}
 .btn-sm{padding:7px 11px;font-size:14px;border-radius:10px}
 .btn-block{width:100%}
 .btn[href]{text-decoration:none}
@@ -284,7 +300,7 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .chips{display:flex;gap:7px;flex-wrap:wrap}
 .chip{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);
   font-size:15px;font-weight:600;cursor:pointer;color:var(--muted);font-family:inherit}
-.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
 .hint{font-size:13.5px;color:var(--muted);line-height:1.5;margin-top:6px}
 /* ---------- nav ---------- */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--chrome);border-top:1px solid var(--line);
@@ -296,7 +312,7 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .nav button span{font-size:22.5px;line-height:1}
 .nav button[aria-selected="true"]{color:var(--brand)}
 .fab{position:fixed;right:calc(50% - 260px + 16px);bottom:88px;z-index:45;width:56px;height:56px;border-radius:50%;
-  border:0;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;font-size:29px;cursor:pointer;
+  border:0;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:var(--on-brand);font-size:29px;cursor:pointer;
   box-shadow:0 8px 22px rgba(11,122,67,.4)}
 .fab.mic{bottom:152px;width:48px;height:48px;font-size:22.5px;background:var(--solid);color:var(--brand);
   border:1px solid var(--line);box-shadow:var(--shadow)}
@@ -372,7 +388,7 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .cal-cell.pub{background:var(--out-bg)}
 .cal-cell.pub .d{color:var(--out)}
 .cal-cell.opt{background:#E3F2FD}
-.cal-cell.opt .d{color:#0B69C7}
+.cal-cell.opt .d{color:var(--opt)}
 :root[data-theme="dark"] .cal-cell.opt{background:#132A40}
 :root[data-theme="dark"] .cal-cell.opt .d{color:#7FC0F5}
 @media (prefers-color-scheme:dark){
@@ -380,7 +396,7 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
   :root:not([data-theme="light"]) .cal-cell.opt .d{color:#7FC0F5}
 }
 .cal-cell.today{background:var(--brand) !important}
-.cal-cell.today .d{color:#fff !important}
+.cal-cell.today .d{color:var(--on-brand) !important}
 .hol-legend{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--muted);font-weight:600}
 .hol-legend i{width:9px;height:9px;border-radius:3px;display:inline-block}
 .hol-legend .lg-p{background:var(--out)} .hol-legend .lg-o{background:#0B69C7}
@@ -390,21 +406,20 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .hol-row .hol-d{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;
   font-size:13.5px;font-weight:800}
 .hol-row.pub .hol-d{background:var(--out-bg);color:var(--out)}
-.hol-row.opt .hol-d{background:#E3F2FD;color:#0B69C7}
-:root[data-theme="dark"] .hol-row.opt .hol-d{background:#132A40;color:#7FC0F5}
+.hol-row.opt .hol-d{background:var(--opt-bg);color:var(--opt)}
 .hol-row .hol-b{flex:1;min-width:0}
 .hol-row .hol-n{display:block;font-size:13.5px;font-weight:700;line-height:1.3}
 .hol-row .hol-t{display:block;font-size:11px;color:var(--muted);margin-top:1px}
 .hol-tag{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;margin-top:5px;margin-right:5px}
 .hol-tag.pub{background:var(--out-bg);color:var(--out)}
-.hol-tag.opt{background:#E3F2FD;color:#0B69C7}
+.hol-tag.opt{background:var(--opt-bg);color:var(--opt)}
 :root[data-theme="dark"] .hol-tag.opt{background:#132A40;color:#7FC0F5}
 
 /* panchangam */
 .cal-cell{aspect-ratio:auto;min-height:52px;padding:5px 2px}
 .cal-cell .t{font-size:8.5px;line-height:1.1;color:var(--muted);margin-top:2px;max-width:100%;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
-.cal-cell.today .t{color:rgba(255,255,255,.9)}
+.cal-cell.today .t{color:var(--on-brand);opacity:.9}
 .pan-box{background:var(--surface-2);border-radius:13px;padding:12px 13px;margin-top:4px}
 .pan-grid{display:grid;grid-template-columns:1fr;gap:1px}
 .pan-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:5px 0;
@@ -469,7 +484,7 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .cal-cell .d{font-size:13px;font-weight:700;color:var(--ink);line-height:1}
 .cal-cell .m{font-size:8.5px;color:var(--out);font-weight:700;margin-top:2px;line-height:1}
 .cal-cell.today{background:var(--brand);border-color:var(--brand)}
-.cal-cell.today .d{color:#fff} .cal-cell.today .m{color:rgba(255,255,255,.85)}
+.cal-cell.today .d{color:var(--on-brand)} .cal-cell.today .m{color:var(--on-brand);opacity:.88}
 .cal-cell.sel{border-color:var(--brand)}
 .cal-cell .fest{position:absolute;top:3px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--amber-2)}
 
@@ -5017,7 +5032,7 @@ function applyTheme(){
   const dark = THEME === 'dark' ||
     (THEME === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const meta = document.querySelector('meta[name=theme-color]');
-  if(meta) meta.setAttribute('content', dark ? '#0A120E' : (CONFIG.theme?.brand || '#0B7A43'));
+  if(meta) meta.setAttribute('content', dark ? '#1B1D25' : (CONFIG.theme?.brand || '#2E8B49'));
 }
 function setTheme(v){
   THEME = v; localStorage.setItem('pocketseeds.theme', v); applyTheme();
