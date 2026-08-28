@@ -509,6 +509,8 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .cal-cell .fest{position:absolute;top:3px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--amber-2)}
 
 /* SIP calculator */
+.sip-stack{display:grid;gap:12px}
+.sipc{padding:15px}
 .sipc-head{display:flex;align-items:flex-start;gap:11px;margin-bottom:13px}
 .sipc-ic{width:38px;height:38px;border-radius:12px;background:var(--in-bg);color:var(--brand);
   display:grid;place-items:center;flex:0 0 auto}
@@ -702,7 +704,7 @@ table.sip tbody tr:last-child td{font-size:15px}
 
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="sipTitle">SIP &amp; mutual funds</h3></div>
-      <div class="card" style="padding:15px" id="sipBox"></div>
+      <div class="sip-stack" id="sipBox" data-sip-host></div>
     </div>
 
     <div class="sec">
@@ -896,7 +898,7 @@ table.sip tbody tr:last-child td{font-size:15px}
 
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="sipTitle">SIP &amp; mutual funds</h3></div>
-      <div class="card" style="padding:15px" id="sipBox2"></div>
+      <div class="sip-stack" id="sipBox2" data-sip-host></div>
     </div>
 
     <div class="sec">
@@ -1310,6 +1312,10 @@ const STR = {
     saveImage:'Save as image', savePdf:'Save as PDF', shareIt:'Share',
     imgSaved:'Statement saved', shareFail:'Sharing is not available here',
     sipCalc:'SIP seed calculator', sipCalcSub:'See what small monthly steps can grow into.',
+    sipMonthlyCalc:'SIP monthly calculator',
+    sipMonthlyCalcSub:'A fixed amount every month, compounding month on month.',
+    sipLumpCalc:'Lumpsum calculator',
+    sipLumpCalcSub:'One amount invested once, then left alone to grow.',
     sipAvail:'Available balance', sipMonthlySeed:'Monthly seed', sipLump:'Amount', sipYearsL:'Years',
     sipExpected:'Expected return', sipProjected:'Projected value', sipYouPlant:'You plant',
     sipGlance:'Same amount, longer', sipYr:'yr',
@@ -1582,6 +1588,10 @@ const STR = {
     saveImage:'ఇమేజ్‌గా భద్రపరచు', savePdf:'PDF గా భద్రపరచు', shareIt:'పంపు',
     imgSaved:'స్టేట్‌మెంట్ భద్రమైంది', shareFail:'ఇక్కడ షేర్ చేయలేం',
     sipCalc:'SIP లెక్క', sipCalcSub:'చిన్న నెలవారీ అడుగులు ఎంతవుతాయో చూడండి.',
+    sipMonthlyCalc:'SIP నెలవారీ లెక్క',
+    sipMonthlyCalcSub:'ప్రతి నెలా ఒకే మొత్తం, నెల నెలా పెరుగుతుంది.',
+    sipLumpCalc:'లంప్‌సమ్ లెక్క',
+    sipLumpCalcSub:'ఒకేసారి పెట్టిన మొత్తం, కాలంతో పెరుగుతుంది.',
     sipAvail:'అందుబాటులో ఉన్న నిల్వ', sipMonthlySeed:'నెలకు', sipLump:'మొత్తం', sipYearsL:'సంవత్సరాలు',
     sipExpected:'ఆశించే రాబడి', sipProjected:'అంచనా విలువ', sipYouPlant:'మీరు వేసేది',
     sipGlance:'అదే మొత్తం, ఎక్కువ కాలం', sipYr:'ఏళ్లు',
@@ -4198,10 +4208,15 @@ paintIcons(); renderSaveBar();   /* this block loads after the first render */
    ========================================================================= */
 const SIP_GLANCE = [5, 10, 15, 20, 25];
 const SIP_RATES  = [8, 10, 12, 14, 18];
-let SIP_MODE = 'monthly';      // 'monthly' | 'once'
-let SIP_AMT  = null;           // null = suggest from the balance
-let SIP_YRS  = 10;
-let SIP_RATE = 12;
+/* Two calculators, not one toggle: a monthly SIP and a lump sum answer
+   different questions, and people compare them side by side. Each keeps its
+   own amount, years and expected return, so switching cards never resets the
+   other. Keyed by mode so both cards share one code path. */
+const SIP_MODES = ['monthly', 'once'];
+const SIP_STATE = {
+  monthly: { amt:null, yrs:10, rate:12 },   // amt null = suggest from the balance
+  once:    { amt:null, yrs:10, rate:12 }
+};
 
 function sipFuture(P, years, ratePct, monthly){
   P = Number(P) || 0;
@@ -4213,44 +4228,47 @@ function sipFuture(P, years, ratePct, monthly){
   return Math.round(P * Math.pow(1 + ratePct / 100, years));
 }
 function sipBalance(){ const b = stats().balance; return b > 0 ? Math.round(b) : 0; }
-function sipBaseAmount(){
-  if(SIP_AMT !== null) return SIP_AMT;
+function sipBaseAmount(mode){
+  const st = SIP_STATE[mode];
+  if(st.amt !== null) return st.amt;
   const b = sipBalance();
   /* a sensible monthly seed rather than the whole balance */
-  return SIP_MODE === 'monthly' ? Math.max(500, Math.round(b / 10 / 500) * 500) : b;
+  return mode === 'monthly' ? Math.max(500, Math.round(b / 10 / 500) * 500) : b;
 }
 
-function sipHTML(){
-  const P = sipBaseAmount();
-  const monthly = SIP_MODE === 'monthly';
-  const fv = sipFuture(P, SIP_YRS, SIP_RATE, monthly);
-  const put = monthly ? P * 12 * SIP_YRS : P;
+function sipCardHTML(mode){
+  const st      = SIP_STATE[mode];
+  const monthly = mode === 'monthly';
+  const P       = sipBaseAmount(mode);
+  const fv      = sipFuture(P, st.yrs, st.rate, monthly);
+  const put     = monthly ? P * 12 * st.yrs : P;
   return `
+  <div class="card sipc" data-sip-card="${mode}">
     <div class="sipc-head">
       <div class="sipc-ic">${ic('chart')}</div>
-      <div><h4>${L('sipCalc')}</h4><p>${t('sipCalcSub')}</p></div>
+      <div><h4>${L(monthly ? 'sipMonthlyCalc' : 'sipLumpCalc')}</h4>
+           <p>${t(monthly ? 'sipMonthlyCalcSub' : 'sipLumpCalcSub')}</p></div>
     </div>
 
-    <button class="sipc-bal" data-sip-usebal="1">
+    <button class="sipc-bal" data-sip-usebal data-sip-mode="${mode}">
       <span class="l">${ic('wallet')}<span>${t('sipAvail')}</span></span>
       <b>${money(sipBalance())}</b>
     </button>
 
-    <div class="seg" style="margin-bottom:13px">
-      <button data-sip="monthly" aria-pressed="${monthly}">SIP Monthly</button>
-      <button data-sip="once" aria-pressed="${!monthly}">Lumpsum</button>
-    </div>
-
     <div class="sipc-fields">
       <div class="sipc-f"><label>${t(monthly ? 'sipMonthlySeed' : 'sipLump')}</label>
-        <div class="box"><span>₹</span><input id="sipVal" type="number" inputmode="decimal" value="${P || ''}" placeholder="0"></div></div>
+        <div class="box"><span>₹</span><input type="number" inputmode="decimal"
+          data-sip-field="amt" data-sip-mode="${mode}"
+          value="${P || ''}" placeholder="0"></div></div>
       <div class="sipc-f"><label>${t('sipYearsL')}</label>
-        <div class="box"><span>${t('sipYr')}</span><input id="sipYrs" type="number" inputmode="numeric" value="${SIP_YRS}" min="1" max="40"></div></div>
+        <div class="box"><span>${t('sipYr')}</span><input type="number" inputmode="numeric"
+          data-sip-field="yrs" data-sip-mode="${mode}"
+          value="${st.yrs}" min="1" max="40"></div></div>
     </div>
 
     <div class="sipc-rate">
       <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:7px">${t('sipExpected')}</label>
-      <div class="chips">${SIP_RATES.map(r => `<button class="chip" data-sip-rate="${r}" aria-pressed="${r===SIP_RATE}">${r}%</button>`).join('')}</div>
+      <div class="chips">${SIP_RATES.map(r => `<button class="chip" data-sip-rate="${r}" data-sip-mode="${mode}" aria-pressed="${r===st.rate}">${r}%</button>`).join('')}</div>
     </div>
 
     <div class="sipc-out">
@@ -4258,36 +4276,43 @@ function sipHTML(){
       <div class="side"><div class="lbl">${t('sipYouPlant')}</div><b>${money(put)}</b></div>
     </div>
 
-    <div class="hint" style="margin-top:11px">${t('sipGlance')} · ${SIP_RATE}%</div>
+    <div class="hint" style="margin-top:11px">${t('sipGlance')} · ${st.rate}%</div>
     <div class="sipc-glance">
       ${SIP_GLANCE.map(y => `<div><div class="y">${y} ${t('sipYr')}</div>
-        <div class="v">${money(sipFuture(P, y, SIP_RATE, monthly))}</div></div>`).join('')}
+        <div class="v">${money(sipFuture(P, y, st.rate, monthly))}</div></div>`).join('')}
     </div>
 
-    <div class="sip-risk">${t('sipRisk')}</div>`;
+    <div class="sip-risk">${t('sipRisk')}</div>
+  </div>`;
 }
 
 function renderSip(){
-  const html = sipHTML();
+  const html = SIP_MODES.map(m => sipCardHTML(m)).join('');
   ['#sipBox', '#sipBox2'].forEach(sel => { const el = $(sel); if(el) el.innerHTML = html; });
 }
 
 document.addEventListener('click', e => {
-  const mode = e.target.closest('[data-sip]');
-  if(mode){ SIP_MODE = mode.dataset.sip; SIP_AMT = null; renderSip(); return; }
   const rate = e.target.closest('[data-sip-rate]');
-  if(rate){ SIP_RATE = Number(rate.dataset.sipRate); renderSip(); return; }
-  if(e.target.closest('[data-sip-usebal]')){ SIP_AMT = sipBalance(); renderSip(); }
+  if(rate){ SIP_STATE[rate.dataset.sipMode].rate = Number(rate.dataset.sipRate); renderSip(); return; }
+  const bal = e.target.closest('[data-sip-usebal]');
+  if(bal){ SIP_STATE[bal.dataset.sipMode].amt = sipBalance(); renderSip(); }
 });
 document.addEventListener('input', e => {
-  const el = e.target;
-  if(!el || (el.id !== 'sipVal' && el.id !== 'sipYrs')) return;
-  const id = el.id, caret = el.value.length;
-  if(id === 'sipVal') SIP_AMT = el.value === '' ? null : Math.max(0, Number(el.value));
-  else SIP_YRS = Math.min(40, Math.max(1, Number(el.value) || 1));
+  const el = e.target.closest('[data-sip-field]');
+  if(!el) return;
+  const mode = el.dataset.sipMode, field = el.dataset.sipField, st = SIP_STATE[mode];
+  if(!st) return;
+  /* the card lives in one of two hosts; keep focus in the one being typed in */
+  const host = el.closest('[data-sip-host]');
+  const caret = el.value.length;
+  if(field === 'amt') st.amt = el.value === '' ? null : Math.max(0, Number(el.value));
+  else st.yrs = Math.min(40, Math.max(1, Number(el.value) || 1));
   const focused = el === document.activeElement;
   renderSip();
-  if(focused){ const f = $('#' + id); if(f){ f.focus(); try{ f.setSelectionRange(caret, caret); }catch(_){} } }
+  if(focused && host){
+    const f = host.querySelector(`[data-sip-field="${field}"][data-sip-mode="${mode}"]`);
+    if(f){ f.focus(); try{ f.setSelectionRange(caret, caret); }catch(_){} }
+  }
 });
 
 /* keep it in step with the rest of the app */
