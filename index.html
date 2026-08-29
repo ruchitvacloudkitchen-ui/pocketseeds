@@ -230,20 +230,103 @@
 .ask-banner .go .i{width:16px;height:16px;stroke-width:2.2}
 .ask-banner:active{filter:brightness(.97)}
 
-/* All three blobs stay inside the green family. An off-family colour (the plum
-   token was the first try) greys out the moment it blurs into the greens and
-   the orb reads as mud. */
-.ask-banner .orb{position:relative;flex:0 0 auto;width:52px;height:52px;border-radius:50%;
-  overflow:hidden;background:linear-gradient(140deg,#1F6B3A 0%,#3E9E63 45%,#56C596 100%);
-  box-shadow:0 4px 14px rgba(37,116,61,.38), inset 0 1px 0 rgba(255,255,255,.35)}
-.ask-banner .orb i{position:absolute;width:34px;height:34px;border-radius:50%;filter:blur(7px)}
-.ask-banner .orb i:nth-child(1){background:#7BE495;left:-4px; top:-6px;   opacity:.95;animation:orb1 5.5s ease-in-out infinite}
-.ask-banner .orb i:nth-child(2){background:#D6FBE6;right:-6px;top:4px;    opacity:.75;animation:orb2 6.5s ease-in-out infinite}
-.ask-banner .orb i:nth-child(3){background:#0E4A28;left:6px;  bottom:-9px;opacity:.55;animation:orb3 7.5s ease-in-out infinite}
-@keyframes orb1{0%,100%{transform:translate(0,0) scale(1)}   50%{transform:translate(12px,10px) scale(1.15)}}
-@keyframes orb2{0%,100%{transform:translate(0,0) scale(1.1)} 50%{transform:translate(-11px,12px) scale(.9)}}
-@keyframes orb3{0%,100%{transform:translate(0,0) scale(1)}   50%{transform:translate(9px,-13px) scale(1.2)}}
-@media (prefers-reduced-motion:reduce){ .ask-banner .orb i{animation:none} }
+/* ---------- the orb ----------
+   A reusable animated icon: put <span class="orb"> … </span> anywhere and set
+   --orb to whatever size you need. orbHTML(size) writes the markup.
+
+   Everything moves on CSS transforms and opacity, so the compositor does the
+   work on the GPU and nothing is measured or laid out per frame. There is no
+   requestAnimationFrame loop on purpose: this thing lives at the bottom of a
+   page a reader may leave open for an hour, and a JS animation loop running
+   that whole time costs battery for no visible gain at 58px.
+
+   The liquid look is five blurred blobs of different colours drifting past one
+   another inside a clipped circle, each on its own 6–8s cycle. Because the
+   periods do not divide into each other, the combination takes far longer than
+   any one of them to repeat, so it reads as organic rather than looped. Every
+   keyframe returns to its own start, which is what makes the loop seamless.
+
+   The three layers, outside in: a translucent ring, the glass body with its
+   inner shadow, and the blobs beneath a fixed glossy highlight — the gloss
+   stays put while the liquid moves under it, which is what sells it as glass
+   rather than as a coloured circle. */
+/* inline-block, not inline: a bare <span> ignores width and height, so the orb
+   would collapse anywhere its parent was not a flex container */
+.orb{--orb:58px;display:inline-block;vertical-align:middle;
+  position:relative;flex:0 0 auto;width:var(--orb);height:var(--orb);
+  border-radius:50%;background:transparent;
+  animation:orbBreathe 7s ease-in-out infinite, orbGlow 8s ease-in-out infinite;
+  will-change:transform}
+.orb-core{position:absolute;inset:0;border-radius:50%;overflow:hidden;
+  background:radial-gradient(115% 115% at 32% 26%, #12793C 0%, #0B5D2A 44%, #06341A 78%, #041F10 100%);
+  box-shadow:inset 0 2px 7px rgba(0,0,0,.45), inset 0 -3px 9px rgba(0,0,0,.35);
+  animation:orbSpin 24s linear infinite;will-change:transform}
+/* the ring sits on its own layer so the core's rotation does not carry it round */
+.orb-ring{position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  border:1.5px solid rgba(216,229,216,.5);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.13), 0 0 0 1px rgba(216,229,216,.16)}
+/* Each blob is a soft radial rather than a hard disc, so the edges fall off
+   before the blur even runs and nothing looks like a circle sliding about.
+   Only the two bright ones screen; the emerald and the dark mass paint
+   normally, or everything washes to one flat mid-green. */
+/* Blur is a fraction of the orb, not a fixed pixel count, or the component
+   only looks right at one size. The blobs are clustered and overlapping on
+   purpose: spread apart they read as separate spots, and the brief asks for
+   one liquid mass, so they never travel far enough to come apart. */
+.orb-core i{position:absolute;border-radius:50%;filter:blur(calc(var(--orb) * .055));
+  will-change:transform,opacity}
+.orb-core i:nth-child(1){width:74%;height:74%;left:0%;top:-4%;opacity:.9;
+  background:radial-gradient(circle at 50% 50%, #16A34A 0%, rgba(22,163,74,.5) 44%, rgba(22,163,74,0) 74%);
+  animation:orbA 7s ease-in-out infinite}
+.orb-core i:nth-child(2){width:66%;height:66%;right:-4%;top:4%;mix-blend-mode:screen;
+  background:radial-gradient(circle at 50% 50%, #A3E635 0%, rgba(163,230,53,.66) 38%, rgba(163,230,53,0) 70%);
+  animation:orbB 8s ease-in-out infinite}
+/* the hot core — small, bright, and the reason it looks lit from inside */
+.orb-core i:nth-child(3){width:50%;height:50%;left:18%;top:20%;mix-blend-mode:screen;
+  filter:blur(calc(var(--orb) * .04));
+  background:radial-gradient(circle at 50% 50%, #C7F000 0%, rgba(199,240,0,.78) 30%, rgba(199,240,0,0) 68%);
+  animation:orbC 6s ease-in-out infinite}
+.orb-core i:nth-child(4){width:44%;height:44%;left:6%;top:36%;mix-blend-mode:screen;opacity:.9;
+  background:radial-gradient(circle at 50% 50%, #7DD3FC 0%, rgba(125,211,252,.55) 36%, rgba(125,211,252,0) 70%);
+  animation:orbD 7.5s ease-in-out infinite}
+/* the dark mass keeps one side deep, so the liquid has somewhere to move into */
+.orb-core i:nth-child(5){width:66%;height:66%;right:-16%;bottom:-22%;opacity:.85;
+  filter:blur(calc(var(--orb) * .08));
+  background:radial-gradient(circle at 50% 50%, #052B15 0%, rgba(5,43,21,.42) 46%, rgba(5,43,21,0) 74%);
+  animation:orbE 6.5s ease-in-out infinite}
+
+/* Lighting sits above the liquid and does not rotate with it. Without the
+   darkened rim the blobs reach the edge and the whole thing reads as a flat
+   ball rather than a sphere. An inset box-shadow on .orb-core cannot do this
+   job — children paint over it. */
+.orb-vig{position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:radial-gradient(78% 78% at 48% 42%, rgba(3,26,13,0) 64%, rgba(3,26,13,.30) 84%, rgba(2,18,9,.78) 100%);
+  box-shadow:inset 0 2px 9px rgba(0,0,0,.5), inset 0 -4px 12px rgba(0,0,0,.4)}
+/* upper-left gloss, plus a faint lime rim light along the bottom */
+.orb-gloss{position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:
+    radial-gradient(26% 19% at 30% 19%, rgba(255,255,255,.92) 0%, rgba(255,255,255,.38) 45%, rgba(255,255,255,0) 78%),
+    radial-gradient(58% 44% at 34% 24%, rgba(255,255,255,.20) 0%, rgba(255,255,255,0) 70%),
+    radial-gradient(66% 50% at 60% 106%, rgba(199,240,0,.30) 0%, rgba(199,240,0,0) 60%)}
+
+@keyframes orbBreathe{0%,100%{transform:scale(.98)} 50%{transform:scale(1.02)}}
+@keyframes orbGlow{
+  0%,100%{box-shadow:0 6px 18px rgba(11,93,42,.34), 0 0 12px rgba(163,230,53,.16)}
+  50%    {box-shadow:0 8px 24px rgba(11,93,42,.46), 0 0 22px rgba(163,230,53,.34)}}
+@keyframes orbSpin{from{transform:rotate(0)} to{transform:rotate(360deg)}}
+@keyframes orbA{0%,100%{transform:translate3d(0,0,0) scale(1)}      50%{transform:translate3d(9%,12%,0) scale(1.12)}}
+@keyframes orbB{0%,100%{transform:translate3d(0,0,0) scale(1.06)}   50%{transform:translate3d(-13%,14%,0) scale(.9)}}
+@keyframes orbC{0%,100%{transform:translate3d(0,0,0) scale(.9)}     50%{transform:translate3d(16%,-16%,0) scale(1.22)}}
+@keyframes orbD{0%,100%{transform:translate3d(0,0,0) scale(1);opacity:.5}
+                50%    {transform:translate3d(22%,-12%,0) scale(1.28);opacity:.8}}
+@keyframes orbE{0%,100%{transform:translate3d(0,0,0) scale(1)}      50%{transform:translate3d(-11%,-13%,0) scale(1.14)}}
+
+/* A permanently moving thing is hard to read past, and some people get motion
+   sick. Hold it on a still frame that still looks like the orb. */
+@media (prefers-reduced-motion:reduce){
+  .orb, .orb-core, .orb-core i{animation:none}
+  .orb{box-shadow:0 6px 18px rgba(11,93,42,.34), 0 0 14px rgba(163,230,53,.2)}
+}
 
 /* ---------- spending reality check ----------
    Warm amber rather than the app's expense red: this is a nudge about one
@@ -272,8 +355,10 @@
 .rc-cta button{flex:1 1 0;min-width:0;border:0;border-radius:12px;padding:11px 8px;cursor:pointer;
   font-family:inherit;font-size:13.5px;font-weight:800;display:inline-flex;align-items:center;
   justify-content:center;gap:5px;white-space:nowrap}
-.rc-cta .p{background:var(--btn);color:var(--on-btn)}
-.rc-cta .s{background:rgba(255,255,255,.72);color:#5A3708;border:1px solid rgba(191,124,20,.3)}
+/* All three read the same. A filled "Invest instead" made the card push one
+   answer, which is the opposite of what a gentle nudge is for — investing it,
+   saving it and ignoring the card are all the reader's to choose. */
+.rc-cta button{background:rgba(255,255,255,.72);color:#5A3708;border:1px solid rgba(191,124,20,.3)}
 .rc-cta button{font-size:13px;padding:11px 6px}
 @media (max-width:400px){ .rc-cta button{font-size:12px;padding:10px 4px;gap:3px} }
 
@@ -289,7 +374,7 @@
 :root[data-theme="dark"] .rc-list li{color:#F3E2C6}
 :root[data-theme="dark"] .rc-list li::before{background:#F0B45A}
 :root[data-theme="dark"] .rc-quote{color:#E4CDA4;border-left-color:rgba(240,180,90,.4)}
-:root[data-theme="dark"] .rc-cta .s{background:rgba(255,255,255,.10);color:#FFE9C6;border-color:rgba(240,180,90,.28)}
+:root[data-theme="dark"] .rc-cta button{background:rgba(255,255,255,.10);color:#FFE9C6;border-color:rgba(240,180,90,.28)}
 @media (prefers-color-scheme:dark){
 :root:not([data-theme="light"]) .rc{
   border-color:rgba(240,180,90,.24);
@@ -301,7 +386,7 @@
 :root:not([data-theme="light"]) .rc-list li{color:#F3E2C6}
 :root:not([data-theme="light"]) .rc-list li::before{background:#F0B45A}
 :root:not([data-theme="light"]) .rc-quote{color:#E4CDA4;border-left-color:rgba(240,180,90,.4)}
-:root:not([data-theme="light"]) .rc-cta .s{background:rgba(255,255,255,.10);color:#FFE9C6;border-color:rgba(240,180,90,.28)}
+:root:not([data-theme="light"]) .rc-cta button{background:rgba(255,255,255,.10);color:#FFE9C6;border-color:rgba(240,180,90,.28)}
 }
 
 .ask-q{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
@@ -891,7 +976,7 @@ table.sip tbody tr:last-child td{font-size:15px}
 
     <div class="sec">
       <button class="ask-banner" id="askBanner">
-        <span class="orb"><i></i><i></i><i></i></span>
+        <span class="orb" id="askOrb" aria-hidden="true"><span class="orb-core"><i></i><i></i><i></i><i></i><i></i></span><span class="orb-vig"></span><span class="orb-gloss"></span><span class="orb-ring"></span></span>
         <span class="tx"><span class="n" data-i18n="askTitle">Ask about your money</span>
           <span class="s" data-i18n="askSub">Speak or type — it answers from your own entries.</span></span>
         <span class="go" data-icon="up"></span>
@@ -6022,6 +6107,16 @@ function sheetAsk(prefill = ''){
   });
   if(prefill) ask();
 }
+/* The animated icon as one call, so it can be dropped anywhere:
+     el.innerHTML = orbHTML();      // default 58px
+     el.innerHTML = orbHTML(120);   // or any size
+   Everything else about it lives in the .orb rules in the stylesheet. */
+function orbHTML(size){
+  const st = size ? ` style="--orb:${Number(size)||58}px"` : '';
+  return `<span class="orb" aria-hidden="true"${st}>`
+       + `<span class="orb-core"><i></i><i></i><i></i><i></i><i></i></span>`
+       + `<span class="orb-vig"></span><span class="orb-gloss"></span><span class="orb-ring"></span></span>`;
+}
 (function(){
   const b = document.getElementById('askBanner');
   if(b) b.addEventListener('click', () => sheetAsk());
@@ -6135,9 +6230,9 @@ function renderRealityCheck(){
       <ul class="rc-list">${p.lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
       ${p.quote ? `<div class="rc-quote">${esc(p.quote)}</div>` : ''}
       <div class="rc-cta">
-        <button class="p" id="rcInvest">📈 ${esc(t('rcInvest'))}</button>
-        <button class="s" id="rcSave">💰 ${esc(t('rcSaveIt'))}</button>
-        <button class="s" id="rcClose">❌ ${esc(t('rcDismiss'))}</button>
+        <button id="rcInvest">📈 ${esc(t('rcInvest'))}</button>
+        <button id="rcSave">💰 ${esc(t('rcSaveIt'))}</button>
+        <button id="rcClose">❌ ${esc(t('rcDismiss'))}</button>
       </div>
     </div>`;
 
