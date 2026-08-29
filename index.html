@@ -245,6 +245,65 @@
 @keyframes orb3{0%,100%{transform:translate(0,0) scale(1)}   50%{transform:translate(9px,-13px) scale(1.2)}}
 @media (prefers-reduced-motion:reduce){ .ask-banner .orb i{animation:none} }
 
+/* ---------- spending reality check ----------
+   Warm amber rather than the app's expense red: this is a nudge about one
+   purchase, not a warning that something is wrong, and red would read as an
+   error. Frosted so it sits over the page wash instead of on top of it. */
+.rc{position:relative;overflow:hidden;border-radius:20px;padding:16px 16px 14px;margin-bottom:13px;
+  border:1px solid rgba(191,124,20,.30);
+  background:linear-gradient(150deg, rgba(255,236,196,.86) 0%, rgba(255,246,228,.80) 55%, rgba(255,231,206,.86) 100%);
+  backdrop-filter:blur(14px) saturate(1.35);-webkit-backdrop-filter:blur(14px) saturate(1.35);
+  box-shadow:0 10px 26px rgba(150,94,14,.16);
+  animation:rcIn .42s cubic-bezier(.22,.9,.3,1) both}
+@keyframes rcIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){ .rc{animation:none} }
+.rc-h{display:flex;align-items:center;gap:10px}
+.rc-ic{width:38px;height:38px;border-radius:13px;flex:0 0 auto;display:grid;place-items:center;font-size:20px;
+  background:rgba(255,255,255,.62);border:1px solid rgba(191,124,20,.26)}
+.rc-t{font-size:16.5px;font-weight:800;letter-spacing:-.01em;color:#5A3708;flex:1;min-width:0;line-height:1.25}
+.rc-lead{font-size:14.5px;line-height:1.5;color:#4A2E07;margin-top:10px;font-weight:600}
+.rc-list{margin:9px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.rc-list li{position:relative;padding-left:19px;font-size:14px;line-height:1.45;color:#4A2E07}
+.rc-list li::before{content:'';position:absolute;left:5px;top:8px;width:6px;height:6px;border-radius:50%;
+  background:#C07A12}
+.rc-quote{margin-top:11px;font-size:13px;line-height:1.5;color:#6B4710;font-style:italic;
+  border-left:3px solid rgba(191,124,20,.45);padding-left:10px}
+.rc-cta{display:flex;gap:7px;margin-top:13px}
+.rc-cta button{flex:1 1 0;min-width:0;border:0;border-radius:12px;padding:11px 8px;cursor:pointer;
+  font-family:inherit;font-size:13.5px;font-weight:800;display:inline-flex;align-items:center;
+  justify-content:center;gap:5px;white-space:nowrap}
+.rc-cta .p{background:var(--btn);color:var(--on-btn)}
+.rc-cta .s{background:rgba(255,255,255,.72);color:#5A3708;border:1px solid rgba(191,124,20,.3)}
+.rc-cta button{font-size:13px;padding:11px 6px}
+@media (max-width:400px){ .rc-cta button{font-size:12px;padding:10px 4px;gap:3px} }
+
+/* Dark mode keeps the amber but drops the brightness, so the card reads as lit
+   from within rather than as a white box someone left on. */
+:root[data-theme="dark"] .rc{
+  border-color:rgba(240,180,90,.24);
+  background:linear-gradient(150deg, rgba(78,52,16,.80) 0%, rgba(62,44,18,.74) 55%, rgba(84,54,18,.80) 100%);
+  box-shadow:0 10px 26px rgba(0,0,0,.45)}
+:root[data-theme="dark"] .rc-ic{background:rgba(255,255,255,.10);border-color:rgba(240,180,90,.22)}
+:root[data-theme="dark"] .rc-t{color:#FFE9C6}
+:root[data-theme="dark"] .rc-lead,
+:root[data-theme="dark"] .rc-list li{color:#F3E2C6}
+:root[data-theme="dark"] .rc-list li::before{background:#F0B45A}
+:root[data-theme="dark"] .rc-quote{color:#E4CDA4;border-left-color:rgba(240,180,90,.4)}
+:root[data-theme="dark"] .rc-cta .s{background:rgba(255,255,255,.10);color:#FFE9C6;border-color:rgba(240,180,90,.28)}
+@media (prefers-color-scheme:dark){
+:root:not([data-theme="light"]) .rc{
+  border-color:rgba(240,180,90,.24);
+  background:linear-gradient(150deg, rgba(78,52,16,.80) 0%, rgba(62,44,18,.74) 55%, rgba(84,54,18,.80) 100%);
+  box-shadow:0 10px 26px rgba(0,0,0,.45)}
+:root:not([data-theme="light"]) .rc-ic{background:rgba(255,255,255,.10);border-color:rgba(240,180,90,.22)}
+:root:not([data-theme="light"]) .rc-t{color:#FFE9C6}
+:root:not([data-theme="light"]) .rc-lead,
+:root:not([data-theme="light"]) .rc-list li{color:#F3E2C6}
+:root:not([data-theme="light"]) .rc-list li::before{background:#F0B45A}
+:root:not([data-theme="light"]) .rc-quote{color:#E4CDA4;border-left-color:rgba(240,180,90,.4)}
+:root:not([data-theme="light"]) .rc-cta .s{background:rgba(255,255,255,.10);color:#FFE9C6;border-color:rgba(240,180,90,.28)}
+}
+
 .ask-q{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .ask-q button{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);
   border-radius:999px;padding:7px 12px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
@@ -802,6 +861,8 @@ table.sip tbody tr:last-child td{font-size:15px}
       <div class="grid3" id="quickTiles"></div>
       <div class="hint" data-i18n="quickAddHint">Tap one — change the amount if yours is different.</div>
     </div>
+
+    <div id="rcBox"></div>
 
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="scTitle">Saving coach</h3></div>
@@ -1475,6 +1536,33 @@ const STR = {
     sosControl:'Police control room', sosWomen:'Women helpline',
     sosSenior:'Senior citizen helpline', sosChild:'Child helpline',
     sosSeniorNote:'some states use their own number',
+    rcTitle:'Think before you spend',
+    rcLead:'Today you spent {a} on {c}. The same {a} could have gone to:',
+    rcLeadYest:'You spent {a} on {c}. The same {a} could have gone to:',
+    rcInvest:'Invest instead', rcSaveIt:'Save this', rcDismiss:'Dismiss',
+    rcSaved:'Set aside instead — nicely done.',
+    /* alternatives, by what the amount can realistically reach */
+    rcAEmergency:'Your emergency fund — the thing that stops one bad month becoming a loan',
+    rcAGold:'Digital gold, bought by the gram',
+    rcASip:'A monthly SIP, started with this much',
+    rcABook:'A book that pays you back for years',
+    rcAFood:'A week of fruit and vegetables at home',
+    rcASave:'Straight into savings, where it keeps growing',
+    rcAIndex:'An index fund that follows the whole market',
+    rcAShare:'A share in a large listed company',
+    rcACourse:'A short course in a skill you can charge for',
+    rcAClothes:'One good garment instead of three that fade',
+    rcAGadget:'A tool you use every day, not a toy',
+    rcAPortfolio:'A month of your long-term portfolio',
+    rcAInsurance:'A slice of this year\'s health cover',
+    rcABigSip:'A bigger SIP, every month from now',
+    rcATravel:'The trip you keep postponing',
+    rcAWealth:'Ten years from now, this is real money',
+    /* quotes, shown now and then rather than every time */
+    rcQ1:'Small unnecessary expenses today can become big opportunities tomorrow.',
+    rcQ2:'Every rupee saved is another step toward financial freedom.',
+    rcQ3:'It is not what you earn, it is what you keep.',
+    rcQ4:'The money you do not spend is the only money that works for you.',
     askTitle:'Ask about your money',
     askSub:'Speak or type — it answers from your own entries.',
     askPlaceholder:'How much did I spend on milk?',
@@ -1795,6 +1883,31 @@ const STR = {
     sosControl:'పోలీస్ కంట్రోల్ రూమ్', sosWomen:'మహిళా హెల్ప్‌లైన్',
     sosSenior:'వృద్ధుల హెల్ప్‌లైన్', sosChild:'చిన్నారుల హెల్ప్‌లైన్',
     sosSeniorNote:'కొన్ని రాష్ట్రాల్లో వేరే నంబర్ ఉంటుంది',
+    rcTitle:'ఖర్చు చేసే ముందు ఒక్క క్షణం',
+    rcLead:'ఈ రోజు {c} కి {a} ఖర్చు చేశారు. అదే {a} వీటికి వెళ్లి ఉండేది:',
+    rcLeadYest:'{c} కి {a} ఖర్చు చేశారు. అదే {a} వీటికి వెళ్లి ఉండేది:',
+    rcInvest:'పెట్టుబడి పెట్టండి', rcSaveIt:'ఇది దాచండి', rcDismiss:'వద్దు',
+    rcSaved:'ఖర్చు కాకుండా పక్కన పెట్టారు — బాగుంది.',
+    rcAEmergency:'అత్యవసర నిధి — ఒక చెడ్డ నెల అప్పుగా మారకుండా ఆపేది',
+    rcAGold:'గ్రాముల లెక్కన డిజిటల్ బంగారం',
+    rcASip:'ఇంతటితోనే మొదలుపెట్టే నెలవారీ SIP',
+    rcABook:'ఏళ్ల తరబడి ఉపయోగపడే ఒక పుస్తకం',
+    rcAFood:'ఇంట్లో వారం రోజుల పండ్లు, కూరగాయలు',
+    rcASave:'నేరుగా పొదుపులోకి, అక్కడ పెరుగుతూ ఉంటుంది',
+    rcAIndex:'మొత్తం మార్కెట్‌ను అనుసరించే ఇండెక్స్ ఫండ్',
+    rcAShare:'పెద్ద లిస్టెడ్ కంపెనీలో ఒక వాటా',
+    rcACourse:'డబ్బు సంపాదించిపెట్టే ఒక చిన్న కోర్సు',
+    rcAClothes:'మూడు కాకుండా ఒక్క మంచి బట్ట',
+    rcAGadget:'రోజూ పనికొచ్చే వస్తువు, ఆటబొమ్మ కాదు',
+    rcAPortfolio:'మీ దీర్ఘకాల పెట్టుబడిలో ఒక నెల',
+    rcAInsurance:'ఈ ఏడాది ఆరోగ్య బీమాలో కొంత భాగం',
+    rcABigSip:'ఇక నుంచి ప్రతి నెలా కొంచెం పెద్ద SIP',
+    rcATravel:'ఎప్పటినుంచో వాయిదా వేస్తున్న ప్రయాణం',
+    rcAWealth:'పదేళ్ల తర్వాత ఇది నిజంగా పెద్ద మొత్తం',
+    rcQ1:'ఈ రోజు అనవసర ఖర్చులు, రేపటి పెద్ద అవకాశాలు.',
+    rcQ2:'దాచిన ప్రతి రూపాయి ఆర్థిక స్వేచ్ఛ వైపు ఒక అడుగు.',
+    rcQ3:'ఎంత సంపాదించారన్నది కాదు, ఎంత మిగిల్చారన్నదే ముఖ్యం.',
+    rcQ4:'ఖర్చు చేయని డబ్బు ఒక్కటే మీ కోసం పని చేస్తుంది.',
     askTitle:'మీ డబ్బు గురించి అడగండి',
     askSub:'మాట్లాడండి లేదా టైప్ చేయండి — మీరు రాసిన లెక్కల నుంచే జవాబు.',
     askPlaceholder:'పాలకు ఎంత ఖర్చు అయింది?',
@@ -2273,6 +2386,9 @@ const CATS = [
   {k:'Chit',      te:'చిట్టీ',         en:'Chit',        ic:'refresh'},
   {k:'Cash',      te:'నగదు తీత',      en:'Cash withdrawal', ic:'atm'},
   {k:'Outing',    te:'వీకెండ్ పార్టీ', en:'Weekend party', ic:'party'},
+  {k:'Movies',    te:'సినిమా / OTT',  en:'Movies & OTT',  ic:'film'},
+  {k:'FastFood',  te:'ఫాస్ట్ ఫుడ్ / కూల్ డ్రింక్స్', en:'Fast food & drinks', ic:'cup'},
+  {k:'Luxury',    te:'విలాస వస్తువులు', en:'Luxury & gadgets', ic:'gem'},
   {k:'Other',     te:'ఇతరం',         en:'Other',       ic:'dot'}
 ];
 const catLabel = k => { const c = CATS.find(c=>c.k===k); return c ? (LANG==='te'?c.te:c.en) : k; };
@@ -2354,6 +2470,9 @@ const ICON = {
   handshake:'<path d="M3 11.5 7 8l3.2 2.6L13 8l4 3.5"/><path d="M3 11.5V16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4.5"/><path d="M10.2 18v-2.4h3.6V18"/>',
   dots:'<circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/>',
   shield:'<path d="M12 3.2 20 6v6.3c0 4.3-3.3 7.5-8 8.9-4.7-1.4-8-4.6-8-8.9V6z"/><path d="M12 8.6v4"/><circle cx="12" cy="15.4" r=".9"/>',
+  film:'<rect x="3" y="5" width="18" height="14" rx="2.4"/><path d="M3 9.4h18M3 14.6h18M8.2 5v14M15.8 5v14"/>',
+  cup:'<path d="M5.4 7h11l-.9 11.4a2 2 0 0 1-2 1.6H8.3a2 2 0 0 1-2-1.6z"/><path d="M16.2 10.2h1.6a2.4 2.4 0 0 1 0 4.8h-1.2"/><path d="M8.6 4.2v-.9M11.6 4.2v-.9M14.6 4.2v-.9"/>',
+  gem:'<path d="M7.6 3.6h8.8L21 9.2 12 20.6 3 9.2z"/><path d="M3 9.2h18M9 9.2 12 20.6l3-11.4M7.6 3.6 9 9.2m7.4-5.6L15 9.2"/>',
   plus:'<path d="M12 5.5v13M5.5 12h13"/>',
   minus:'<path d="M5.5 12h13"/>',
   mic:'<rect x="9" y="2.8" width="6" height="11" rx="3"/><path d="M5.2 11.2a6.8 6.8 0 0 0 13.6 0"/><path d="M12 18v3.2"/>',
@@ -5906,5 +6025,138 @@ function sheetAsk(prefill = ''){
 (function(){
   const b = document.getElementById('askBanner');
   if(b) b.addEventListener('click', () => sheetAsk());
+})();
+</script>
+
+<script>
+'use strict';
+/* =================== SMART SPENDING REALITY CHECK ===================
+   After a non-essential expense of ₹300 or more, one card above the saving
+   coach shows what the same money could have gone to instead.
+
+   Two rules govern the wording, and they matter more than the feature:
+   nothing here shames the reader, and nothing here names a security to buy.
+   The app already refuses to rank or recommend individual funds (see
+   FUND_LIST); a card that appears at an emotional moment and says "you could
+   have bought TATA Motors" would be a specific recommendation to a retail
+   investor, which is not ours to give. So the alternatives name instrument
+   classes — an index fund, a share in a large listed company, gold. Publish
+   {"realityCheckStocks":["TATA Motors","Infosys"]} in config.json to name
+   companies instead; that is a deliberate choice for whoever publishes, not a
+   default.
+
+   There is no model here. "Unique every time" is a rotation: the alternatives
+   are drawn from the band the amount falls in, offset by the expense id, so
+   two expenses of the same size rarely read alike and re-opening the app does
+   not reshuffle the card underneath the reader.
+   ================================================================= */
+const RC_MIN = 300;
+/* Essentials are never questioned. Rent, food, milk, school fees, medicine and
+   travel to work are not choices most people are making lightly. */
+const RC_CATS = ['Movies', 'FastFood', 'Luxury', 'Shopping', 'Outing'];
+const RC_BANDS = [
+  { max: 999,       keys:['rcAEmergency','rcAGold','rcASip','rcABook','rcAFood','rcASave'] },
+  { max: 4999,      keys:['rcAShare','rcAIndex','rcAGold','rcACourse','rcAClothes','rcAGadget'] },
+  { max: Infinity,  keys:['rcAPortfolio','rcAInsurance','rcABigSip','rcAEmergency','rcATravel','rcAWealth'] }
+];
+const RC_QUOTES = ['rcQ1','rcQ2','rcQ3','rcQ4'];
+const RC_SEEN_KEY = 'pocketseeds.rcDismissed';
+
+function rcStocks(){
+  try{
+    const c = CONFIG && CONFIG.realityCheckStocks;
+    return (Array.isArray(c) ? c : []).filter(x => typeof x === 'string' && x.trim());
+  }catch(e){ return []; }
+}
+/* a stable number from the expense id, so the same expense always draws the
+   same card — the alternatives must not shuffle while someone is reading */
+function rcSeed(id){
+  let n = 0;
+  for(let i = 0; i < String(id).length; i++) n = (n * 31 + String(id).charCodeAt(i)) >>> 0;
+  return n;
+}
+function rcLatest(){
+  const cut = ymd(new Date(Date.now() - 2 * 864e5));       // today or the two days before
+  let best = null;
+  DB.tx.forEach(x => {
+    if(x.type !== 'expense') return;
+    if(!RC_CATS.includes(x.category)) return;
+    if((Number(x.amount) || 0) < RC_MIN) return;
+    if(x.date < cut) return;
+    if(!best || (x.date + x.id) > (best.date + best.id)) best = x;
+  });
+  return best;
+}
+function rcPlan(tx){
+  const amt  = Number(tx.amount) || 0;
+  const band = RC_BANDS.find(b => amt <= b.max);
+  const seed = rcSeed(tx.id);
+  /* walk the band from a per-expense offset so different expenses of the same
+     size get different alternatives */
+  const keys = band.keys, out = [];
+  const want = 3 + (seed % 2);                              // three or four
+  for(let i = 0; i < want; i++) out.push(keys[(seed + i * 2) % keys.length]);
+  const lines = [...new Set(out)].map(k => {
+    if(k !== 'rcAShare') return t(k);
+    const names = rcStocks();
+    return names.length ? t('rcAShare') + ' — ' + names[seed % names.length] : t('rcAShare');
+  });
+  return {
+    amount: amt,
+    cat: catLabel(tx.category),
+    today: tx.date === ymd(new Date()),
+    lines,
+    /* a quote roughly every third card, so it stays a nice surprise */
+    quote: (seed % 3 === 0) ? t(RC_QUOTES[seed % RC_QUOTES.length]) : ''
+  };
+}
+
+function rcDismissed(){
+  try{ return localStorage.getItem(RC_SEEN_KEY) || ''; }catch(e){ return ''; }
+}
+function rcDismiss(id){
+  try{ localStorage.setItem(RC_SEEN_KEY, id); }catch(e){}
+  renderRealityCheck();
+}
+
+function renderRealityCheck(){
+  const box = $('#rcBox'); if(!box) return;
+  const tx = rcLatest();
+  if(!tx || rcDismissed() === tx.id){ box.innerHTML = ''; return; }
+  const p = rcPlan(tx);
+  const a = money(p.amount);
+  box.innerHTML = `
+    <div class="rc" id="rcCard">
+      <div class="rc-h">
+        <span class="rc-ic">💡</span>
+        <span class="rc-t">${L('rcTitle')}</span>
+      </div>
+      <div class="rc-lead">${esc(t(p.today ? 'rcLead' : 'rcLeadYest', { a, c:p.cat }))}</div>
+      <ul class="rc-list">${p.lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
+      ${p.quote ? `<div class="rc-quote">${esc(p.quote)}</div>` : ''}
+      <div class="rc-cta">
+        <button class="p" id="rcInvest">📈 ${esc(t('rcInvest'))}</button>
+        <button class="s" id="rcSave">💰 ${esc(t('rcSaveIt'))}</button>
+        <button class="s" id="rcClose">❌ ${esc(t('rcDismiss'))}</button>
+      </div>
+    </div>`;
+
+  const close = () => rcDismiss(tx.id);
+  $('#rcClose').addEventListener('click', close);
+  /* Invest goes to the page that already holds gold, the calculators and the
+     brokers, rather than inventing a second list of the same things. */
+  $('#rcInvest').addEventListener('click', () => {
+    close();
+    go('save');
+    setTimeout(() => { const el = $('#sipBox2'); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 280);
+  });
+  /* Save opens the existing set-aside sheet with the amount already in it. */
+  $('#rcSave').addEventListener('click', () => { close(); sheetSaving(p.amount); });
+}
+
+(function(){
+  const prev = window.renderAll;
+  window.renderAll = function(){ prev(); try{ renderRealityCheck(); }catch(e){ console.error(e); } };
+  renderRealityCheck();
 })();
 </script>
