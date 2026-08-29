@@ -71,14 +71,15 @@
   --warn:#F5C56B;--warn-bg:rgba(245,197,107,.14);--save:#7BD189;--save-bg:rgba(99,190,113,.16);
   --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--btn:#56C596;--btn-2:#7BE495;--on-btn:#FFFFFF;--shadow:0 2px 16px rgba(0,0,0,.55)}
 
-/* ---------- income banner ----------
-   The artwork is optional: if income-banner.jpg is not in the repo the <img>
-   fails and the whole block removes itself, rather than leaving a broken
-   image on the page. aspect-ratio holds the space so nothing jumps when the
-   picture arrives late. */
+/* ---------- tab banners (income, expenses) ----------
+   The artwork is optional: if the .jpg is not in the repo the <img> fails and
+   the whole block removes itself, rather than leaving a broken image on the
+   page. aspect-ratio holds the space so nothing jumps when the picture
+   arrives late. Each banner sets its own ratio to match its file. */
 .inc-banner{margin:0 0 13px;border-radius:18px;overflow:hidden;line-height:0;
   box-shadow:var(--shadow);border:1px solid var(--line)}
 .inc-banner img{display:block;width:100%;height:auto;aspect-ratio:1456/745;object-fit:cover}
+#expBanner img{aspect-ratio:1330/783}
 
 /* ---------- first-run splash ----------
    Nothing is drawn here any more: the splash is splash.jpg and only that. The
@@ -132,6 +133,19 @@
 /* Emergency help. The SOS button is the one place in the app that uses a loud
    red: it has to be findable by someone who is panicking, and it must not read
    as any of the money-coloured buttons. */
+/* Kept out of the tile grid and in the app's one loud red: in an emergency it
+   has to be found without reading, and it must not look like the six ordinary
+   shortcuts beside it. */
+.sos-tile{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;
+  font-family:inherit;border:0;border-radius:18px;padding:14px 15px;color:#fff;
+  background:linear-gradient(135deg,#D32F2F,#B71C1C);box-shadow:0 8px 22px rgba(183,28,28,.32)}
+.sos-tile .ic{width:42px;height:42px;border-radius:14px;flex:0 0 auto;display:grid;place-items:center;
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28)}
+.sos-tile .ic .i{width:22px;height:22px;stroke-width:2.1}
+.sos-tile .tx{min-width:0}
+.sos-tile .n{display:block;font-size:17px;font-weight:800;letter-spacing:-.01em}
+.sos-tile .s{display:block;font-size:12.5px;opacity:.9;margin-top:2px;line-height:1.35}
+.sos-tile:active{filter:brightness(.94)}
 .sos-big{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;
   border-radius:18px;padding:19px 16px;font-family:inherit;font-size:19px;font-weight:800;cursor:pointer;
   color:#fff;background:linear-gradient(135deg,#D32F2F,#B71C1C);box-shadow:0 8px 22px rgba(183,28,28,.35)}
@@ -158,6 +172,14 @@
 .sc-links a{flex:0 1 auto;min-width:0;text-decoration:none;background:var(--surface-2);
   border:1px solid var(--line);border-radius:999px;padding:6px 11px;
   font-size:12.5px;font-weight:700;color:var(--ink);white-space:nowrap}
+/* Half-width cells cannot fit two names on one line, and stacking them read as
+   a list rather than a pair. Two equal columns keep them side by side at any
+   width; a long name wraps inside its own pill instead of pushing the other
+   one down. */
+.sc-cell:not(.wide) .sc-links{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.sc-cell:not(.wide) .sc-links a{white-space:normal;text-align:center;padding:6px 7px;
+  font-size:11.5px;line-height:1.25;overflow-wrap:anywhere}
+.sc-cell:not(.wide) .sc-where{padding:22px 8px 11px}
 .sc-note{margin-top:10px;border-radius:16px;padding:12px 14px;font-size:14px;line-height:1.45;font-weight:600}
 .sc-ok{background:var(--in-bg);color:var(--in)}
 .sc-short{background:var(--warn-bg);color:var(--warn)}
@@ -182,11 +204,53 @@
    Each glyph sits on its own coloured rounded square, the way app icons do,
    so a category is found by colour before the label is read. The glyphs are
    the app's own stroke set drawn in white — no second icon library. */
-.q-ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;margin:0 auto;
+.q-ic{width:56px;height:56px;border-radius:17px;display:grid;place-items:center;margin:0 auto;
   background:var(--btn);color:var(--on-btn);
   box-shadow:0 4px 10px rgba(14,27,20,.18), inset 0 1px 0 rgba(255,255,255,.28)}
-.q-ic .i{width:22px;height:22px;stroke-width:2}
-@media (max-width:359px){.q-ic{width:40px;height:40px;border-radius:12px}.q-ic .i{width:20px;height:20px}}
+.q-ic .i{width:29px;height:29px;stroke-width:2}
+@media (max-width:359px){.q-ic{width:50px;height:50px;border-radius:15px}.q-ic .i{width:26px;height:26px}}
+
+/* ---------- ask-about-your-money banner ----------
+   A Siri-style animated orb, but built from the app's own greens rather than
+   a borrowed palette: three blurred blobs drifting behind a rounded card. The
+   whole card is the button. prefers-reduced-motion stops the drift, because a
+   permanently moving thing at the bottom of a page is hard to read past. */
+.ask-banner{position:relative;overflow:hidden;display:flex;align-items:center;gap:13px;width:100%;
+  text-align:left;cursor:pointer;font-family:inherit;border:1px solid var(--line);border-radius:20px;
+  padding:15px 15px;color:var(--ink);background:var(--surface);box-shadow:var(--shadow)}
+/* a soft wash behind the text, so the card belongs with the orb rather than
+   looking like a plain row with a picture stuck on the left */
+.ask-banner::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 130% at 0% 50%, rgba(86,197,150,.20) 0%, rgba(86,197,150,0) 62%)}
+.ask-banner .tx{flex:1;min-width:0;position:relative}
+.ask-banner .n{display:block;font-size:16.5px;font-weight:800;letter-spacing:-.01em}
+.ask-banner .s{display:block;font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+.ask-banner .go{flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  background:var(--btn);color:var(--on-btn);transform:rotate(90deg);position:relative}
+.ask-banner .go .i{width:16px;height:16px;stroke-width:2.2}
+.ask-banner:active{filter:brightness(.97)}
+
+/* All three blobs stay inside the green family. An off-family colour (the plum
+   token was the first try) greys out the moment it blurs into the greens and
+   the orb reads as mud. */
+.ask-banner .orb{position:relative;flex:0 0 auto;width:52px;height:52px;border-radius:50%;
+  overflow:hidden;background:linear-gradient(140deg,#1F6B3A 0%,#3E9E63 45%,#56C596 100%);
+  box-shadow:0 4px 14px rgba(37,116,61,.38), inset 0 1px 0 rgba(255,255,255,.35)}
+.ask-banner .orb i{position:absolute;width:34px;height:34px;border-radius:50%;filter:blur(7px)}
+.ask-banner .orb i:nth-child(1){background:#7BE495;left:-4px; top:-6px;   opacity:.95;animation:orb1 5.5s ease-in-out infinite}
+.ask-banner .orb i:nth-child(2){background:#D6FBE6;right:-6px;top:4px;    opacity:.75;animation:orb2 6.5s ease-in-out infinite}
+.ask-banner .orb i:nth-child(3){background:#0E4A28;left:6px;  bottom:-9px;opacity:.55;animation:orb3 7.5s ease-in-out infinite}
+@keyframes orb1{0%,100%{transform:translate(0,0) scale(1)}   50%{transform:translate(12px,10px) scale(1.15)}}
+@keyframes orb2{0%,100%{transform:translate(0,0) scale(1.1)} 50%{transform:translate(-11px,12px) scale(.9)}}
+@keyframes orb3{0%,100%{transform:translate(0,0) scale(1)}   50%{transform:translate(9px,-13px) scale(1.2)}}
+@media (prefers-reduced-motion:reduce){ .ask-banner .orb i{animation:none} }
+
+.ask-q{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ask-q button{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);
+  border-radius:999px;padding:7px 12px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+.ask-a{margin-top:12px;border-radius:16px;padding:13px 14px;background:var(--in-bg);color:var(--ink)}
+.ask-a .big{font-size:26px;font-weight:800;letter-spacing:-.02em;color:var(--brand);line-height:1.15}
+.ask-a .ln{font-size:14px;line-height:1.5;margin-top:4px}
 
 .policy-row{text-align:center;padding-top:2px}
 .policy-row a{display:inline-block;color:var(--muted);font-size:14px;font-weight:600;
@@ -764,6 +828,15 @@ table.sip tbody tr:last-child td{font-size:15px}
       <div class="card" style="padding:15px 14px" id="catBox"></div>
     </div>
 
+    <div class="sec">
+      <button class="ask-banner" id="askBanner">
+        <span class="orb"><i></i><i></i><i></i></span>
+        <span class="tx"><span class="n" data-i18n="askTitle">Ask about your money</span>
+          <span class="s" data-i18n="askSub">Speak or type — it answers from your own entries.</span></span>
+        <span class="go" data-icon="up"></span>
+      </button>
+    </div>
+
   </section>
 
   <!-- ===================== INCOME ===================== -->
@@ -815,6 +888,10 @@ table.sip tbody tr:last-child td{font-size:15px}
 
   <!-- ===================== EXPENSE ===================== -->
   <section class="page" id="page-expense">
+    <div class="inc-banner" id="expBanner">
+      <img id="expBannerImg" src="expense-banner.jpg" alt="" loading="lazy" decoding="async">
+    </div>
+
     <div class="card tile t-out" style="padding:16px">
       <div class="t-lbl"><i class="dot d-out"></i><span data-i18n="expenseThisMonth">Expenditure this month</span></div>
       <div class="t-amt" style="font-size:33.5px" id="eTotal">₹0</div>
@@ -1006,6 +1083,14 @@ table.sip tbody tr:last-child td{font-size:15px}
   <section class="page" id="page-more">
     <div class="sec" style="margin-top:4px">
       <div class="card" style="padding:16px" id="fundsBox"></div>
+    </div>
+
+    <div class="sec">
+      <button class="sos-tile" data-go="sos">
+        <span class="ic" data-icon="shield"></span>
+        <span class="tx"><span class="n" data-i18n="mSOS">Emergency help</span>
+          <span class="s" data-i18n="sosTileSub">112, 108 and your own numbers, one tap away</span></span>
+      </button>
     </div>
 
     <div class="sec">
@@ -1374,6 +1459,7 @@ const STR = {
     funds:'Fund categories to explore', fundsSub:'A research starting point for long-term SIP investors — not a recommendation.',
     mSOS:'Emergency help',
     sosTitle:'Emergency help',
+    sosTileSub:'112, 108 and your own numbers, one tap away',
     sosSub:'Free, 24x7, from any phone — including one with no balance or no SIM.',
     sosBig:'SOS — call for help',
     sosPickSub:'Tap a number to call. Police and ambulance answer first.',
@@ -1389,6 +1475,27 @@ const STR = {
     sosControl:'Police control room', sosWomen:'Women helpline',
     sosSenior:'Senior citizen helpline', sosChild:'Child helpline',
     sosSeniorNote:'some states use their own number',
+    askTitle:'Ask about your money',
+    askSub:'Speak or type — it answers from your own entries.',
+    askPlaceholder:'How much did I spend on milk?',
+    askGo:'Ask', askListen:'Speak',
+    askTry:'Try one of these',
+    askQBalance:'What is my balance?',
+    askQSpent:'How much have I spent this month?',
+    askQEarned:'How much did I earn this month?',
+    askQTop:'What did I spend most on?',
+    askQSave:'How much should I save?',
+    askABalance:'Your balance right now.',
+    askASpent:'Spent in {m}.',
+    askAEarned:'Earned in {m}.',
+    askATop:'{c} took the most in {m}.',
+    askATopNone:'Nothing recorded in {m} yet, so there is no biggest one.',
+    askASave:'a month — 30% of {i} income, split three ways.',
+    askACat:'Spent on {c} in {m}.',
+    askACatNone:'Nothing recorded for {c} in {m}.',
+    askAPerDay:'a day — what is left to spend for the rest of {m}.',
+    askNoIdea:'I could not match that to anything I hold. Try one of the questions below.',
+    askScope:'Answers come from what you have entered in this app, on this phone. It is not investment advice and it does not know anything outside your own records.',
     scWhere:'Where to start',
     scWhereNote:'Well-known providers, listed alphabetically. PocketSeeds is not affiliated with any of them and earns nothing from these links. Compare cover, charges and terms yourself before you buy.',
     privacyLink:'Privacy policy',
@@ -1430,8 +1537,8 @@ const STR = {
     scNoIncome:'Add this month\u2019s income and the coach works out what to set aside.',
     reelsTitle:'Worth two minutes',
     reelSoon:'Coming soon',
-    reel1t:'How vaddi actually adds up', reel1s:'Rupees per hundred, per month — what it costs over a year.',
-    reel2t:'Chits: the real cost', reel2s:'What you get, what you pay, and when it is worth it.',
+    reel1t:'Monthly SIP or one lump sum?', reel1s:'The two ways to put money into a fund, side by side.',
+    reel2t:'How to invest a lump sum in mutual funds', reel2s:'Putting a single amount in, step by step.',
 
     insTitle:'Insights', insLast:'Last {n} months', insNone:'Add a few months of entries and the trend shows up here.',
     insAvgIncome:'Average income', insAvgSpend:'Average spend', insAvgSaved:'Average saved',
@@ -1672,6 +1779,7 @@ const STR = {
     funds:'చూడదగ్గ ఫండ్ రకాలు', fundsSub:'దీర్ఘకాల SIP కోసం పరిశోధన మొదలుపెట్టే చోటు — సిఫారసు కాదు.',
     mSOS:'అత్యవసర సాయం',
     sosTitle:'అత్యవసర సాయం',
+    sosTileSub:'112, 108 తో పాటు మీ సొంత నంబర్లు — ఒక్క నొక్కులో',
     sosSub:'ఉచితం, 24x7 — బ్యాలెన్స్ లేకపోయినా, సిమ్ లేకపోయినా కలుస్తుంది.',
     sosBig:'SOS — సాయం కోసం కాల్',
     sosPickSub:'నంబర్ నొక్కితే కాల్ వెళ్తుంది. పోలీస్, అంబులెన్స్ ముందు కలుస్తాయి.',
@@ -1687,6 +1795,27 @@ const STR = {
     sosControl:'పోలీస్ కంట్రోల్ రూమ్', sosWomen:'మహిళా హెల్ప్‌లైన్',
     sosSenior:'వృద్ధుల హెల్ప్‌లైన్', sosChild:'చిన్నారుల హెల్ప్‌లైన్',
     sosSeniorNote:'కొన్ని రాష్ట్రాల్లో వేరే నంబర్ ఉంటుంది',
+    askTitle:'మీ డబ్బు గురించి అడగండి',
+    askSub:'మాట్లాడండి లేదా టైప్ చేయండి — మీరు రాసిన లెక్కల నుంచే జవాబు.',
+    askPlaceholder:'పాలకు ఎంత ఖర్చు అయింది?',
+    askGo:'అడుగు', askListen:'మాట్లాడు',
+    askTry:'ఇవి అడిగి చూడండి',
+    askQBalance:'నా దగ్గర ఎంత ఉంది?',
+    askQSpent:'ఈ నెల ఎంత ఖర్చు అయింది?',
+    askQEarned:'ఈ నెల ఎంత వచ్చింది?',
+    askQTop:'ఎక్కువ ఖర్చు దేనికి?',
+    askQSave:'ఎంత పొదుపు చేయాలి?',
+    askABalance:'ఇప్పుడు మీ దగ్గర ఉన్నది.',
+    askASpent:'{m} లో ఖర్చు.',
+    askAEarned:'{m} లో వచ్చినది.',
+    askATop:'{m} లో ఎక్కువ ఖర్చు {c} కే.',
+    askATopNone:'{m} లో ఇంకా ఏమీ రాయలేదు, కాబట్టి ఎక్కువ ఏదో చెప్పలేను.',
+    askASave:'నెలకు — {i} ఆదాయంలో 30%, మూడు భాగాలుగా.',
+    askACat:'{m} లో {c} కు అయిన ఖర్చు.',
+    askACatNone:'{m} లో {c} కు ఏమీ రాయలేదు.',
+    askAPerDay:'రోజుకు — {m} మిగిలిన రోజులకు ఖర్చు చేయదగినది.',
+    askNoIdea:'అది నాకు అర్థం కాలేదు. కింద ఉన్న ప్రశ్నలు అడిగి చూడండి.',
+    askScope:'జవాబులు ఈ ఫోన్‌లో మీరు రాసిన లెక్కల నుంచే వస్తాయి. ఇది పెట్టుబడి సలహా కాదు, మీ లెక్కల బయట దేనీ గురించీ తెలియదు.',
     scWhere:'ఎక్కడ మొదలుపెట్టాలి',
     scWhereNote:'ఇవి బాగా తెలిసిన సంస్థలు, అక్షర క్రమంలో ఇచ్చాం. PocketSeedsకు వీటితో సంబంధం లేదు, ఈ లింకుల ద్వారా ఏమీ రాదు. కొనే ముందు కవర్, ఛార్జీలు, నిబంధనలు మీరే పోల్చి చూసుకోండి.',
     privacyLink:'గోప్యతా విధానం',
@@ -1728,8 +1857,10 @@ const STR = {
     scNoIncome:'ఈ నెల ఆదాయం చేర్చండి, ఎంత పక్కన పెట్టాలో కోచ్ చెబుతుంది.',
     reelsTitle:'రెండు నిమిషాలు చాలు',
     reelSoon:'త్వరలో',
-    reel1t:'వడ్డీ ఎలా పెరుగుతుంది', reel1s:'వందకు ఇంత, నెలకు — ఏడాదికి ఎంత అవుతుందో.',
-    reel2t:'చిట్టీలు — నిజమైన ఖర్చు', reel2s:'ఎంత వస్తుంది, ఎంత కడతారు, ఎప్పుడు లాభం.',
+    reel1t:'Mutual Funds లో నెల నెల ఇన్వెస్ట్ చేయాలా ? లేదా Lump Sum లో ఇన్వెస్ట్ చేయాలా ?',
+    reel1s:'ఫండ్‌లో డబ్బు పెట్టే రెండు దారులు, పక్కపక్కనే.',
+    reel2t:'Mutual Fundsలో లంప్‌సమ్ ఎలా పెట్టుబడి పెట్టాలి?',
+    reel2s:'ఒకేసారి పెట్టే మొత్తం, అడుగు అడుగునా.',
 
     insTitle:'విశ్లేషణ', insLast:'గత {n} నెలలు', insNone:'కొన్ని నెలల వివరాలు చేర్చిన తర్వాత ఇక్కడ తీరు కనిపిస్తుంది.',
     insAvgIncome:'సగటు ఆదాయం', insAvgSpend:'సగటు ఖర్చు', insAvgSaved:'సగటు పొదుపు',
@@ -2315,8 +2446,7 @@ function renderHome(){
   $('#quickTiles').innerHTML = QUICK.map((q,i) => `
     <button class="card" data-quick="${i}" style="padding:11px 8px;text-align:center;cursor:pointer;border:1px solid var(--line);font-family:inherit">
       <span class="q-ic">${ic(q.ic)}</span>
-      <div style="font-size:13.5px;font-weight:700;margin-top:3px">${LANG==='te'?q.te:q.en}</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:1px">₹${q.amt.toLocaleString('en-IN')}</div>
+      <div style="font-size:13.5px;font-weight:700;margin-top:6px">${LANG==='te'?q.te:q.en}</div>
     </button>`).join('');
 
   const k = mKey(VIEW);
@@ -3064,10 +3194,11 @@ let SPLASH_READY = false;
    visibility that only arrives after loading. Instead aspect-ratio holds the
    space and the block deletes itself if the file is not there. */
 (function(){
-  const img = document.getElementById('incBannerImg');
-  const box = document.getElementById('incBanner');
-  if(!img || !box) return;
-  img.addEventListener('error', () => box.remove(), {once:true});
+  [['incBannerImg','incBanner'], ['expBannerImg','expBanner']].forEach(([i,b]) => {
+    const img = document.getElementById(i), box = document.getElementById(b);
+    if(!img || !box) return;
+    img.addEventListener('error', () => box.remove(), {once:true});
+  });
 })();
 
 /* =========================== SAVING COACH ===========================
@@ -3288,6 +3419,7 @@ function fireDueNotifications(){
 /* =========================== EVENTS =========================== */
 function go(tab){
   TAB = tab;
+  if(typeof paintFab === 'function') paintFab();
   $$('.page').forEach(p => p.classList.toggle('on', p.id === 'page-'+tab));
   $$('.nav button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.go === tab)));
   window.scrollTo({top:0, behavior:'smooth'});
@@ -3354,6 +3486,11 @@ document.addEventListener('click', e => {
 
 $$('.nav button').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
 $('#fab').addEventListener('click', () => sheetTx(TAB === 'income' ? 'income' : 'expense'));
+/* Home carries its own two (+) tiles and the whole quick-add grid, so the
+   floating one only repeats what is already on screen. It stays on every
+   other tab, where it is the only way in. */
+function paintFab(){ const f = $('#fab'); if(f) f.hidden = (TAB === 'home'); }
+paintFab();                       // home is the tab on load; go() has not run yet
 $('#fabMic').addEventListener('click', startVoice);
 $('#btnSettings').addEventListener('click', sheetSettings);
 /* Each language is its own switch. Both on is the bilingual view; turning one
@@ -4424,17 +4561,19 @@ function brokerList(){
     return (Array.isArray(c) && c.length) ? c : BROKERS;
   }catch(e){ return BROKERS; }   // CONFIG loads in a later block
 }
-function brokersHTML(){
+/* `card` false returns the bare row, for callers that are already inside a
+   card — the fund list on the More hub. */
+function brokersHTML(card = true){
   const rows = brokerList().filter(b => b && b.name && b.url);
   if(!rows.length) return '';
-  return `
-  <div class="card sipc">
+  const inner = `
     <div class="t-lbl" style="font-size:14px;font-weight:700">${L('brokers')}</div>
     <div class="brokers">
       ${rows.map(b => `<a class="btn btn-g btn-sm" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer">${esc(b.name)}</a>`).join('')}
     </div>
-    <div class="hint" style="margin-top:9px">${t('brokersNote')}</div>
-  </div>`;
+    <div class="hint" style="margin-top:9px">${t('brokersNote')}</div>`;
+  return card ? `<div class="card sipc">${inner}</div>`
+              : `<div style="margin-top:14px">${inner}</div>`;
 }
 
 function renderSip(){
@@ -4727,6 +4866,7 @@ function renderFunds(){
       </div>`).join('')}
     <div class="hint" style="margin-top:12px"><b>${t('fundsHow')}:</b> ${t('fundsCriteria')}</div>
     <div class="hint" style="margin-top:7px">${t('fundsCheck')}</div>
+    ${brokersHTML(false)}
     <div class="sip-risk">${t('fundsDisc')}</div>`;
 }
 
@@ -4735,7 +4875,6 @@ const MENU = [
   { go:'reports',                      icon:'chart',    t:'mTracker'   },
   { go:'family',                       icon:'people',   t:'mFamily'    },
   { act:'statement',                   icon:'doc',      t:'mStatement' },
-  { go:'sos',                          icon:'shield',   t:'mSOS'       },
   { go:'invite',                       icon:'gift',     t:'mInvite'    },
   { act:'settings',                    icon:'gear',     t:'mSettings'  }
 ];
@@ -5642,3 +5781,130 @@ document.addEventListener('click', e => {
 })();
 </script>
 
+
+<script>
+'use strict';
+/* =========================== ASK ABOUT YOUR MONEY ===========================
+   A question box on the home page, spoken or typed. It answers from DB only —
+   there is no model and no network here, and pretending otherwise would be
+   worse than useless in an app people trust with their money. So the scope is
+   stated plainly under every answer: it reads what you entered, on this phone.
+
+   Everything it can answer is one entry in ASK_RULES: a matcher and a reply.
+   Add a rule rather than another branch. Matching is deliberately loose and
+   bilingual, because speech recognition mangles both languages.
+   ======================================================================== */
+function askCatWords(){
+  /* The quick-add list already names every category in both languages, so the
+     category matcher stays in step with it for free. Telugu takes case endings
+     — "పాలు" is asked about as "పాలకు" — so each word is also matched one
+     character short, which covers the common ones without a stemmer. */
+  const out = [];
+  QUICK.forEach(q => {
+    const words = [];
+    [q.te, q.en, q.cat].forEach(w => {
+      if(!w) return;
+      words.push(w);
+      if(w.length >= 4) words.push(w.slice(0, -1));
+    });
+    out.push({ cat:q.cat, words });
+  });
+  return out;
+}
+function askSpendOn(cat){
+  const k = mKey(VIEW);
+  return sum(inMonth(DB.tx.filter(x => x.type === 'expense' && x.category === cat), k));
+}
+function askTopCategory(){
+  const k = mKey(VIEW), by = {};
+  inMonth(DB.tx.filter(x => x.type === 'expense'), k)
+    .forEach(x => { by[x.category] = (by[x.category] || 0) + (Number(x.amount) || 0); });
+  const top = Object.keys(by).sort((a,b) => by[b] - by[a])[0];
+  return top ? { cat:top, amount:by[top] } : null;
+}
+/* Order matters: the narrow questions come first. "What did I spend most on?"
+   contains "spend", so the general spending rule would otherwise answer it. */
+const ASK_RULES = [
+  { re:/ఎక్కువ ఖర్చు|దేనికి ఎక్కువ|most|biggest|top/i,
+    run:() => { const top = askTopCategory();
+      return top ? { amount: top.amount, line: t('askATop',{ c: catLabel(top.cat), m: fmtMonth(VIEW) }) }
+                 : { line: t('askATopNone',{ m: fmtMonth(VIEW) }) }; } },
+  { re:/రోజుకు|per day|a day|daily/i,
+    run:() => ({ amount: stats().perDay, line: t('askAPerDay',{ m: fmtMonth(VIEW) }) }) },
+  { re:/పొదుపు|దాచ|save|saving/i,
+    run:() => { const c = coachPlan();
+      return { amount: c.total, line: t('askASave',{ i: money(c.income) }) }; } },
+  { re:/నిల్వ|బ్యాలెన్స్|దగ్గర ఎంత|balance|how much do i have|left/i,
+    run:() => ({ amount: stats().balance, line: t('askABalance') }) },
+  { re:/వచ్చిన|ఆదాయ|సంపాద|earn|income|salary/i,
+    run:() => ({ amount: stats().income, line: t('askAEarned',{m:fmtMonth(VIEW)}) }) },
+  { re:/ఖర్చు అయ|ఎంత ఖర్చు|spent|spend|expense/i,
+    run:() => ({ amount: stats().expense, line: t('askASpent',{m:fmtMonth(VIEW)}) }) }
+];
+function askAnswer(qRaw){
+  const q = (qRaw || '').trim();
+  if(!q) return null;
+  /* a named category wins over the general rules: "how much on milk" is about
+     milk, not about spending in general */
+  const hit = askCatWords().find(c => c.words.some(w => w && q.toLowerCase().includes(String(w).toLowerCase())));
+  if(hit){
+    const a = askSpendOn(hit.cat);
+    return a ? { amount:a, line: t('askACat',{ c: catLabel(hit.cat), m: fmtMonth(VIEW) }) }
+             : { line: t('askACatNone',{ c: catLabel(hit.cat), m: fmtMonth(VIEW) }) };
+  }
+  const rule = ASK_RULES.find(r => r.re.test(q));
+  return rule ? rule.run() : null;
+}
+
+const ASK_SUGGEST = ['askQBalance','askQSpent','askQEarned','askQTop','askQSave'];
+function sheetAsk(prefill = ''){
+  openSheet(`
+    <h3>${L('askTitle')}</h3>
+    <div class="sheet-sub">${t('askSub')}</div>
+    <div class="field"><input id="askIn" type="text" value="${esc(prefill)}"
+      placeholder="${esc(t('askPlaceholder'))}"></div>
+    <div class="grid2">
+      <button class="btn btn-p" id="askGo">${t('askGo')}</button>
+      <button class="btn btn-g" id="askMic">${t('askListen')}</button>
+    </div>
+    <div id="askOut"></div>
+    <div class="hint" style="margin-top:11px;font-weight:700;color:var(--ink)">${t('askTry')}</div>
+    <div class="ask-q">${ASK_SUGGEST.map(k =>
+      `<button data-ask="${k}">${esc(t(k))}</button>`).join('')}</div>
+    <div class="hint" style="margin-top:11px">${t('askScope')}</div>`);
+
+  const show = q => {
+    const a = askAnswer(q);
+    $('#askOut').innerHTML = a
+      ? `<div class="ask-a">${a.amount != null ? `<div class="big">${money(a.amount)}</div>` : ''}
+           <div class="ln">${esc(a.line)}</div></div>`
+      : `<div class="ask-a" style="background:var(--surface-2)"><div class="ln">${esc(t('askNoIdea'))}</div></div>`;
+  };
+  const ask = () => show($('#askIn').value);
+  $('#askGo').addEventListener('click', ask);
+  $('#askIn').addEventListener('keydown', e => { if(e.key === 'Enter') ask(); });
+  $('#askOut').closest('.sheet, body').addEventListener('click', e => {
+    const b = e.target.closest('[data-ask]');
+    if(!b) return;
+    $('#askIn').value = t(b.dataset.ask);
+    ask();
+  });
+  $('#askMic').addEventListener('click', () => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR) return toast(t('voiceNo'));
+    const r = new SR();
+    r.lang = LANG === 'te' ? 'te-IN' : 'en-IN';
+    r.interimResults = false;
+    r.onstart  = () => toast(t('voiceListen'));
+    r.onerror  = () => toast(t('voiceFail'));
+    r.onresult = e => { const said = e.results[0][0].transcript;
+                        $('#askIn').value = said; show(said); };
+    try{ r.start(); }catch(_){ toast(t('voiceFail')); }
+  });
+  if(prefill) ask();
+}
+(function(){
+  const b = document.getElementById('askBanner');
+  if(b) b.addEventListener('click', () => sheetAsk());
+})();
+</script>
