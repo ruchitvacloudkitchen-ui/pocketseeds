@@ -99,14 +99,12 @@
 /* The total card is a light lavender, so its ink is dark — a near-white
    heading would vanish on it. Like the three blocks below, it carries its own
    background and ink and so looks the same in both themes. */
-/* One green ramp for the whole coach, from the reference palette:
-   #CEFCC2 → #ACE79A → #86CB74 → #68A755 → #53883E. Every panel takes two
-   neighbouring steps, so the four still separate at a glance while reading as
-   one family. The ink is a near-black green rather than white: white clears
-   4.5:1 on none of these shades, and the darkest, #53883E, cannot carry small
-   text at all — it is used for the gradient tail and the accents only. */
-.sc-top{border-radius:22px;padding:18px 19px;color:#071C0B;position:relative;overflow:hidden;
-  background:linear-gradient(140deg,#ACE79A 0%,#96D986 52%,#86CB74 100%);
+/* One flat green for every panel of the coach — the ramp is gone, this is the
+   single colour asked for. Set it once here and all four follow.
+   Near-black-green ink on it measures 10.06:1. */
+:root{--sc:#8ED47E; --sc-ink:#071C0B}
+.sc-top{border-radius:22px;padding:18px 19px;color:var(--sc-ink);position:relative;overflow:hidden;
+  background:var(--sc);
   box-shadow:0 10px 28px rgba(60,110,45,.24)}
 .sc-top::after{content:'';position:absolute;right:-38px;top:-46px;width:150px;height:150px;border-radius:50%;
   background:radial-gradient(circle, rgba(255,255,255,.42), rgba(255,255,255,0) 68%)}
@@ -116,6 +114,9 @@
 
 /* The pen marks whichever date is selected in the grid above it, so it names
    that date rather than saying "add" — there is no second place to choose. */
+.cal-tools{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media (max-width:359px){ .cal-tools{grid-template-columns:1fr} }
+.cal-pen.bell .ic{background:var(--amber);color:#fff}
 .cal-pen{display:flex;align-items:center;gap:11px;width:100%;margin-top:12px;text-align:left;
   cursor:pointer;font-family:inherit;border:1px solid var(--line);border-radius:15px;
   padding:11px 13px;background:var(--surface-2);color:var(--ink)}
@@ -128,6 +129,34 @@
 .cal-pen:active{filter:brightness(.97)}
 /* a marked day shows its dot in the grid and its note in the day panel */
 .cal-note{font-size:12.5px;line-height:1.45;color:var(--muted);margin-top:3px}
+
+/* ---------- reminder banner ----------
+   Fixed to the top over everything, including the sheet, because a reminder
+   that a sheet can hide is not a reminder. It slides in and out rather than
+   appearing, so it is noticed without being startling. */
+.rem-bar{position:fixed;left:0;right:0;top:0;z-index:120;padding:max(8px,env(safe-area-inset-top)) 10px 10px;
+  pointer-events:none}
+.rem-bar[hidden]{display:none}
+.rem-card{max-width:520px;margin:0 auto;pointer-events:auto;border-radius:18px;padding:13px 14px;
+  background:var(--chrome);border:1px solid var(--line);
+  backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);
+  box-shadow:0 12px 30px rgba(10,25,16,.28);
+  transform:translateY(-130%);transition:transform .34s cubic-bezier(.22,.9,.3,1)}
+.rem-bar.on .rem-card{transform:none}
+.rem-h{display:flex;align-items:flex-start;gap:10px}
+.rem-ic{width:34px;height:34px;border-radius:12px;flex:0 0 auto;display:grid;place-items:center;
+  background:var(--amber-2);color:#fff}
+.rem-ic .i{width:18px;height:18px;stroke-width:2.1}
+.rem-tx{flex:1;min-width:0}
+.rem-n{display:block;font-size:15.5px;font-weight:800;line-height:1.3;color:var(--ink)}
+.rem-w{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.rem-cta{display:flex;gap:8px;margin-top:11px}
+.rem-cta button{flex:1 1 0;min-width:0;border-radius:11px;padding:10px 8px;cursor:pointer;
+  font-family:inherit;font-size:13.5px;font-weight:800;white-space:nowrap;
+  border:1px solid var(--line);background:var(--surface-2);color:var(--ink)}
+.rem-cta .snooze{background:var(--btn);color:var(--on-btn);border-color:transparent}
+@media (prefers-reduced-motion:reduce){ .rem-card{transition:none} }
+
 .sc-bento{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .sc-b{position:relative;overflow:hidden;border-radius:20px;padding:15px 16px;min-height:118px;
   display:flex;flex-direction:column;justify-content:space-between;
@@ -145,10 +174,9 @@
 .sc-b .sc-pc{margin-left:auto;font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:999px;
   background:rgba(83,136,62,.22);box-shadow:inset 0 0 0 1px rgba(83,136,62,.32)}
 .sc-b .sc-v{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-top:10px}
-/* class names kept — they are the bucket's identity in SC_PARTS, not a colour */
-.sc-pink {background:linear-gradient(140deg,#CEFCC2 0%,#ACE79A 100%); color:#071C0B}
-.sc-amber{background:linear-gradient(140deg,#ACE79A 0%,#86CB74 100%); color:#071C0B}
-.sc-green{background:linear-gradient(140deg,#86CB74 0%,#68A755 100%); color:#071C0B}
+/* class names kept — they are the bucket's identity in SC_PARTS, not a colour.
+   All three are the same green now; the icon and the name tell them apart. */
+.sc-pink, .sc-amber, .sc-green{background:var(--sc); color:var(--sc-ink)}
 
 /* Each bucket carries its own two starting points, in a panel tucked under the
    coloured box so the pair reads as one unit rather than a loose list. */
@@ -1322,13 +1350,26 @@ table.sip tbody tr:last-child td{font-size:15px}
         <button class="cal-nav" id="calNext">›</button>
       </div>
       <div class="cal-grid" id="calGrid"></div>
-      <button class="cal-pen" id="btnCalPen">
-        <span class="ic" data-icon="pencil"></span>
-        <span class="tx"><span class="n" data-i18n="calPen">Mark this date</span>
-          <span class="s" id="calPenDate">—</span></span>
-      </button>
+      <div class="cal-tools">
+        <button class="cal-pen" id="btnCalPen">
+          <span class="ic" data-icon="pencil"></span>
+          <span class="tx"><span class="n" data-i18n="calPen">Mark this date</span>
+            <span class="s" id="calPenDate">—</span></span>
+        </button>
+        <button class="cal-pen bell" id="btnCalRem">
+          <span class="ic" data-icon="bell"></span>
+          <span class="tx"><span class="n" data-i18n="remAdd">Remind me</span>
+            <span class="s" id="calRemDate">—</span></span>
+        </button>
+      </div>
     </div>
     <div class="sec"><div class="card" style="padding:15px" id="calDetail"></div></div>
+
+    <div class="sec">
+      <div class="sec-head"><h3 data-i18n="remTitle">Reminders</h3></div>
+      <div class="sub" data-i18n="remSub">They ring at 7:55 in the morning, before the day starts.</div>
+      <div class="list" id="remList"></div>
+    </div>
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="holidays">Holidays</h3>
         <span class="hol-legend"><i class="lg-p"></i><i class="lg-o"></i>
@@ -1493,6 +1534,7 @@ table.sip tbody tr:last-child td{font-size:15px}
   </div>
 </nav>
 
+<div class="rem-bar" id="remBar" role="alert" aria-live="assertive" hidden></div>
 <div class="splash" id="splash" role="button" tabindex="0" aria-label="PocketSeeds"></div>
 
 <div class="scrim" id="scrim"></div>
@@ -1726,6 +1768,16 @@ const STR = {
     askAPerDay:'a day — what is left to spend for the rest of {m}.',
     askNoIdea:'I could not match that to anything I hold. Try one of the questions below.',
     askScope:'Answers come from what you have entered in this app, on this phone. It is not investment advice and it does not know anything outside your own records.',
+    remTitle:'Reminders',
+    remSub:'They ring at 7:55 in the morning, before the day starts.',
+    remAdd:'Remind me', remWhat:'What is it for?', remTime:'Time',
+    remSave:'Set the reminder', remDel:'Remove',
+    remNone:'Nothing set. Pick a day above and tap Remind me.',
+    remClose:'Close', remSnooze:'In 10 minutes',
+    remSnoozed:'Back in 10 minutes.',
+    remToday:'Today', remTomorrow:'Tomorrow',
+    remAsk:'Allow notifications so this can reach you when the app is closed?',
+    remOnlyOpen:'Reminders show when you open the app. A phone can only ring on its own for an app it has notification permission for.',
     calPen:'Mark this date', calPenNote:'Short note', calPenNoteHint:'A few words — what happened, or what to remember.',
     calPenSave:'Mark the day', calPenClear:'Remove the mark',
     scWhere:'Where to start',
@@ -2073,6 +2125,16 @@ const STR = {
     askAPerDay:'రోజుకు — {m} మిగిలిన రోజులకు ఖర్చు చేయదగినది.',
     askNoIdea:'అది నాకు అర్థం కాలేదు. కింద ఉన్న ప్రశ్నలు అడిగి చూడండి.',
     askScope:'జవాబులు ఈ ఫోన్‌లో మీరు రాసిన లెక్కల నుంచే వస్తాయి. ఇది పెట్టుబడి సలహా కాదు, మీ లెక్కల బయట దేనీ గురించీ తెలియదు.',
+    remTitle:'గుర్తుంపులు',
+    remSub:'ఉదయం 7:55కి — రోజు మొదలవ్వక ముందే.',
+    remAdd:'గుర్తు చేయి', remWhat:'దేని కోసం?', remTime:'సమయం',
+    remSave:'గుర్తుంపు పెట్టు', remDel:'తీసివేయి',
+    remNone:'ఇంకా ఏమీ లేవు. పైన ఒక రోజు ఎంచుకుని "గుర్తు చేయి" నొక్కండి.',
+    remClose:'సరే', remSnooze:'10 నిమిషాల్లో',
+    remSnoozed:'10 నిమిషాల్లో మళ్లీ.',
+    remToday:'ఈ రోజు', remTomorrow:'రేపు',
+    remAsk:'యాప్ మూసి ఉన్నా గుర్తు చేయాలంటే నోటిఫికేషన్‌లకు అనుమతి ఇవ్వండి.',
+    remOnlyOpen:'యాప్ తెరిచినప్పుడు గుర్తుంపులు కనిపిస్తాయి. ఫోన్ దానంతట అది మోగాలంటే నోటిఫికేషన్ అనుమతి కావాలి.',
     calPen:'ఈ తేదీని గుర్తు పెట్టు', calPenNote:'చిన్న నోట్', calPenNoteHint:'రెండు మాటలు — ఏం జరిగింది, లేదా ఏం గుర్తుంచుకోవాలి.',
     calPenSave:'గుర్తు పెట్టు', calPenClear:'గుర్తు తీసివేయి',
     scWhere:'ఎక్కడ మొదలుపెట్టాలి',
@@ -2298,7 +2360,8 @@ const DEFAULTS = {
   fests:[],     // {id,name,target,date,saved}
   moyi:[],      // {id,person,event,type:'given'|'received',amount,date}
   udhaar:[],    // {id,shop,amount,date}
-  sos:[]        // {id,name,phone}                       own emergency contacts
+  sos:[],       // {id,name,phone}                       own emergency contacts
+  calRem:[]     // {id,date,time,title,snooze,done}      calendar reminders
 };
 
 let DB = load();
@@ -6412,5 +6475,213 @@ function renderRealityCheck(){
   const prev = window.renderAll;
   window.renderAll = function(){ prev(); try{ renderRealityCheck(); }catch(e){ console.error(e); } };
   renderRealityCheck();
+})();
+</script>
+
+<script>
+'use strict';
+/* ======================= CALENDAR REMINDERS =======================
+   Pick a day on the calendar, say what it is for, and the app raises it at
+   7:55 the next time it is looking — early enough to act on before the day
+   starts.
+
+   WHAT THIS CAN AND CANNOT DO, because the difference matters:
+   the app is a PWA with no server. A page that is not running cannot run
+   code, and scheduling a notification for later while closed needs either the
+   Notification Triggers API (not shipped in any browser) or a push server
+   (there isn't one). So:
+     • app open, on screen        → the banner, with a sound
+     • app open, tab in the back  → a system notification through the service
+                                    worker, if permission was given
+     • app closed                 → nothing fires then; the reminder is still
+                                    due and shows the moment the app is opened
+   That last line is the honest limit, and the sheet says so rather than
+   letting someone rely on a ring that will not come.
+
+   The ticker is one 20-second interval plus a check whenever the app comes
+   back to the front. Not a second-by-second loop: nothing here needs that
+   accuracy, and a phone in a pocket should not pay for it.
+   ================================================================ */
+const REM_DEFAULT_TIME = '07:55';
+const REM_SNOOZE_MIN   = 10;
+const REM_TICK_MS      = 20000;
+let REM_SHOWING = null;          // one banner at a time, by reminder id
+
+function remList(){ return DB.calRem || (DB.calRem = []); }
+function remAt(r){
+  /* local time, deliberately: 7:55 means 7:55 where the reader is */
+  const [h, mi] = String(r.time || REM_DEFAULT_TIME).split(':').map(Number);
+  const [y, m, d] = String(r.date).split('-').map(Number);
+  return new Date(y, m - 1, d, h || 0, mi || 0, 0, 0).getTime();
+}
+function remDueAt(r){ return r.snooze || remAt(r); }
+function remIsDue(r, now){ return !r.done && remDueAt(r) <= now; }
+/* the oldest thing still owed, so a backlog comes out in order */
+function remNextDue(now){
+  return remList().filter(r => remIsDue(r, now))
+                  .sort((a,b) => remDueAt(a) - remDueAt(b))[0] || null;
+}
+
+/* A soft two-note chime, built rather than shipped: no file to cache and no
+   request to make. Browsers refuse audio until the reader has interacted with
+   the page at least once, so this can silently do nothing — the banner is the
+   notification, the sound is the courtesy. */
+let REM_AC = null;
+function remChime(){
+  try{
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    REM_AC = REM_AC || new AC();
+    if(REM_AC.state === 'suspended') REM_AC.resume();
+    const t0 = REM_AC.currentTime;
+    [[880, 0], [1174.7, 0.16]].forEach(([hz, off]) => {
+      const o = REM_AC.createOscillator(), g = REM_AC.createGain();
+      o.type = 'sine'; o.frequency.value = hz;
+      g.gain.setValueAtTime(0.0001, t0 + off);
+      g.gain.exponentialRampToValueAtTime(0.13, t0 + off + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + off + 0.42);
+      o.connect(g); g.connect(REM_AC.destination);
+      o.start(t0 + off); o.stop(t0 + off + 0.45);
+    });
+  }catch(e){}
+}
+
+function remWhenLabel(r){
+  const at = new Date(remDueAt(r));
+  const today = ymd(new Date()), d = ymd(at);
+  const tm = String(at.getHours()).padStart(2,'0') + ':' + String(at.getMinutes()).padStart(2,'0');
+  if(d === today) return t('remToday') + ' · ' + tm;
+  const tomorrow = ymd(new Date(Date.now() + 864e5));
+  if(d === tomorrow) return t('remTomorrow') + ' · ' + tm;
+  return shortDate(d) + ' · ' + tm;
+}
+
+function remShow(r){
+  const bar = $('#remBar'); if(!bar) return;
+  REM_SHOWING = r.id;
+  bar.innerHTML = `
+    <div class="rem-card">
+      <div class="rem-h">
+        <span class="rem-ic">${ic('bell')}</span>
+        <span class="rem-tx"><span class="rem-n">${esc(r.title)}</span>
+          <span class="rem-w">${esc(remWhenLabel(r))}</span></span>
+      </div>
+      <div class="rem-cta">
+        <button class="snooze" id="remSnooze">${esc(t('remSnooze'))}</button>
+        <button id="remClose">${esc(t('remClose'))}</button>
+      </div>
+    </div>`;
+  bar.hidden = false;
+  requestAnimationFrame(() => bar.classList.add('on'));   // let the transition run
+  remChime();
+  $('#remSnooze').addEventListener('click', () => {
+    r.snooze = Date.now() + REM_SNOOZE_MIN * 60000;
+    save(); remHide(); toast(t('remSnoozed'));
+  });
+  $('#remClose').addEventListener('click', () => {
+    r.done = true; r.snooze = 0;
+    save(); remHide(); renderReminders();
+  });
+}
+function remHide(){
+  const bar = $('#remBar'); if(!bar) return;
+  bar.classList.remove('on');
+  REM_SHOWING = null;
+  /* emptied once it is out of sight, not just hidden: this is an aria-live
+     region, and leaving a dismissed reminder sitting in it is how a screen
+     reader ends up announcing something the reader already closed */
+  setTimeout(() => {
+    if(REM_SHOWING) return;              // another one arrived meanwhile
+    bar.hidden = true;
+    bar.innerHTML = '';
+  }, 360);
+}
+
+/* Out of sight but still running: hand it to the system instead, once per
+   reminder, so a backgrounded tab does not queue up a pile of them. */
+function remNotify(r){
+  try{
+    if(!('Notification' in window) || Notification.permission !== 'granted') return false;
+    if(r.notified === remDueAt(r)) return true;          // already sent for this firing
+    navigator.serviceWorker.ready.then(reg => {
+      reg.showNotification(r.title, {
+        body: remWhenLabel(r), tag: 'rem-' + r.id, renotify: false,
+        icon: 'icon.png', badge: 'icon.png'
+      });
+    }).catch(()=>{});
+    r.notified = remDueAt(r); save();
+    return true;
+  }catch(e){ return false; }
+}
+
+function remTick(){
+  if(REM_SHOWING) return;                  // only ever one at a time
+  const due = remNextDue(Date.now());
+  if(!due) return;
+  if(document.hidden){ remNotify(due); return; }
+  remShow(due);
+}
+
+function renderReminders(){
+  const box = $('#remList'); if(!box) return;
+  const rows = remList().filter(r => !r.done).sort((a,b) => remAt(a) - remAt(b));
+  box.innerHTML = rows.length ? rows.map(r => `
+    <div class="row">
+      <div class="ic ic-warn">${ic('bell')}</div>
+      <div class="body"><div class="title">${esc(r.title)}</div>
+        <div class="meta">${esc(shortDate(r.date))} · ${esc(r.time || REM_DEFAULT_TIME)}</div></div>
+      <button class="swipe-del" data-del-rem="${r.id}">✕</button>
+    </div>`).join('') : emptyBox('bell', t('remNone'));
+  const cap = $('#calRemDate');
+  if(cap) cap.textContent = shortDate(CAL_SEL);
+}
+
+function sheetReminder(date){
+  const on = date || CAL_SEL;
+  const canRing = ('Notification' in window);
+  openSheet(`
+    <h3>${L('remAdd')}</h3>
+    <div class="sheet-sub">${shortDate(on)}</div>
+    <div class="field"><label>${L('remWhat')}</label><input id="rmTitle" type="text"></div>
+    <div class="grid2">
+      <div class="field"><label>${L('calDate')}</label><input id="rmDate" type="date" value="${on}"></div>
+      <div class="field"><label>${L('remTime')}</label><input id="rmTime" type="time" value="${REM_DEFAULT_TIME}"></div>
+    </div>
+    <button class="btn btn-p btn-block" id="rmSave">${t('remSave')}</button>
+    <div class="hint">${t('remOnlyOpen')}</div>`);
+  $('#rmSave').addEventListener('click', () => {
+    const title = $('#rmTitle').value.trim();
+    if(!title) return toast(t('enterAmount'));
+    remList().push({ id:uid(), date:$('#rmDate').value || on,
+                     time:$('#rmTime').value || REM_DEFAULT_TIME,
+                     title, snooze:0, done:false });
+    save(); renderReminders(); closeSheet(); toast(t('saved'));
+    /* ask only once something is actually scheduled — a permission prompt on
+       first open, before anyone has asked for anything, is just noise */
+    if(canRing && Notification.permission === 'default'){
+      Notification.requestPermission().catch(()=>{});
+    }
+  });
+}
+
+document.addEventListener('click', e => {
+  const del = e.target.closest('[data-del-rem]');
+  if(!del) return;
+  DB.calRem = remList().filter(r => r.id !== del.dataset.delRem);
+  save(); renderReminders(); toast(t('removed'));
+});
+(function(){
+  const b = $('#btnCalRem');
+  if(b) b.addEventListener('click', () => sheetReminder(CAL_SEL));
+  const prev = window.renderAll;
+  window.renderAll = function(){ prev(); try{ renderReminders(); }catch(e){ console.error(e); } };
+  renderReminders();
+
+  setInterval(remTick, REM_TICK_MS);
+  /* the moment the app is looked at again is the moment to catch up on
+     anything that came due while it was away — or closed entirely */
+  document.addEventListener('visibilitychange', () => { if(!document.hidden) remTick(); });
+  window.addEventListener('focus', remTick);
+  remTick();
 })();
 </script>
