@@ -99,34 +99,56 @@
 /* The total card is a light lavender, so its ink is dark — a near-white
    heading would vanish on it. Like the three blocks below, it carries its own
    background and ink and so looks the same in both themes. */
-.sc-top{border-radius:22px;padding:18px 19px;color:#2E1F47;position:relative;overflow:hidden;
-  background:linear-gradient(140deg,#CDBBEC 0%,#BFA8E4 52%,#B69EE0 100%);
-  box-shadow:0 10px 28px rgba(96,70,150,.22)}
+/* One green ramp for the whole coach, from the reference palette:
+   #CEFCC2 → #ACE79A → #86CB74 → #68A755 → #53883E. Every panel takes two
+   neighbouring steps, so the four still separate at a glance while reading as
+   one family. The ink is a near-black green rather than white: white clears
+   4.5:1 on none of these shades, and the darkest, #53883E, cannot carry small
+   text at all — it is used for the gradient tail and the accents only. */
+.sc-top{border-radius:22px;padding:18px 19px;color:#071C0B;position:relative;overflow:hidden;
+  background:linear-gradient(140deg,#ACE79A 0%,#96D986 52%,#86CB74 100%);
+  box-shadow:0 10px 28px rgba(60,110,45,.24)}
 .sc-top::after{content:'';position:absolute;right:-38px;top:-46px;width:150px;height:150px;border-radius:50%;
   background:radial-gradient(circle, rgba(255,255,255,.42), rgba(255,255,255,0) 68%)}
 .sc-top .sc-k{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.8}
 .sc-top .sc-amt{font-size:36px;font-weight:800;letter-spacing:-.03em;margin:3px 0 2px;line-height:1.05}
 .sc-top .sc-of{font-size:14px;font-weight:600;opacity:.88}
 
+/* The pen marks whichever date is selected in the grid above it, so it names
+   that date rather than saying "add" — there is no second place to choose. */
+.cal-pen{display:flex;align-items:center;gap:11px;width:100%;margin-top:12px;text-align:left;
+  cursor:pointer;font-family:inherit;border:1px solid var(--line);border-radius:15px;
+  padding:11px 13px;background:var(--surface-2);color:var(--ink)}
+.cal-pen .ic{width:34px;height:34px;border-radius:11px;flex:0 0 auto;display:grid;place-items:center;
+  background:var(--btn);color:var(--on-btn)}
+.cal-pen .ic .i{width:18px;height:18px;stroke-width:2.1}
+.cal-pen .tx{min-width:0}
+.cal-pen .n{display:block;font-size:14.5px;font-weight:700}
+.cal-pen .s{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
+.cal-pen:active{filter:brightness(.97)}
+/* a marked day shows its dot in the grid and its note in the day panel */
+.cal-note{font-size:12.5px;line-height:1.45;color:var(--muted);margin-top:3px}
 .sc-bento{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .sc-b{position:relative;overflow:hidden;border-radius:20px;padding:15px 16px;min-height:118px;
   display:flex;flex-direction:column;justify-content:space-between;
   box-shadow:0 6px 18px rgba(14,27,20,.12)}
 .sc-b.wide{grid-column:1 / -1;min-height:104px}
 .sc-b::after{content:'';position:absolute;right:-30px;top:-34px;width:118px;height:118px;border-radius:50%;
-  background:radial-gradient(circle, rgba(255,255,255,.34), rgba(255,255,255,0) 66%)}
+  background:radial-gradient(circle, rgba(255,255,255,.38), rgba(255,255,255,0) 66%)}
 .sc-b > *{position:relative}
 .sc-b .sc-h{display:flex;align-items:center;gap:8px}
+/* the overlays were white, which vanishes on a light green ground */
 .sc-b .sc-ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
-  background:rgba(255,255,255,.42)}
+  background:rgba(255,255,255,.5);box-shadow:inset 0 0 0 1px rgba(7,28,11,.10)}
 .sc-b .sc-ic .i{width:16px;height:16px}
 .sc-b .sc-nm{font-size:14px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
 .sc-b .sc-pc{margin-left:auto;font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:999px;
-  background:rgba(255,255,255,.46)}
+  background:rgba(83,136,62,.22);box-shadow:inset 0 0 0 1px rgba(83,136,62,.32)}
 .sc-b .sc-v{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-top:10px}
-.sc-pink {background:linear-gradient(140deg,#F9A8CB 0%,#F084B4 100%); color:#3D1027}
-.sc-amber{background:linear-gradient(140deg,#FBD97A 0%,#EFB63F 100%); color:#3B2A08}
-.sc-green{background:linear-gradient(140deg,#93E0B4 0%,#63C88C 100%); color:#0A3A22}
+/* class names kept — they are the bucket's identity in SC_PARTS, not a colour */
+.sc-pink {background:linear-gradient(140deg,#CEFCC2 0%,#ACE79A 100%); color:#071C0B}
+.sc-amber{background:linear-gradient(140deg,#ACE79A 0%,#86CB74 100%); color:#071C0B}
+.sc-green{background:linear-gradient(140deg,#86CB74 0%,#68A755 100%); color:#071C0B}
 
 /* Each bucket carries its own two starting points, in a panel tucked under the
    coloured box so the pair reads as one unit rather than a loose list. */
@@ -184,7 +206,23 @@
 .sc-ok{background:var(--in-bg);color:var(--in)}
 .sc-short{background:var(--warn-bg);color:var(--warn)}
 
-.reels{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.reel-row{position:relative}
+.reels{display:flex;gap:11px;overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;padding:2px 1px 4px;scrollbar-width:none}
+.reels::-webkit-scrollbar{display:none}
+.reels > *{flex:0 0 46%;scroll-snap-align:start}
+@media (min-width:520px){ .reels > *{flex:0 0 31%} }
+/* the arrows sit over the row's edges and disappear at each end, so they never
+   promise a scroll that is not there */
+.reel-arw{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:34px;height:34px;
+  border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  font-family:inherit;font-size:22px;line-height:1;cursor:pointer;box-shadow:var(--shadow);
+  display:grid;place-items:center;padding:0 0 3px}
+/* fully inside the row, or the page's own padding clips them */
+.reel-arw.prev{left:3px}
+.reel-arw.next{right:3px}
+.reel-arw[hidden]{display:none}
+
 .reel{position:relative;aspect-ratio:9/16;border-radius:18px;overflow:hidden;display:flex;
   flex-direction:column;justify-content:flex-end;padding:13px;text-decoration:none;
   border:1px solid var(--line);box-shadow:var(--shadow);color:#fff}
@@ -1257,7 +1295,11 @@ table.sip tbody tr:last-child td{font-size:15px}
 
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="reelsTitle">Worth two minutes</h3></div>
-      <div class="reels" id="reelBox"></div>
+      <div class="reel-row">
+        <button class="reel-arw prev" id="reelPrev" aria-label="previous" hidden>‹</button>
+        <div class="reels" id="reelBox"></div>
+        <button class="reel-arw next" id="reelNext" aria-label="next" hidden>›</button>
+      </div>
     </div>
 
     <div class="sec">
@@ -1280,6 +1322,11 @@ table.sip tbody tr:last-child td{font-size:15px}
         <button class="cal-nav" id="calNext">›</button>
       </div>
       <div class="cal-grid" id="calGrid"></div>
+      <button class="cal-pen" id="btnCalPen">
+        <span class="ic" data-icon="pencil"></span>
+        <span class="tx"><span class="n" data-i18n="calPen">Mark this date</span>
+          <span class="s" id="calPenDate">—</span></span>
+      </button>
     </div>
     <div class="sec"><div class="card" style="padding:15px" id="calDetail"></div></div>
     <div class="sec">
@@ -1434,7 +1481,6 @@ table.sip tbody tr:last-child td{font-size:15px}
   </section>
 </div>
 
-<button class="fab mic" id="fabMic" aria-label="voice" data-icon="mic"></button>
 <button class="fab" id="fab" aria-label="add" data-icon="plus"></button>
 
 <nav class="nav">
@@ -1680,6 +1726,8 @@ const STR = {
     askAPerDay:'a day — what is left to spend for the rest of {m}.',
     askNoIdea:'I could not match that to anything I hold. Try one of the questions below.',
     askScope:'Answers come from what you have entered in this app, on this phone. It is not investment advice and it does not know anything outside your own records.',
+    calPen:'Mark this date', calPenNote:'Short note', calPenNoteHint:'A few words — what happened, or what to remember.',
+    calPenSave:'Mark the day', calPenClear:'Remove the mark',
     scWhere:'Where to start',
     scWhereNote:'Well-known providers, listed alphabetically. PocketSeeds is not affiliated with any of them and earns nothing from these links. Compare cover, charges and terms yourself before you buy.',
     privacyLink:'Privacy policy',
@@ -1720,7 +1768,7 @@ const STR = {
     scShort:'You are {a} short of the full 30%. Start with the emergency fund — it is the one that stops a bad month turning into a loan.',
     scNoIncome:'Add this month\u2019s income and the coach works out what to set aside.',
     reelsTitle:'Worth two minutes',
-    reelSoon:'Coming soon',
+    reelSoon:'Coming soon', reelNum:'Watch #{n}',
     reel1t:'Monthly SIP or one lump sum?', reel1s:'The two ways to put money into a fund, side by side.',
     reel2t:'How to invest a lump sum in mutual funds', reel2s:'Putting a single amount in, step by step.',
 
@@ -2025,6 +2073,8 @@ const STR = {
     askAPerDay:'రోజుకు — {m} మిగిలిన రోజులకు ఖర్చు చేయదగినది.',
     askNoIdea:'అది నాకు అర్థం కాలేదు. కింద ఉన్న ప్రశ్నలు అడిగి చూడండి.',
     askScope:'జవాబులు ఈ ఫోన్‌లో మీరు రాసిన లెక్కల నుంచే వస్తాయి. ఇది పెట్టుబడి సలహా కాదు, మీ లెక్కల బయట దేనీ గురించీ తెలియదు.',
+    calPen:'ఈ తేదీని గుర్తు పెట్టు', calPenNote:'చిన్న నోట్', calPenNoteHint:'రెండు మాటలు — ఏం జరిగింది, లేదా ఏం గుర్తుంచుకోవాలి.',
+    calPenSave:'గుర్తు పెట్టు', calPenClear:'గుర్తు తీసివేయి',
     scWhere:'ఎక్కడ మొదలుపెట్టాలి',
     scWhereNote:'ఇవి బాగా తెలిసిన సంస్థలు, అక్షర క్రమంలో ఇచ్చాం. PocketSeedsకు వీటితో సంబంధం లేదు, ఈ లింకుల ద్వారా ఏమీ రాదు. కొనే ముందు కవర్, ఛార్జీలు, నిబంధనలు మీరే పోల్చి చూసుకోండి.',
     privacyLink:'గోప్యతా విధానం',
@@ -2065,7 +2115,7 @@ const STR = {
     scShort:'పూర్తి 30% కి {a} తక్కువ. ముందు అత్యవసర నిధితో మొదలుపెట్టండి — కష్ట కాలంలో అప్పు తప్పించేది అదే.',
     scNoIncome:'ఈ నెల ఆదాయం చేర్చండి, ఎంత పక్కన పెట్టాలో కోచ్ చెబుతుంది.',
     reelsTitle:'రెండు నిమిషాలు చాలు',
-    reelSoon:'త్వరలో',
+    reelSoon:'త్వరలో', reelNum:'వీడియో #{n}',
     reel1t:'Mutual Funds లో నెల నెల ఇన్వెస్ట్ చేయాలా ? లేదా Lump Sum లో ఇన్వెస్ట్ చేయాలా ?',
     reel1s:'ఫండ్‌లో డబ్బు పెట్టే రెండు దారులు, పక్కపక్కనే.',
     reel2t:'Mutual Fundsలో లంప్‌సమ్ ఎలా పెట్టుబడి పెట్టాలి?',
@@ -3373,6 +3423,10 @@ function guessSpokenCategory(s){
   return 'Other';
 }
 let REC = null, LISTENING = false;
+/* The floating mic is gone. startVoice() is left whole and null-safe so voice
+   entry can be attached to any button later — micLive() is where that button
+   would show it is listening. */
+function micLive(on){ const m = $('#fabMic'); if(m) m.classList.toggle('live', !!on); }
 function startVoice(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SR) return toast(t('voiceNo'));
@@ -3381,9 +3435,9 @@ function startVoice(){
   REC.lang = LANG === 'te' ? 'te-IN' : 'en-IN';
   REC.interimResults = false;
   REC.maxAlternatives = 1;
-  REC.onstart = () => { LISTENING = true; $('#fabMic').classList.add('live'); toast(t('voiceListen')); };
-  REC.onerror = () => { LISTENING = false; $('#fabMic').classList.remove('live'); toast(t('voiceFail')); };
-  REC.onend   = () => { LISTENING = false; $('#fabMic').classList.remove('live'); };
+  REC.onstart = () => { LISTENING = true; micLive(true); toast(t('voiceListen')); };
+  REC.onerror = () => { LISTENING = false; micLive(false); toast(t('voiceFail')); };
+  REC.onend   = () => { LISTENING = false; micLive(false); };
   REC.onresult = e => {
     const said = e.results[0][0].transcript;
     const p = parseSpoken(said);
@@ -3499,9 +3553,20 @@ function renderSavingCoach(){
    The URLs ship as defaults so they work with no network on first open;
    CONFIG.reels still overrides both the link and the copy, which is how the
    titles get changed without a release. */
+/* Eight now, so the two-up grid became a row that scrolls sideways — eight
+   9:16 cards stacked two to a line would be most of a screen of scrolling on
+   the way to everything below them. The arrows beside the row scroll it, and
+   hide themselves at each end. Only the first two have written titles; the
+   rest carry the thumbnail and a number until real ones arrive. */
 const REELS = [
   { cls:'reel-a', t:'reel1t', s:'reel1s', url:'https://www.youtube.com/shorts/HyhTn1u42Ho' },
-  { cls:'reel-b', t:'reel2t', s:'reel2s', url:'https://www.youtube.com/shorts/VYOtr8lgXMw' }
+  { cls:'reel-b', t:'reel2t', s:'reel2s', url:'https://www.youtube.com/shorts/VYOtr8lgXMw' },
+  { cls:'reel-a', url:'https://www.youtube.com/shorts/VMOfnP6kia8' },
+  { cls:'reel-b', url:'https://www.youtube.com/shorts/s3n6GjMspw8' },
+  { cls:'reel-a', url:'https://www.youtube.com/shorts/lDgKcMsz6h4' },
+  { cls:'reel-b', url:'https://www.youtube.com/shorts/awmkakjySGM' },
+  { cls:'reel-a', url:'https://www.youtube.com/shorts/jDzp4jCCDm4' },
+  { cls:'reel-b', url:'https://www.youtube.com/shorts/eWTN3DF9ExY' }
 ];
 function reelLinks(){
   try{ return (CONFIG && Array.isArray(CONFIG.reels)) ? CONFIG.reels : []; }
@@ -3528,8 +3593,8 @@ function renderReels(){
   box.innerHTML = REELS.map((r,i) => {
     const cfg   = urls[i];
     const url   = (cfg && cfg.url) || r.url;
-    const title = (cfg && cfg.title) || t(r.t);
-    const sub   = (cfg && cfg.text)  || t(r.s);
+    const title = (cfg && cfg.title) || (r.t ? t(r.t) : t('reelNum', { n: i + 1 }));
+    const sub   = (cfg && cfg.text)  || (r.s ? t(r.s) : '');
     const thumb = url ? reelThumb(cfg, url) : '';
     /* no lazy loading: these cards are small and the fallback depends on the
        error firing, which a lazy image below the fold never gets round to */
@@ -3537,7 +3602,7 @@ function renderReels(){
       ? `<img class="r-thumb" src="${esc(thumb)}" alt="" decoding="async" referrerpolicy="no-referrer">`
       : '';
     const inner = pic + `<span class="r-play">${ic('up')}</span>
-      <h4>${esc(title)}</h4><p>${esc(sub)}</p>`;
+      <h4>${esc(title)}</h4>${sub ? `<p>${esc(sub)}</p>` : ''}`;
     return url
       ? `<a class="reel ${r.cls}${thumb ? ' has-thumb' : ''}" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${inner}</a>`
       : `<div class="reel ${r.cls}" aria-disabled="true"><span class="r-play">${ic('up')}</span>
@@ -3552,7 +3617,27 @@ function renderReels(){
       img.remove();
     }, {once:true});
   });
+  paintReelArrows();
 }
+/* The arrows only appear where there is something to scroll to. Bound once;
+   renderReels() repaints them because the row's width changes with the cards. */
+function paintReelArrows(){
+  const box = $('#reelBox'), prev = $('#reelPrev'), next = $('#reelNext');
+  if(!box || !prev || !next) return;
+  const max = box.scrollWidth - box.clientWidth;
+  prev.hidden = box.scrollLeft <= 4;
+  next.hidden = box.scrollLeft >= max - 4;
+}
+(function(){
+  const box = $('#reelBox'), prev = $('#reelPrev'), next = $('#reelNext');
+  if(!box || !prev || !next) return;
+  /* one card plus its gap, so a tap lands the next card at the edge */
+  const step = () => (box.querySelector('.reel')?.getBoundingClientRect().width || 160) + 11;
+  prev.addEventListener('click', () => box.scrollBy({ left: -step(), behavior:'smooth' }));
+  next.addEventListener('click', () => box.scrollBy({ left:  step(), behavior:'smooth' }));
+  box.addEventListener('scroll', paintReelArrows, { passive:true });
+  window.addEventListener('resize', paintReelArrows);
+})();
 
 /* =========================== WELCOME ===========================
    Shown on a first run only. A permanent banner would push the balance —
@@ -3735,9 +3820,13 @@ $('#fab').addEventListener('click', () => sheetTx(TAB === 'income' ? 'income' : 
 /* Home carries its own two (+) tiles and the whole quick-add grid, so the
    floating one only repeats what is already on screen. It stays on every
    other tab, where it is the only way in. */
-function paintFab(){ const f = $('#fab'); if(f) f.hidden = (TAB === 'home'); }
+/* Pages that carry their own way in, or have nothing to add to: home has two
+   (+) tiles and the whole quick-add grid, More is a menu, the calendar adds
+   days through its own pen. The FAB stays everywhere else, where it is the
+   only way in. */
+const FAB_HIDDEN_ON = ['home', 'more', 'calendar'];
+function paintFab(){ const f = $('#fab'); if(f) f.hidden = FAB_HIDDEN_ON.includes(TAB); }
 paintFab();                       // home is the tab on load; go() has not run yet
-$('#fabMic').addEventListener('click', startVoice);
 $('#btnSettings').addEventListener('click', sheetSettings);
 /* Each language is its own switch. Both on is the bilingual view; turning one
    off leaves the other; turning off the only one left is refused, because an
@@ -4406,9 +4495,9 @@ function voiceConfirm(said, p){
       const r = new SR();
       r.lang = LANG === 'te' ? 'te-IN' : 'en-IN';
       r.interimResults = false; r.maxAlternatives = 1;
-      r.onstart = () => { $('#fabMic').classList.add('live'); toast(t('voiceListen')); };
-      r.onerror = () => { $('#fabMic').classList.remove('live'); toast(t('voiceFail')); };
-      r.onend   = () => { $('#fabMic').classList.remove('live'); };
+      r.onstart = () => { micLive(true); toast(t('voiceListen')); };
+      r.onerror = () => { micLive(false); toast(t('voiceFail')); };
+      r.onend   = () => { micLive(false); };
       r.onresult = e => {
         const said = e.results[0][0].transcript;
         voiceConfirm(said, parseSpoken(said));
@@ -4416,9 +4505,11 @@ function voiceConfirm(said, p){
       try{ r.start(); }catch(e){ toast(t('voiceFail')); }
     };
     const mic = $('#fabMic');
-    const fresh = mic.cloneNode(true);
-    mic.parentNode.replaceChild(fresh, mic);
-    fresh.addEventListener('click', () => window.startVoice());
+    if(mic){
+      const fresh = mic.cloneNode(true);
+      mic.parentNode.replaceChild(fresh, mic);
+      fresh.addEventListener('click', () => window.startVoice());
+    }
   }
 
   // SMS scan now fills a review queue instead of writing straight in
@@ -5351,13 +5442,18 @@ function renderCalendar(){
     </button>`;
   }
   grid.innerHTML = html;
+  const pen = $('#calPenDate');
+  if(pen){
+    const rec = (DB.days || []).find(d => d.date === CAL_SEL);
+    pen.textContent = shortDate(CAL_SEL) + (rec ? ' · ' + rec.name : '');
+  }
   renderCalDetail();
   const list = [...(DB.days||[])].sort((a,b)=>a.date.localeCompare(b.date));
   $('#dayList').innerHTML = list.length ? list.map(d => `
     <div class="row">
       <div class="ic ic-warn">${ic('calendar')}</div>
       <div class="body"><div class="title">${esc(d.name)}</div>
-        <div class="meta">${shortDate(d.date)}</div></div>
+        <div class="meta">${shortDate(d.date)}${d.note && d.note !== d.name ? ' · ' + esc(d.note) : ''}</div></div>
       <button class="swipe-del" data-del-day="${d.id}">✕</button>
     </div>`).join('') : emptyBox('calendar', t('calFestNote'));
 }
@@ -5372,7 +5468,8 @@ function renderCalDetail(){
       <div><div style="font-size:15px;font-weight:800">${shortDate(CAL_SEL)}${CAL_SEL===ymd(new Date())?' · '+t('calToday'):''}</div>
         ${(typeof holidaysOn === 'function' ? holidaysOn(CAL_SEL) : []).map(h =>
           `<div class="hol-tag ${h.type==='p'?'pub':'opt'}">${esc(holidayName(h))}</div>`).join('')}
-        ${day?`<div style="font-size:12.5px;color:var(--amber-2);font-weight:700;margin-top:2px">${esc(day.name)}</div>`:''}</div>
+        ${day?`<div style="font-size:12.5px;color:var(--amber-2);font-weight:700;margin-top:2px">${esc(day.name)}</div>`:''}
+        ${day && day.note && day.note !== day.name ? `<div class="cal-note">${esc(day.note)}</div>` : ''}</div>
       ${spent?`<div style="text-align:right"><div style="font-size:11px;color:var(--muted)">${t('calSpent')}</div>
         <div style="font-size:16px;font-weight:800;color:var(--out)">${money(spent)}</div></div>`:''}
     </div>
@@ -5402,19 +5499,38 @@ function panchangamHTML(date){
     </div>`;
 }
 
-function sheetDay(){
+/* One sheet for both routes in: the pen below the grid opens it on the day
+   that is selected, "+ Add day" opens it blank. Editing an existing mark
+   reuses it too, so there is a single place where a day is written. */
+function sheetDay(date){
+  const on  = date || CAL_SEL;
+  const rec = (DB.days || []).find(d => d.date === on);
   openSheet(`
-    <h3>${L('calAddNote')}</h3>
-    <div class="field"><label>${L('calName')}</label><input id="dyName" type="text"></div>
-    <div class="field"><label>${L('calDate')}</label><input id="dyDate" type="date" value="${CAL_SEL}"></div>
-    <button class="btn btn-p btn-block" id="dySave">${L('add')}</button>
+    <h3>${L('calPen')}</h3>
+    <div class="sheet-sub">${shortDate(on)}</div>
+    <div class="field"><label>${L('calName')}</label>
+      <input id="dyName" type="text" value="${esc(rec ? rec.name : '')}"></div>
+    <div class="field"><label>${L('calPenNote')}</label>
+      <input id="dyNote" type="text" maxlength="90" value="${esc(rec && rec.note ? rec.note : '')}"
+        placeholder="${esc(t('calPenNoteHint'))}"></div>
+    <div class="field"><label>${L('calDate')}</label><input id="dyDate" type="date" value="${on}"></div>
+    <button class="btn btn-p btn-block" id="dySave">${rec ? t('saveChanges') : t('calPenSave')}</button>
+    ${rec ? `<button class="btn btn-g btn-block" style="margin-top:8px" id="dyDel">${t('calPenClear')}</button>` : ''}
     <div class="hint">${t('calFestNote')}</div>`);
   $('#dySave').addEventListener('click', () => {
     const name = $('#dyName').value.trim();
-    if(!name) return toast(t('enterAmount'));
+    const note = $('#dyNote').value.trim();
+    if(!name && !note) return toast(t('enterAmount'));
+    const day = { id: rec ? rec.id : uid(),
+                  name: name || note.slice(0, 24),   // a note alone is enough to mark a day
+                  note, date: $('#dyDate').value || on };
     DB.days = DB.days || [];
-    DB.days.push({ id:uid(), name, date:$('#dyDate').value || CAL_SEL });
+    DB.days = rec ? DB.days.map(d => d.id === rec.id ? day : d) : DB.days.concat([day]);
     save(); renderCalendar(); closeSheet(); toast(t('saved'));
+  });
+  if($('#dyDel')) $('#dyDel').addEventListener('click', () => {
+    DB.days = (DB.days || []).filter(d => d.id !== rec.id);
+    save(); renderCalendar(); closeSheet(); toast(t('removed'));
   });
 }
 
@@ -5427,7 +5543,8 @@ document.addEventListener('click', e => {
 });
 $('#calPrev').addEventListener('click', () => { CAL_VIEW = new Date(CAL_VIEW.getFullYear(), CAL_VIEW.getMonth()-1, 1); renderCalendar(); });
 $('#calNext').addEventListener('click', () => { CAL_VIEW = new Date(CAL_VIEW.getFullYear(), CAL_VIEW.getMonth()+1, 1); renderCalendar(); });
-$('#btnAddDay').addEventListener('click', sheetDay);
+$('#btnAddDay').addEventListener('click', () => sheetDay());
+$('#btnCalPen').addEventListener('click', () => sheetDay(CAL_SEL));
 
 /* calendar joins the shortcut list */
 /* calendar has its own tab in the bottom bar now */
