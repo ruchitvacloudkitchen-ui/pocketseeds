@@ -6838,9 +6838,17 @@ function mbSpread(incoming){
   const prev = window.renderAll;
   window.renderAll = function(){ prev(); try{ renderMoneyBox(); }catch(e){ console.error(e); } };
   renderMoneyBox();
-  /* the tracker is a separate page in the same origin, so its writes arrive
-     here as a storage event while both are open, and on focus otherwise */
+  /* The tracker is a separate page in the same origin, so its writes arrive
+     here as a storage event while both are open, and on focus otherwise.
+
+     The second branch fixes a real one. This page holds DB in memory; the
+     tracker writes to the same store from its own document. With both open,
+     the tracker's "Add to my savings" landed in storage and the next ordinary
+     save() here — adding an expense, say — wrote this page's stale DB straight
+     over it, and the entry was gone. Re-reading on the event keeps the two
+     documents honest. */
   window.addEventListener('storage', e => {
+    if(e.key === KEY){ DB = load(); renderAll(); return; }
     if(e.key && e.key.startsWith('moneybox:')) renderMoneyBox();
   });
   window.addEventListener('focus', renderMoneyBox);

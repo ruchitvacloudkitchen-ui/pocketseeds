@@ -88,8 +88,11 @@ input:focus-visible{outline:3px solid #2E8B49;outline-offset:1px}
    The printed face, drawn in its own row and column order. It must fit a
    360px screen whole, so the cell size is whatever the width allows and the
    number scales with it — see the note in the script about the tap target. */
-.board{margin:0 -13px;padding:0 4px}
-.brow{display:grid;grid-template-columns:repeat(var(--cols,10),1fr);gap:3px;margin-bottom:3px}
+/* The negative margin cancels the card's own padding exactly, so the board
+   gets the full width of the page. At 360 that is 7 columns of 44.3px with
+   3px gutters — the tap target, met by the width rather than by shrinking. */
+.board{margin:0 -17px;padding:0 2px}
+.brow{display:grid;grid-template-columns:repeat(var(--cols,7),1fr);gap:3px;margin-bottom:3px}
 .cell{aspect-ratio:1;min-height:0;border-radius:6px;border:0;cursor:pointer;padding:0;
   font-family:inherit;font-weight:800;line-height:1;
   font-size:clamp(8px,3vw,13px);
@@ -219,13 +222,17 @@ footer a{color:var(--brand);font-weight:700}
 const MB_GOAL  = 100000;
 
 /* PROVISIONAL — the printed face is being finalised. Replace both of these
-   together with the real row-by-row layout; do not edit one alone. */
+   together with the real row-by-row layout; do not edit one alone.
+
+   Seven columns rather than ten is a deliberate choice made at the source:
+   ten cells across cannot be 44px on a 360px screen (that needs 476px), so
+   the face was narrowed until the tap target fits instead of shrinking the
+   cells to reach it. */
 const MB_CELLS = [
-  { amount: 500, count: 140 },   // ₹70,000
-  { amount: 200, count: 100 },   // ₹20,000
-  { amount: 100, count: 100 }    // ₹10,000
-];                               // = ₹1,00,000 across 340 cells
-const MB_FACE_ROWS = Array.from({ length: 34 }, () => 10);   // 34 rows of 10
+  { amount: 500, count: 170 },   // ₹85,000
+  { amount: 200, count:  75 }    // ₹15,000
+];                               // = ₹1,00,000 across 245 cells
+const MB_FACE_ROWS = Array.from({ length: 35 }, () => 7);    // 35 rows of 7
 
 const MB_PLANNED = MB_CELLS.reduce((n, g) => n + g.amount * g.count, 0);
 const MB_COUNT   = MB_CELLS.reduce((n, g) => n + g.count, 0);
