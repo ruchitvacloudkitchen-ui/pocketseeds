@@ -2392,7 +2392,8 @@ const DEFAULTS = {
   moyi:[],      // {id,person,event,type:'given'|'received',amount,date}
   udhaar:[],    // {id,shop,amount,date}
   sos:[],       // {id,name,phone}                       own emergency contacts
-  calRem:[]     // {id,date,time,title,snooze,done}      calendar reminders
+  calRem:[],    // {id,date,time,title,snooze,done}      calendar reminders
+  boxes:{}      // boxId -> money box, mirrored from the moneybox:* keys
 };
 
 let DB = load();
@@ -4805,6 +4806,9 @@ async function driveFind(){
 
 async function googleBackup(){
   if(!GTOKEN) return googleConnect();
+  /* refresh the mirror first: a box filled since the last render would
+     otherwise be missing from the file */
+  try{ if(typeof mbCollect === 'function') mbCollect(); }catch(e){}
   const body = JSON.stringify(DB);
   const existing = await driveFind();
   const meta = existing ? {} : { name:'pocketseeds-backup.json', parents:['appDataFolder'] };
@@ -4836,6 +4840,9 @@ async function googleRestore(){
   if(!data || typeof data !== 'object') return toast(t('badFile'));
   DB = Object.assign(structuredClone(DEFAULTS), data,
     { settings: Object.assign({}, DEFAULTS.settings, data.settings||{}) });
+  /* boxes are merged rather than replaced, so restoring an older backup onto
+     a phone mid-box does not wipe what is already counted */
+  try{ if(typeof mbSpread === 'function'){ mbSpread(DB.boxes); mbCollect(); } }catch(e){}
   save(); renderAll(); toast(t('restored'));
 }
 
@@ -6787,6 +6794,46 @@ function renderMoneyBox(){
         <span>${esc(t('mbLiveLeft', { a: money(Math.max(0, goal - saved)) }))}</span></div>
     </a>`;
 }
+/* ---- Google Drive sync ----------------------------------------------
+   The tracker at /box/ owns the moneybox:* keys and knows nothing about DB.
+   So DB.boxes is a mirror, not a second copy anyone writes to: filled in
+   just before a backup, spread back out just after a restore. That keeps one
+   source of truth on the device while still riding the backup the app
+   already has.
+
+   Only the filled cells travel. The tracker rebuilds the rest of the printed
+   face from its own MB_CELLS on open — the same path a change to the box
+   design takes — so the payload stays small and survives a redesign.
+
+   Merging is per box and last-write-wins on updatedAt, so restoring an older
+   backup onto a phone that has been filling a box does not undo it. */
+function mbCompact(b){
+  return { boxId:b.boxId, startedAt:b.startedAt, goal:b.goal,
+           syncedTotal:b.syncedTotal || 0, updatedAt:b.updatedAt || 0,
+           cells:(b.cells || []).filter(c => c.filledAt) };
+}
+function mbCollect(){
+  const out = {};
+  mbBoxes().forEach(b => { if(b.boxId) out[b.boxId] = mbCompact(b); });
+  DB.boxes = out;
+  return out;
+}
+function mbSpread(incoming){
+  const box = incoming || {};
+  let changed = 0;
+  Object.keys(box).forEach(id => {
+    const remote = box[id];
+    if(!remote || !Array.isArray(remote.cells)) return;
+    let local = null;
+    try{ local = JSON.parse(localStorage.getItem('moneybox:' + id) || 'null'); }catch(e){}
+    /* the device that touched it last wins; a tie keeps what is already here */
+    if(local && (local.updatedAt || 0) >= (remote.updatedAt || 0)) return;
+    try{ localStorage.setItem('moneybox:' + id, JSON.stringify(remote)); changed++; }catch(e){}
+  });
+  if(changed) renderMoneyBox();
+  return changed;
+}
+
 (function(){
   const prev = window.renderAll;
   window.renderAll = function(){ prev(); try{ renderMoneyBox(); }catch(e){ console.error(e); } };
