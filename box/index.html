@@ -88,14 +88,27 @@ input:focus-visible{outline:3px solid #2E8B49;outline-offset:1px}
    The printed face, drawn in its own row and column order. It must fit a
    360px screen whole, so the cell size is whatever the width allows and the
    number scales with it — see the note in the script about the tap target. */
-/* The negative margin cancels the card's own padding exactly, so the board
-   gets the full width of the page. At 360 that is 7 columns of 44.3px with
-   3px gutters — the tap target, met by the width rather than by shrinking. */
+/* Two modes over one row structure. Fit shows the whole face at once, which
+   is what makes it recognisable as the box; zoom trades that for a cell you
+   can hit, scrolling sideways. Either way the rows and the order within them
+   are the print's, so a cell is in the same place in both. The negative
+   margin cancels the card's own padding, so fit gets the full page width. */
 .board{margin:0 -17px;padding:0 2px}
-.brow{display:grid;grid-template-columns:repeat(var(--cols,7),1fr);gap:3px;margin-bottom:3px}
+.board.zoom{overflow-x:auto;scrollbar-width:thin;padding-bottom:6px}
+.brow{display:grid;grid-template-columns:repeat(var(--cols,15),1fr);gap:2px;margin-bottom:2px}
+.board.zoom .brow{grid-template-columns:repeat(var(--cols,15),var(--zcell,44px));
+  gap:3px;margin-bottom:3px;width:max-content}
+.board.zoom .cell{font-size:13px}
+.zoombar{display:flex;align-items:center;gap:8px;margin-top:10px}
+.zoombar .seg{display:flex;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:11px;overflow:hidden}
+.zoombar .seg button{border:0;background:none;font-family:inherit;font-size:13px;font-weight:800;
+  color:var(--muted);padding:0 13px;height:34px;cursor:pointer}
+.zoombar .seg button[aria-pressed="true"]{background:#2E8B49;color:#fff}
+.zoombar .hint{font-size:12px;color:var(--muted);line-height:1.35}
 .cell{aspect-ratio:1;min-height:0;border-radius:6px;border:0;cursor:pointer;padding:0;
   font-family:inherit;font-weight:800;line-height:1;
-  font-size:clamp(8px,3vw,13px);
+  font-size:clamp(7px,2.7vw,13px);
   background:#5B3A21;color:#E8D8C3;
   display:grid;place-items:center;
   box-shadow:inset 0 -1px 0 rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.10);
@@ -224,15 +237,15 @@ const MB_GOAL  = 100000;
 /* PROVISIONAL — the printed face is being finalised. Replace both of these
    together with the real row-by-row layout; do not edit one alone.
 
-   Seven columns rather than ten is a deliberate choice made at the source:
-   ten cells across cannot be 44px on a 360px screen (that needs 476px), so
-   the face was narrowed until the tap target fits instead of shrinking the
-   cells to reach it. */
+   Square, because the face has to sit on a cube. 245 has no square-ish
+   factorisation — only 5x49 and 7x35 — which is what made the last face a
+   ribbon, so the cell count changed rather than the layout. 225 is 15x15. */
 const MB_CELLS = [
-  { amount: 500, count: 170 },   // ₹85,000
-  { amount: 200, count:  75 }    // ₹15,000
-];                               // = ₹1,00,000 across 245 cells
-const MB_FACE_ROWS = Array.from({ length: 35 }, () => 7);    // 35 rows of 7
+  { amount: 500, count: 175 },   // ₹87,500
+  { amount: 300, count:  25 },   // ₹7,500
+  { amount: 200, count:  25 }    // ₹5,000
+];                               // = ₹1,00,000 across 225 cells
+const MB_FACE_ROWS = Array.from({ length: 15 }, () => 15);   // 15 rows of 15
 
 const MB_PLANNED = MB_CELLS.reduce((n, g) => n + g.amount * g.count, 0);
 const MB_COUNT   = MB_CELLS.reduce((n, g) => n + g.count, 0);
@@ -253,6 +266,10 @@ MB_FAULTS.forEach(f => console.error('MoneyBox: ' + f));
 
 const APP_KEY   = 'pocketseeds.v2';
 const LAST_BOX  = 'moneybox.last';
+/* A dot, not a colon: moneybox:* is the box records, and a preference is not
+   a box. knownBoxes() would otherwise read this as one. */
+const ZOOM_KEY  = id => 'moneybox.zoom.' + id;
+let ZOOM = false;
 const BOX_RE    = /^BOX\d{4,6}$/;
 
 const MONTHS = {
@@ -270,6 +287,9 @@ const STR = {
     board:'బాక్స్ ముఖం',
     boardS:'డబ్బు వేసిన గడిని నొక్కండి. బాక్స్ మీద ఎక్కడ ఉందో ఇక్కడా అక్కడే ఉంటుంది.',
     rowCol:'వరుస {r}, గడి {c}',
+    zFit:'పూర్తి ముఖం', zBig:'పెద్దగా',
+    zFitS:'బాక్స్ మొత్తం ఒకేసారి కనిపిస్తుంది.',
+    zBigS:'గడులు పెద్దవి — పక్కకు జరుపుతూ చూడండి.',
     undo:'చివరిది వెనక్కి', addSav:'నా పొదుపులో కలుపు', reset:'బాక్స్ ఖాళీ చేయి',
     share:'ఎంత అయిందో పంపు',
     lastT:'చివరి 10 పొదుపులు', viewAll:'అన్నీ చూడు', colDate:'తేదీ', colAmt:'మొత్తం',
@@ -301,6 +321,9 @@ const STR = {
     board:'The box face',
     boardS:'Tap the cell you just fed. Where it sits here is where it sits on the box.',
     rowCol:'row {r}, cell {c}',
+    zFit:'Whole face', zBig:'Bigger',
+    zFitS:'The whole box at once.',
+    zBigS:'Bigger cells — scroll sideways.',
     undo:'Undo last', addSav:'Add to my savings', reset:'Reset box',
     share:'Share progress',
     lastT:'Last 10 savings', viewAll:'View all', colDate:'Date', colAmt:'Amount',
@@ -558,7 +581,14 @@ function render(){
       <h2>${esc(t('board'))}</h2>
       <p class="sub">${esc(t('boardS'))}</p>
       ${MB_FAULTS.length ? `<div class="fault">${MB_FAULTS.map(esc).join('<br>')}</div>` : ''}
-      <div class="board" style="--cols:${MB_FACE_COLS}">${faceRows().map((row, r) => `
+      <div class="zoombar">
+        <div class="seg" id="zoomSeg">
+          <button data-zoom="fit"  aria-pressed="${!ZOOM}">${esc(t('zFit'))}</button>
+          <button data-zoom="big"  aria-pressed="${ZOOM}">${esc(t('zBig'))}</button>
+        </div>
+        <span class="hint">${esc(ZOOM ? t('zBigS') : t('zFitS'))}</span>
+      </div>
+      <div class="board${ZOOM ? ' zoom' : ''}" style="--cols:${MB_FACE_COLS}">${faceRows().map((row, r) => `
         <div class="brow">${row.map((c, i) => `
           <button class="cell" data-cell="${esc(c.id)}" aria-pressed="${!!c.filledAt}"
             aria-label="${esc(money(c.amount))} · ${esc(t('rowCol', { r:r+1, c:i+1 }))}"
@@ -591,6 +621,20 @@ function render(){
         <div class="boxes">${boxes.map(b => `<a class="${b===BOX.boxId?'on':''}" href="?id=${esc(b)}">${esc(b)}</a>`).join('')}</div>` : ''}
     </section>`;
 
+  /* Switching mode is a class on the container, not a re-render: the cells
+     and their pressed state stay exactly as they are. */
+  $('#zoomSeg').addEventListener('click', e => {
+    const b = e.target.closest('button[data-zoom]'); if(!b) return;
+    const want = b.dataset.zoom === 'big';
+    if(want === ZOOM) return;
+    ZOOM = want;
+    try{ localStorage.setItem(ZOOM_KEY(BOX.boxId), ZOOM ? 'big' : 'fit'); }catch(e2){}
+    document.querySelector('.board').classList.toggle('zoom', ZOOM);
+    document.querySelectorAll('#zoomSeg button').forEach(x =>
+      x.setAttribute('aria-pressed', String((x.dataset.zoom === 'big') === ZOOM)));
+    const h = document.querySelector('.zoombar .hint');
+    if(h) h.textContent = ZOOM ? t('zBigS') : t('zFitS');
+  });
   $('#undo').addEventListener('click', undoLast);
   $('#addSav').addEventListener('click', addToSavings);
   $('#share').addEventListener('click', share);
@@ -687,6 +731,7 @@ $('#langPick').addEventListener('click', e => {
   document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
   if(!id || !BOX_RE.test(id)){ askView(); return; }
   BOX = loadBox(id);
+  try{ ZOOM = localStorage.getItem(ZOOM_KEY(id)) === 'big'; }catch(e){}
   /* a box opened for the first time starts counting from today */
   if(!localStorage.getItem(boxKey(id))) saveBox();
   render(); announce();

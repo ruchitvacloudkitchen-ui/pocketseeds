@@ -24,6 +24,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const OUT = require('./glyphs.js');     // vector letterforms, so no font is named
 
 /* ---------- read the config out of the app, rather than restating it ---- */
 const APP = path.join(__dirname, '..', 'box', 'index.html');
@@ -69,12 +70,15 @@ const arg = (name, dflt) => {
   const i = argv.indexOf('--' + name);
   return i === -1 ? dflt : argv[i + 1];
 };
+/* PAD/GAP/FOOT are the face's furniture, and --cell needs them to work out
+   how big the face has to be, so they are declared before OPT. */
+const PAD = 8, GAP = 1.4, FOOT = 26;
 const OPT = {
-  /* A 7 x 35 face is a tall ribbon, not a square — see the note this script
-     prints. These defaults keep a 14mm cell, which is a comfortable size to
-     write a tick in and to find with a finger. Override with --w/--h. */
-  wmm:  Number(arg('w', 118)),
-  hmm:  Number(arg('h', 566)),
+  wmm:  Number(arg('w', 0)),
+  hmm:  Number(arg('h', 0)),
+  /* --cell drives the face from the cell size, which is the way round you
+     usually want it: pick a cell you can write a tick in, get the face. */
+  cell: Number(arg('cell', 0)),
   dpi:  Number(arg('dpi', 300)),
   out:  arg('out', 'dist'),
   seed: Number(arg('seed', SEED))
@@ -108,67 +112,92 @@ cfg.rows.forEach(n => { grid.push(order.slice(k, k + n)); k += n; });
 
 /* ---------- geometry, in mm, then scaled ---------- */
 const MM = OPT.dpi / 25.4;                       // px per mm at the chosen dpi
-const PAD = 8;                                   // mm margin inside the face
-const FOOT = 26;                                 // mm reserved for the footer band
 const QRW = 30, QRH = 22;                        // mm reserved for the QR label
-const gridW = OPT.wmm - PAD * 2;
-const gridH = OPT.hmm - PAD * 2 - FOOT;
-const GAP = 1.4;                                 // mm between cells
-const cw = (gridW - GAP * (cols - 1)) / cols;
-const ch = (gridH - GAP * (cfg.rows.length - 1)) / cfg.rows.length;
-const cell = Math.min(cw, ch);                   // square cells
+const rowsN = cfg.rows.length;
+let cell, faceW, faceH;
+if(OPT.cell > 0){
+  cell  = OPT.cell;
+  faceW = cell * cols  + GAP * (cols  - 1) + PAD * 2;
+  faceH = cell * rowsN + GAP * (rowsN - 1) + PAD * 2 + FOOT;
+}else{
+  faceW = OPT.wmm > 0 ? OPT.wmm : 236.6;         // 13.4mm cells on a 15x15 face
+  faceH = OPT.hmm > 0 ? OPT.hmm : 262.6;
+  const cw = (faceW - PAD * 2 - GAP * (cols - 1)) / cols;
+  const ch = (faceH - PAD * 2 - FOOT - GAP * (rowsN - 1)) / rowsN;
+  cell = Math.min(cw, ch);                       // square cells
+}
+OPT.wmm = faceW; OPT.hmm = faceH;
 const usedW = cell * cols + GAP * (cols - 1);
-const usedH = cell * cfg.rows.length + GAP * (cfg.rows.length - 1);
-const x0 = (OPT.wmm - usedW) / 2;
+const usedH = cell * rowsN + GAP * (rowsN - 1);
+const x0 = (faceW - usedW) / 2;
 const y0 = PAD;
 
 const INK = '#C9A227', WOOD = '#3E2412', LINE = 'rgba(201,162,39,.55)';
 
-/* ---------- SVG ---------- */
-function svg(){
+/* ---------- SVG ----------
+   Two files. box-face.svg is what goes to the printer: every glyph is a
+   path, so there is not one font name in it — a substituted font would set
+   the wrong character for U+20B9 onto wood, and the run would be scrap.
+   box-face-proof.svg is the same drawing with live text, which is easier to
+   read on screen and to copy-edit from. Never send the proof to print.  */
+function drawFace(outlined){
   const px = n => +(n * MM).toFixed(2);
-  const fs = +(cell * 0.34).toFixed(2);
+  const cap = cell * 0.30;                       // cap height of the cell numbers
   let out = '';
   out += `<svg xmlns="http://www.w3.org/2000/svg" width="${px(OPT.wmm)}" height="${px(OPT.hmm)}" `
        + `viewBox="0 0 ${px(OPT.wmm)} ${px(OPT.hmm)}">\n`;
   out += `<rect width="100%" height="100%" fill="${WOOD}"/>\n`;
-  out += `<g font-family="Helvetica,Arial,sans-serif" font-weight="700" text-anchor="middle" fill="${INK}">\n`;
+
   grid.forEach((row, r) => {
     row.forEach((amt, c) => {
       const x = px(x0 + c * (cell + GAP)), y = px(y0 + r * (cell + GAP));
-      const s = px(cell);
-      out += `<rect x="${x}" y="${y}" width="${s}" height="${s}" fill="none" `
+      const s2 = px(cell);
+      out += `<rect x="${x}" y="${y}" width="${s2}" height="${s2}" fill="none" `
            + `stroke="${LINE}" stroke-width="${px(0.25)}" rx="${px(1)}"/>`;
-      out += `<text x="${(x + s / 2).toFixed(2)}" y="${(y + s / 2 + px(fs) * 0.35).toFixed(2)}" `
-           + `font-size="${px(fs)}">${amt}</text>\n`;
+      const cxp = x + s2 / 2, byp = y + s2 / 2 + px(cap) / 2;
+      out += outlined
+        ? OUT.text(String(amt), cxp, byp, px(cap), { anchor:'middle', stroke:INK, weight:0.13 })
+        : `<text x="${cxp.toFixed(2)}" y="${byp.toFixed(2)}" text-anchor="middle" `
+          + `font-family="Helvetica,Arial,sans-serif" font-weight="700" `
+          + `font-size="${px(cap * 1.35)}" fill="${INK}">${amt}</text>`;
+      out += '\n';
     });
   });
-  out += `</g>\n`;
-  /* footer: the goal, the line, and the reserved QR label */
+
   const fy = y0 + usedH + 9;
-  out += `<g font-family="Helvetica,Arial,sans-serif" fill="${INK}">\n`;
-  out += `<text x="${px(x0)}" y="${px(fy + 7)}" font-size="${px(8)}" font-weight="700">`
-       + `₹ 1,00,000</text>\n`;
-  out += `<text x="${px(x0)}" y="${px(fy + 13.5)}" font-size="${px(3.6)}">`
-       + `Small Amounts Become Big Savings</text>\n`;
-  out += `</g>\n`;
+  const goalCap = 7, subCap = 3.2;
+  if(outlined){
+    out += OUT.text('₹ 1,00,000', px(x0), px(fy + 8), px(goalCap), { stroke:INK, weight:0.12 }) + '\n';
+    out += OUT.text('Small Amounts Become Big Savings', px(x0), px(fy + 15), px(subCap),
+                    { stroke:INK, weight:0.10 }) + '\n';
+  }else{
+    out += `<text x="${px(x0)}" y="${px(fy + 8)}" font-family="Helvetica,Arial,sans-serif" `
+         + `font-weight="700" font-size="${px(goalCap * 1.35)}" fill="${INK}">₹ 1,00,000</text>\n`;
+    out += `<text x="${px(x0)}" y="${px(fy + 15)}" font-family="Helvetica,Arial,sans-serif" `
+         + `font-size="${px(subCap * 1.35)}" fill="${INK}">Small Amounts Become Big Savings</text>\n`;
+  }
+
+  /* the space the QR label and the box ID are stuck into afterwards */
   const qx = x0 + usedW - QRW, qy = fy - 1;
   out += `<rect x="${px(qx)}" y="${px(qy)}" width="${px(QRW)}" height="${px(QRH)}" `
-       + `fill="none" stroke="${LINE}" stroke-width="${px(0.3)}" stroke-dasharray="${px(1.5)} ${px(1.5)}" rx="${px(1.5)}"/>\n`;
-  out += `<text x="${px(qx + QRW / 2)}" y="${px(qy + QRH / 2)}" text-anchor="middle" `
-       + `font-family="Helvetica,Arial,sans-serif" font-size="${px(2.6)}" fill="${INK}">QR LABEL</text>\n`;
-  out += `<text x="${px(qx + QRW / 2)}" y="${px(qy + QRH / 2 + 4)}" text-anchor="middle" `
-       + `font-family="Helvetica,Arial,sans-serif" font-size="${px(2.6)}" fill="${INK}">+ BOX ID</text>\n`;
-  out += `</svg>\n`;
+       + `fill="none" stroke="${LINE}" stroke-width="${px(0.3)}" `
+       + `stroke-dasharray="${px(1.5)} ${px(1.5)}" rx="${px(1.5)}"/>\n`;
+  const label = 'QR LABEL + BOX ID';
+  out += outlined
+    ? OUT.text(label, px(qx + QRW / 2), px(qy + QRH / 2), px(2.4),
+               { anchor:'middle', stroke:INK, weight:0.11 })
+    : `<text x="${px(qx + QRW / 2)}" y="${px(qy + QRH / 2)}" text-anchor="middle" `
+      + `font-family="Helvetica,Arial,sans-serif" font-size="${px(3.2)}" fill="${INK}">${label}</text>`;
+  out += `\n</svg>\n`;
   return out;
 }
 
 /* ---------- PDF ----------
-   Written by hand because this script takes no dependencies. Helvetica is one
-   of the base-14 fonts every reader has, so nothing is embedded — which is
-   also why the footer says "Rs." rather than the rupee sign: U+20B9 is not in
-   WinAnsi, and faking it would print a wrong glyph. Send the SVG to the
-   printer; this is the proof. */
+   A proof, not a print file, and named box-face-proof.pdf so it cannot be
+   picked up by mistake. It references Helvetica rather than embedding
+   anything, which is exactly the risk the SVG was outlined to remove — and
+   why its footer reads "Rs." : U+20B9 is not in WinAnsi and faking it would
+   set a wrong glyph. Send box-face.svg to the printer. */
 function pdf(){
   const pt = n => +(n * 72 / 25.4).toFixed(2);      // mm -> points
   const W = pt(OPT.wmm), H = pt(OPT.hmm);
@@ -221,8 +250,9 @@ function pdf(){
 /* ---------- write ---------- */
 const dir = path.join(__dirname, '..', OPT.out);
 fs.mkdirSync(dir, { recursive: true });
-fs.writeFileSync(path.join(dir, 'box-face.svg'), svg());
-fs.writeFileSync(path.join(dir, 'box-face.pdf'), pdf(), 'binary');
+fs.writeFileSync(path.join(dir, 'box-face.svg'), drawFace(true));
+fs.writeFileSync(path.join(dir, 'box-face-proof.svg'), drawFace(false));
+fs.writeFileSync(path.join(dir, 'box-face-proof.pdf'), pdf(), 'binary');
 fs.writeFileSync(path.join(dir, 'box-face.json'), JSON.stringify({
   goal: cfg.goal, cells: cfg.cells, rows: cfg.rows, seed: OPT.seed,
   cols, rowCount: cfg.rows.length, total: count,
@@ -237,7 +267,20 @@ console.log(`  ${cols} columns x ${cfg.rows.length} rows = ${count} cells, ` +
 console.log(`  face ${OPT.wmm} x ${OPT.hmm} mm at ${OPT.dpi} dpi ` +
             `(${Math.round(OPT.wmm * MM)} x ${Math.round(OPT.hmm * MM)} px), cell ${cell.toFixed(1)} mm`);
 console.log(`  seed ${OPT.seed} — re-running gives the identical layout`);
-console.log(`  written to ${OPT.out}/box-face.{svg,pdf,json}\n`);
+console.log(`  written to ${OPT.out}/box-face.svg  (outlined — this is the print file)`);
+console.log(`             ${OPT.out}/box-face-proof.svg  (live text — screen only)`);
+console.log(`             ${OPT.out}/box-face-proof.pdf  (names Helvetica — screen only)`);
+console.log(`             ${OPT.out}/box-face.json`);
+/* proving it, rather than saying it */
+const printed = fs.readFileSync(path.join(dir, 'box-face.svg'), 'utf8');
+const nText = (printed.match(/<text/g) || []).length;
+const nFont = (printed.match(/font-family/g) || []).length;
+console.log(`  print file: ${nText} <text> elements, ${nFont} font-family attributes`);
+if(nText || nFont){
+  console.error('\n  A font reference reached the print file. Refusing to call that done.\n');
+  process.exit(2);
+}
+console.log('');
 if(Number(aspect) > 2)
   console.log(`  NOTE: this face is ${aspect}:1 — a tall ribbon, not a cube face.\n` +
               `        ${cols} columns x ${cfg.rows.length} rows cannot be square. If it has to sit on a\n` +

@@ -25,6 +25,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const OUT = require('./glyphs.js');   // the label text is outlined too — see face.js
+
 let QR;
 try{ QR = require('qrcode'); }
 catch(e){
@@ -82,12 +84,14 @@ fs.mkdirSync(path.join(dir, 'qr'), { recursive: true });
     /* the qrcode svg comes with its own viewBox; nest it so it scales */
     const inner = svgs[i].replace(/^<\?xml[^>]*>\s*/, '')
                          .replace('<svg ', `<svg x="${(x + px(1.5)).toFixed(2)}" y="${(y + px(1.5)).toFixed(2)}" width="${qs}" height="${qs}" `);
+    const tx = x + px(1.5) + qs + px(2);
+    /* The id is printed beside the code on purpose: a scuffed QR on a wooden
+       box is still recoverable if a person can read the number and type it
+       into /box/. Outlined, for the same reason the face is. */
     sheet += `<g><rect x="${x}" y="${y}" width="${px(OPT.labelW)}" height="${px(OPT.labelH)}" `
            + `fill="none" stroke="#ccc" stroke-width="${px(0.2)}"/>${inner}`
-           + `<text x="${(x + px(1.5) + qs + px(2)).toFixed(2)}" y="${(y + px(9)).toFixed(2)}" `
-           + `font-family="Helvetica,Arial,sans-serif" font-size="${px(2.4)}" fill="#333">Scan to Track</text>`
-           + `<text x="${(x + px(1.5) + qs + px(2)).toFixed(2)}" y="${(y + px(14)).toFixed(2)}" `
-           + `font-family="Helvetica,Arial,sans-serif" font-weight="700" font-size="${px(3.2)}" fill="#111">${id(i)}</text>`
+           + OUT.text('Scan to Track', tx, y + px(8), px(2.0), { stroke:'#333', weight:0.11 })
+           + OUT.text(id(i), tx, y + px(14.5), px(3.0), { stroke:'#111', weight:0.13 })
            + `</g>`;
   });
   sheet += '</svg>\n';
@@ -100,6 +104,13 @@ fs.mkdirSync(path.join(dir, 'qr'), { recursive: true });
   console.log(`  ${OPT.base}/box/?id=${id(ids[0])}`);
   console.log(`  qr/            one SVG per box`);
   console.log(`  labels-sheet.svg  ${OPT.cols} across x ${rows} down, ${OPT.labelW}x${OPT.labelH}mm each`);
-  console.log(`  boxes.csv      the run, to check against\n`);
+  console.log(`  boxes.csv      the run, to check against`);
+  const sheetSrc = fs.readFileSync(path.join(dir, 'labels-sheet.svg'), 'utf8');
+  const nText = (sheetSrc.match(/<text/g) || []).length;
+  const nFont = (sheetSrc.match(/font-family/g) || []).length;
+  console.log(`  sheet: ${nText} <text>, ${nFont} font-family — the ids are outlined paths`);
+  console.log(`  payload: ${url(ids[0])}`);
+  if(nText || nFont){ console.error('\n  A font reference reached the label sheet.\n'); process.exit(2); }
+  console.log('');
   console.log(`  Next run starts at --from ${ids[ids.length - 1] + 1}\n`);
 })();
