@@ -2396,6 +2396,8 @@ const DEFAULTS = {
   boxes:{}      // boxId -> money box, mirrored from the moneybox:* keys
 };
 
+/* what storage held when we last agreed with it; see save() */
+let BASE = null;
 let DB = load();
 let VIEW = new Date();
 let TAB = 'home';
@@ -2403,12 +2405,74 @@ let TAB = 'home';
 function load(){
   try{
     const raw = JSON.parse(localStorage.getItem(KEY) || localStorage.getItem('pocketseeds.v1') || 'null');
-    if(!raw) return structuredClone(DEFAULTS);
-    return Object.assign(structuredClone(DEFAULTS), raw,
-      { settings: Object.assign({}, DEFAULTS.settings, raw.settings||{}) });
-  }catch(e){ return structuredClone(DEFAULTS); }
+    const db = !raw ? structuredClone(DEFAULTS)
+      : Object.assign(structuredClone(DEFAULTS), raw,
+          { settings: Object.assign({}, DEFAULTS.settings, raw.settings||{}) });
+    BASE = structuredClone(db);        // what storage held when we last agreed with it
+    return db;
+  }catch(e){ BASE = structuredClone(DEFAULTS); return structuredClone(DEFAULTS); }
 }
-function save(){ localStorage.setItem(KEY, JSON.stringify(DB)); }
+
+/* =========================== SAVING ===========================
+   save() is a read-modify-write, not an overwrite. This page is not the only
+   writer: the money box tracker at /box/ writes the same store from its own
+   document. Overwriting from memory meant whatever the other document had
+   just written was silently gone — a savings entry, in the case that was
+   found. The storage event tells us afterwards; it must not be what keeps
+   the data, because a backgrounded tab is not guaranteed to be told promptly,
+   or at all.
+
+   So: re-read what is actually in storage, merge our change into it, write
+   that. BASE is what storage held when we last agreed with it, which is what
+   makes "we changed this" distinguishable from "they changed this".
+
+   Lists of {id} objects merge by id: ours wins on a clash, theirs is kept if
+   it is new since BASE, and something we deleted stays deleted rather than
+   being resurrected by a stale copy. Everything else is per key — if we
+   touched it, ours; if not, theirs.
+   ============================================================ */
+function idMap(list){
+  const m = new Map();
+  (Array.isArray(list) ? list : []).forEach(o => { if(o && o.id != null) m.set(o.id, o); });
+  return m;
+}
+function isIdList(v){
+  return Array.isArray(v) && v.every(o => o && typeof o === 'object' && o.id != null);
+}
+function mergeIdList(mine, theirs, base){
+  const wasThere = idMap(base), out = [], seen = new Set();
+  (mine || []).forEach(o => { out.push(o); if(o && o.id != null) seen.add(o.id); });
+  (theirs || []).forEach(o => {
+    if(!o || o.id == null || seen.has(o.id)) return;
+    if(wasThere.has(o.id)) return;      // we removed it on purpose
+    out.push(o);                        // it appeared elsewhere while we were away
+  });
+  return out;
+}
+function mergeStore(mine, theirs, base){
+  const out = {};
+  const keys = new Set([...Object.keys(mine || {}), ...Object.keys(theirs || {})]);
+  keys.forEach(k => {
+    const a = mine ? mine[k] : undefined;
+    const b = theirs ? theirs[k] : undefined;
+    const c = base ? base[k] : undefined;
+    if(b === undefined){ out[k] = a; return; }
+    if(a === undefined){ out[k] = b; return; }
+    if(isIdList(a) && isIdList(b)){ out[k] = mergeIdList(a, b, c); return; }
+    const weChanged = JSON.stringify(a) !== JSON.stringify(c);
+    out[k] = weChanged ? a : b;
+  });
+  return out;
+}
+function save(){
+  let stored = null;
+  try{ stored = JSON.parse(localStorage.getItem(KEY) || 'null'); }catch(e){}
+  const merged = stored ? mergeStore(DB, stored, BASE) : DB;
+  try{ localStorage.setItem(KEY, JSON.stringify(merged)); }catch(e){}
+  /* memory and storage now agree, so this is the new baseline */
+  if(merged !== DB) Object.keys(merged).forEach(k => { DB[k] = merged[k]; });
+  BASE = structuredClone(DB);
+}
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
 
 /* =========================== DATES & MONEY =========================== */
@@ -6841,12 +6905,10 @@ function mbSpread(incoming){
   /* The tracker is a separate page in the same origin, so its writes arrive
      here as a storage event while both are open, and on focus otherwise.
 
-     The second branch fixes a real one. This page holds DB in memory; the
-     tracker writes to the same store from its own document. With both open,
-     the tracker's "Add to my savings" landed in storage and the next ordinary
-     save() here — adding an expense, say — wrote this page's stale DB straight
-     over it, and the entry was gone. Re-reading on the event keeps the two
-     documents honest. */
+     The KEY branch is only about what is on screen. Correctness lives in
+     save(), which re-reads and merges — an event that is throttled, delayed
+     or dropped in a backgrounded tab must not be the thing standing between
+     the reader and their data. */
   window.addEventListener('storage', e => {
     if(e.key === KEY){ DB = load(); renderAll(); return; }
     if(e.key && e.key.startsWith('moneybox:')) renderMoneyBox();
