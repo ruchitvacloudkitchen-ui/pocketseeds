@@ -95,8 +95,8 @@ input:focus-visible{outline:3px solid #2E8B49;outline-offset:1px}
    margin cancels the card's own padding, so fit gets the full page width. */
 .board{margin:0 -17px;padding:0 2px}
 .board.zoom{overflow-x:auto;scrollbar-width:thin;padding-bottom:6px}
-.brow{display:grid;grid-template-columns:repeat(var(--cols,15),1fr);gap:2px;margin-bottom:2px}
-.board.zoom .brow{grid-template-columns:repeat(var(--cols,15),var(--zcell,44px));
+.brow{display:grid;grid-template-columns:repeat(var(--cols,10),1fr);gap:2px;margin-bottom:2px}
+.board.zoom .brow{grid-template-columns:repeat(var(--cols,10),var(--zcell,44px));
   gap:3px;margin-bottom:3px;width:max-content}
 .board.zoom .cell{font-size:13px}
 .zoombar{display:flex;align-items:center;gap:8px;margin-top:10px}
@@ -202,10 +202,12 @@ footer a{color:var(--brand);font-weight:700}
 /* ==================== SEED BOX — TRACKER ====================
    Opened by the QR on the box: /box/?id=BOX0001
 
-   THE GRID IS DATA. Everything printed on the box face is MB_CELLS below —
-   change the denominations or the counts there and the page follows. The sum
-   is asserted on load, because a grid that does not add up to the goal is a
-   bug the reader would only find at the very end.
+   THE GRID IS DATA. Everything printed on the box face is in the three
+   constants below — the denominations, the shape, and the frozen order they
+   are printed in. The page follows them, and tools/face.js prints from the
+   same values, so the screen and the box cannot drift apart. The sum is
+   asserted on load, because a grid that does not add up to the goal is a bug
+   the reader would only find at the very end.
 
    The feature is called Seed Box in every string a person reads, and
    moneybox in every key and path they do not. That is deliberate, not a
@@ -225,33 +227,80 @@ footer a{color:var(--brand);font-weight:700}
    THE PRINTED FACE — these three constants are the box, and the only
    things to edit when the print changes.
 
-   MB_CELLS is the run of cells in PRINTED ORDER: reading order across the
-   face, left to right then down. Each entry is a denomination and how many
-   of that cell come next. The order here is the order on the box, so it is
-   also the order they are drawn on screen.
+   MB_CELLS is the bill of materials: each entry is a denomination and how
+   many of that cell the face carries. It says nothing about position.
 
    MB_FACE_ROWS is the face's shape: one number per printed row, being how
-   many columns that row has. The app breaks the run of cells into rows using
-   it, so a cell's position on screen is its position on the box. A short
-   final row is fine — say [10,10,10,7].
+   many columns that row has. A short final row is fine — say [10,10,10,7].
 
-   Two assertions, both loud, because either being wrong breaks the entire
+   MB_FACE_ORDER is the printed sequence, frozen: reading order across the
+   face, left to right then down. The app draws from it, so a cell's position
+   on screen is its position on the box.
+
+   Four assertions, all loud, because any of them being wrong breaks the whole
    mechanic: fill a printed cell, tap the same cell here.
    --------------------------------------------------------------- */
 const MB_GOAL  = 100000;
 
-/* PROVISIONAL — the printed face is being finalised. Replace both of these
-   together with the real row-by-row layout; do not edit one alone.
-
-   Square, because the face has to sit on a cube. 245 has no square-ish
-   factorisation — only 5x49 and 7x35 — which is what made the last face a
-   ribbon, so the cell count changed rather than the layout. 225 is 15x15. */
+/* The ladder. Twenty rows of ten, each row one amount, so every row is worth
+   exactly a tenth of the goal and the ten of them add to it. It is a MENU,
+   not a schedule: a saver taps whichever cell they can afford today — a ₹20
+   on a lean day, a ₹1,250 on a good one — in any order they like. Nothing
+   here implies a week, a sequence, or a cell you owe. */
 const MB_CELLS = [
-  { amount: 500, count: 175 },   // ₹87,500
-  { amount: 300, count:  25 },   // ₹7,500
-  { amount: 200, count:  25 }    // ₹5,000
-];                               // = ₹1,00,000 across 225 cells
-const MB_FACE_ROWS = Array.from({ length: 15 }, () => 15);   // 15 rows of 15
+  { amount:   20, count: 10 }, { amount:   40, count: 10 },
+  { amount:   60, count: 10 }, { amount:   80, count: 10 },
+  { amount:  100, count: 10 }, { amount:  150, count: 10 },
+  { amount:  200, count: 10 }, { amount:  250, count: 10 },
+  { amount:  300, count: 10 }, { amount:  350, count: 10 },
+  { amount:  400, count: 10 }, { amount:  500, count: 10 },
+  { amount:  600, count: 10 }, { amount:  700, count: 10 },
+  { amount:  800, count: 10 }, { amount:  900, count: 10 },
+  { amount: 1000, count: 10 }, { amount: 1100, count: 10 },
+  { amount: 1200, count: 10 }, { amount: 1250, count: 10 }
+];                                  // = ₹1,00,000 across 200 cells
+const MB_FACE_ROWS = Array.from({ length: 20 }, () => 10);   // 20 rows of 10
+
+/* MB_FACE_ORDER is the face, frozen.
+
+   MB_CELLS above is only a bill of materials — how many of each denomination
+   the face carries. It says nothing about where they sit, and reading it in
+   order would draw the board as twenty solid bands, which is not what the box
+   looks like. This array is the actual printed sequence, reading order across
+   the face, left to right then down.
+
+   It was produced once by the seeded shuffle in tools/face.js (seed 20260904)
+   and then written down here, rather than being recomputed at run time in two
+   places that could drift apart. The app draws from it and the printer prints
+   from it, so a cell's position on screen is its position on the box.
+
+   DO NOT REORDER OR EDIT BY HAND. Every box already printed carries this
+   layout; changing it makes those boxes disagree with the app. A new face
+   means a new order: run `node tools/face.js --make-order` and paste the
+   result over this whole array, and understand you have invalidated the
+   existing print run. */
+const MB_FACE_ORDER = [
+  1250, 1100,   20,  250,  400,  350,  800,  700, 1250,  100,
+  1200,  200,   80,  600,   40,  500,  100,  350, 1250, 1000,
+  1100,  700,  100,  350,  800,  300, 1200,  350,   80, 1200,
+    20,  800,  600, 1250,  400, 1200,  300,  250,  700,  300,
+   350, 1200,  900,   80,  200,  150,  500,  800,  350,  900,
+  1100,   40,  300,  250,  600, 1000,  400,   20,  200,  250,
+    40,  900,  200, 1000,  800,  600,  150,   80,  900,   20,
+   100, 1100,  250,   20,  700,   60,  600, 1100,  250,   20,
+   900,  500,   60,  350,  200,  700, 1100,  150,  600,  400,
+  1000, 1250,   20,  400,  400, 1250,  100,   20,  150,  300,
+   250,  200,  800,   60, 1100,  900,  700,  500,  300,   60,
+   600, 1000, 1250,   40,  100,  200,  500,   80, 1000,  150,
+    40, 1100, 1250,   40,  200,   40,  300,  350,  500,   80,
+   800,  100,  500,  300,  600,  350, 1000, 1000, 1000,  500,
+   800, 1200,   60, 1100,  250,   40,  700,  100,  500,  800,
+   100,  150,  800,  700,  350,  150,   60,   60,  200,   40,
+    60,  600, 1100,   20,  400, 1200, 1200,  200, 1200,  300,
+    80,  900,  250,  900,   80,   80,  500, 1250,   80,  400,
+  1250,  700,  900,  400, 1200,   40,  100,   20, 1000,  900,
+   150,   60,  400,  600,  250,  300,   60,  150,  700,  150
+];
 
 const MB_PLANNED = MB_CELLS.reduce((n, g) => n + g.amount * g.count, 0);
 const MB_COUNT   = MB_CELLS.reduce((n, g) => n + g.count, 0);
@@ -265,6 +314,23 @@ if(MB_PLANNED !== MB_GOAL)
   MB_FAULTS.push('cells add up to ' + MB_PLANNED + ', not ' + MB_GOAL);
 if(MB_ROWED !== MB_COUNT)
   MB_FAULTS.push('the face has ' + MB_ROWED + ' cells across its rows, but MB_CELLS declares ' + MB_COUNT);
+if(MB_FACE_ORDER.length !== MB_COUNT)
+  MB_FAULTS.push('MB_FACE_ORDER lists ' + MB_FACE_ORDER.length + ' cells, but MB_CELLS declares ' + MB_COUNT);
+/* the printed order must be the bill of materials rearranged and nothing
+   else: same denominations, same counts of each, so no cell was invented,
+   dropped or silently retyped when the order was frozen */
+(() => {
+  const want = new Map(), got = new Map();
+  MB_CELLS.forEach(g => want.set(g.amount, (want.get(g.amount) || 0) + g.count));
+  MB_FACE_ORDER.forEach(a => got.set(a, (got.get(a) || 0) + 1));
+  const off = [...new Set([...want.keys(), ...got.keys()])]
+    .filter(a => (want.get(a) || 0) !== (got.get(a) || 0));
+  if(off.length) MB_FAULTS.push('MB_FACE_ORDER is not MB_CELLS rearranged — ' + off.map(a =>
+    '₹' + a + ': the face has ' + (got.get(a) || 0) + ', the cells declare ' + (want.get(a) || 0)).join('; '));
+})();
+const MB_ORDER_SUM = MB_FACE_ORDER.reduce((n, a) => n + a, 0);
+if(MB_ORDER_SUM !== MB_GOAL)
+  MB_FAULTS.push('the printed order adds up to ' + MB_ORDER_SUM + ', not ' + MB_GOAL);
 /* Loud on purpose, and on the page rather than only in the console: a face
    that does not match the print is not a cosmetic bug, it is the reader
    tapping the wrong cell. */
@@ -383,9 +449,16 @@ let BOX = null;
 
 function boxKey(id){ return 'moneybox:' + id; }
 function blankBox(id){
-  const cells = [];
-  MB_CELLS.forEach(g => { for(let i = 0; i < g.count; i++)
-    cells.push({ id: g.amount + '-' + i, amount: g.amount, filledAt: null }); });
+  /* built in PRINTED order, so cells[n] is the nth cell on the box. The id
+     stays keyed to the denomination and its nth occurrence rather than to the
+     position, so if the face is ever re-cut a filled ₹500 can only ever be
+     restored onto a ₹500 — never onto whatever now happens to sit at that
+     index. */
+  const cells = [], seen = {};
+  MB_FACE_ORDER.forEach(a => {
+    const n = seen[a] = (seen[a] || 0) + 1;
+    cells.push({ id: a + '-' + (n - 1), amount: a, filledAt: null });
+  });
   return { boxId:id, startedAt:ymd(new Date()), goal:MB_GOAL, cells,
            syncedTotal:0, milestones:[], updatedAt:Date.now() };
 }

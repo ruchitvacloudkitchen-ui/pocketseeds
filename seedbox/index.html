@@ -51,6 +51,12 @@ header{display:flex;align-items:center;gap:11px;padding:4px 0 14px}
   border-radius:999px;padding:10px 18px;margin:0 0 14px}
 .shot{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:16px;
   background:var(--surface-2);border:1px solid var(--line)}
+/* The tagline sits under the title and stays on one line — it is a saying,
+   and a saying broken across two lines stops sounding like one. */
+.tagline{margin:9px 0 0;font-size:14.5px;font-weight:700;color:#2E8B49;line-height:1.35;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .tagline{color:#7BD189} }
+:root[data-theme="dark"] .tagline{color:#7BD189}
 .ribbon{position:absolute;top:16px;right:-42px;transform:rotate(45deg);background:#B0431A;color:#fff;
   font-size:11px;font-weight:800;letter-spacing:.04em;padding:6px 46px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
 .cta{display:flex;flex-direction:column;gap:9px;margin-top:15px}
@@ -136,6 +142,7 @@ footer a{color:var(--brand);font-weight:700}
   <div class="ribbon" data-t="ribbon"></div>
   <p class="eyebrow" data-t="eyebrow"></p>
   <div class="pill" data-t="pillTitle"></div>
+  <p class="tagline" data-t="tagline"></p>
   <img class="shot" id="shot" src="../seedbox-hero.jpg" alt="" loading="lazy" decoding="async">
   <div class="cta">
     <a class="btn btn-p" id="waBtn" href="#" target="_blank" rel="noopener noreferrer" data-t="ctaOrder"></a>
@@ -215,6 +222,7 @@ const STR = {
   te: {
     eyebrow:'పొదుపు తెలివిగా. లెక్క సులభంగా. కల పెద్దగా.',
     pillTitle:'₹1,00,000 పొదుపు ట్రాకర్',
+    tagline:'నీటిబొట్లు కలిస్తే సముద్రం.',
     ribbon:'ఈరోజు క్రమశిక్షణ · రేపు స్వేచ్ఛ',
     ctaOrder:'WhatsApp లో ఆర్డర్ చేయండి', ctaHave:'నా దగ్గర బాక్స్ ఉంది',
     f1t:'రోజూ దాచండి', f1s:'చిన్న మొత్తాలు, పెద్ద భవిష్యత్తు.',
@@ -247,6 +255,7 @@ const STR = {
   en: {
     eyebrow:'Save Smart. Track Easy. Achieve Big.',
     pillTitle:'₹1,00,000 Savings Tracker',
+    tagline:'A little every day — a lakh in a year.',
     ribbon:'Discipline Today · Freedom Tomorrow',
     ctaOrder:'Order on WhatsApp', ctaHave:'I already have a box',
     f1t:'Save Daily', f1s:'Small savings, big future.',

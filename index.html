@@ -142,6 +142,31 @@
 .sb .no{border:0;background:none;color:var(--muted);font-family:inherit;font-size:12px;
   font-weight:700;cursor:pointer;padding:2px 4px;white-space:nowrap}
 .sb .buy:focus-visible,.sb .no:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
+
+/* The full promo, for someone who has neither a box nor a single saving
+   recorded: they have never met the product, so it gets the card treatment
+   rather than a strip. Matched to .ask-banner — same radius, same wash, same
+   type sizes — so the two read as one family down the page.
+   The tagline is one line and must stay one line; if it ever wraps, the fix
+   is the copy, not a smaller type size. */
+.sb.promo.big{align-items:flex-start;gap:12px;padding:13px 14px;border-radius:20px;
+  position:relative;overflow:hidden;flex-wrap:nowrap}
+.sb.promo.big::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 130% at 0% 45%, rgba(86,197,150,.20) 0%, rgba(86,197,150,0) 64%)}
+.sb.promo.big > *{position:relative}
+.sb.promo.big .shot{width:54px;height:54px;border-radius:15px;overflow:hidden}
+.sb.promo.big .shot .i{width:30px;height:30px}
+.sb.promo.big .shot img{width:100%;height:100%;object-fit:cover;display:block}
+.sb.promo.big .n{font-size:16.5px}
+.sb.promo.big .tag{display:block;margin-top:4px;font-size:13.5px;font-weight:700;
+  color:#2E8B49;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:root[data-theme="dark"] .sb.promo.big .tag{color:var(--brand)}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .sb.promo.big .tag{color:var(--brand)} }
+/* the actions sit on their own row under the text, as a row of two */
+.sb.promo.big{flex-wrap:wrap}
+.sb.promo.big .acts{flex-direction:row-reverse;width:100%;align-items:center;
+  justify-content:space-between;gap:10px;margin-top:9px}
+.sb.promo.big .buy{padding:10px 18px;font-size:14px}
 @media (max-width:359px){
   .sb.promo{flex-wrap:wrap}
   .sb .acts{flex-direction:row;width:100%;align-items:center;justify-content:space-between}
@@ -1911,6 +1936,7 @@ const STR = {
     mbLiveT:'Seed Box {b}', mbLiveS:'{a} of {g} · {p}%', mbLiveLeft:'{a} to go',
     mbOpen:'Open the box',
     mbBuy:'Buy now', mbMore:'+{n} more', mbDismiss:'Not now',
+    mbTagline:'A little every day — a lakh in a year.',
     remTitle:'Reminders',
     remSub:'They ring at 7:55 in the morning, before the day starts.',
     remAdd:'Remind me', remWhat:'What is it for?', remTime:'Time',
@@ -2278,6 +2304,7 @@ const STR = {
     mbLiveT:'విత్తన పెట్టె {b}', mbLiveS:'{g} లో {a} · {p}%', mbLiveLeft:'ఇంకా {a}',
     mbOpen:'పెట్టె తెరువు',
     mbBuy:'ఇప్పుడే కొనండి', mbMore:'ఇంకా {n}', mbDismiss:'ఇప్పుడు వద్దు',
+    mbTagline:'నీటిబొట్లు కలిస్తే సముద్రం.',
     remTitle:'గుర్తుంపులు',
     remSub:'ఉదయం 7:55కి — రోజు మొదలవ్వక ముందే.',
     remAdd:'గుర్తు చేయి', remWhat:'దేని కోసం?', remTime:'సమయం',
@@ -7030,7 +7057,13 @@ function mbState(){
              pct: Math.min(100, Math.round(saved / goal * 100)) };
   }
   if(!mbCanBuy()) return { kind:'none' };
-  return { kind:'promo' };
+  /* Weight, not a second state. Someone with no box AND nothing saved has
+     never met the product, so the promo earns the room: thumbnail, tagline,
+     the lot. Someone already recording savings has the habit and only needs
+     to know the box exists — a strip, not an interruption. Both are the same
+     promo, dismissed by the same key. */
+  const started = (() => { try{ return (DB.savings || []).length > 0; }catch(e){ return false; } })();
+  return { kind:'promo', weight: started ? 'compact' : 'full' };
 }
 function mbTotal(b){
   return b.cells.reduce((n,c) => n + (c.filledAt ? (Number(c.amount)||0) : 0), 0);
@@ -7070,6 +7103,28 @@ function renderMoneyBox(){
     </a>`;
 }
 
+/* The thumbnail on the full promo. seedbox-hero.jpg is the owner's product
+   photo and may not exist yet, so the drawn box is what is rendered and the
+   photo replaces it only once a probe says it is there — the same trick the
+   app icon uses, and for the same reason: never a broken image. */
+function mbShotHTML(){ return ic('box'); }
+function mbShotArtwork(){
+  const slot = document.querySelector('.sb.promo.big .shot');
+  if(!slot || slot.dataset.probed) return;
+  slot.dataset.probed = '1';
+  const KEY = 'moneybox.shot';
+  let memo = {};
+  try{ memo = JSON.parse(localStorage.getItem(KEY) || '{}'); }catch(e){}
+  const weekAgo = Date.now() - 7 * 864e5;
+  const show = () => { slot.innerHTML = '<img src="seedbox-hero.jpg" alt="">'; };
+  if(memo.found && memo.at > weekAgo) return show();
+  if(memo.found === false && memo.at > weekAgo) return;
+  const probe = new Image();
+  probe.onload  = () => { localStorage.setItem(KEY, JSON.stringify({found:true,  at:Date.now()})); show(); };
+  probe.onerror = () => { localStorage.setItem(KEY, JSON.stringify({found:false, at:Date.now()})); };
+  probe.src = 'seedbox-hero.jpg';
+}
+
 /* The home banner. Same three states, drawn tighter, and the promo is
    dismissible for a month — home is somewhere you land every day, and an
    advert you cannot put down is an advert you come to resent. Progress is
@@ -7095,22 +7150,37 @@ function renderSeedBanner(){
   }
 
   if(st.kind !== 'promo' || mbPromoDismissed()){ host.innerHTML = ''; return; }
-  host.innerHTML = `
+
+  /* One action, never two: this is the promo state, so it is Buy now. "Add
+     savings" belongs to the progress state and the two never share a card. */
+  const acts = `
+      <span class="acts">
+        <a class="buy" href="seedbox/">${esc(t('mbBuy'))}</a>
+        <button class="no" id="sbNo">${esc(t('mbDismiss'))}</button>
+      </span>`;
+
+  host.innerHTML = st.weight === 'full' ? `
+    <div class="sb promo big">
+      <span class="shot" aria-hidden="true">${mbShotHTML()}</span>
+      <span class="tx">
+        <span class="n">${esc(t('mbPromoT'))}</span>
+        <span class="tag">${esc(t('mbTagline'))}</span>
+      </span>
+      ${acts}
+    </div>` : `
     <div class="sb promo">
       <span class="shot" aria-hidden="true">${ic('box')}</span>
       <span class="tx">
         <span class="n">${esc(t('mbPromoT'))}</span>
         <span class="s">${esc(t('mbPromoS'))}</span>
       </span>
-      <span class="acts">
-        <a class="buy" href="seedbox/">${esc(t('mbBuy'))}</a>
-        <button class="no" id="sbNo">${esc(t('mbDismiss'))}</button>
-      </span>
+      ${acts}
     </div>`;
   $('#sbNo').addEventListener('click', () => {
     try{ localStorage.setItem(MB_DISMISS_KEY, String(Date.now())); }catch(e){}
     renderSeedBanner();
   });
+  mbShotArtwork();
 }
 /* ---- Google Drive sync ----------------------------------------------
    The tracker at /box/ owns the moneybox:* keys and knows nothing about DB.

@@ -37,16 +37,22 @@ function readConfig(){
   };
   /* the three declarations are plain literals; evaluating them in a bare
      Function keeps this honest without pulling in a parser */
-  const src2 = 'return [' + grab('MB_GOAL') + ',' + grab('MB_CELLS') + ',' + grab('MB_FACE_ROWS') + '];';
-  const [goal, cells, rows] = Function(src2)();
-  return { goal, cells, rows };
+  const src2 = 'return [' + grab('MB_GOAL') + ',' + grab('MB_CELLS') + ','
+    + grab('MB_FACE_ROWS') + ',' + grab('MB_FACE_ORDER') + '];';
+  const [goal, cells, rows, order] = Function(src2)();
+  return { goal, cells, rows, order };
 }
 
 /* ---------- deterministic shuffle ----------
-   A fixed seed, so the face looks mixed rather than blocked into a slab of
-   500s followed by a slab of 200s — and so re-running this produces the
-   identical layout every time. Change SEED only if you want a different
-   face, and know that it invalidates any box already printed. */
+   This is no longer part of a normal run. The printed order now lives frozen
+   in MB_FACE_ORDER in box/index.html, so the app and the printer read the one
+   array instead of each recomputing a shuffle that could drift apart.
+
+   It survives here for one job: `--make-order` runs it over the current
+   MB_CELLS and prints an array to paste over MB_FACE_ORDER, for when the face
+   is genuinely re-cut. A fixed seed, so the face comes out mixed rather than
+   blocked into slabs of one denomination, and so the same config always gives
+   the same layout. Doing this invalidates every box already printed. */
 const SEED = 20260904;
 function rng(seed){
   let a = seed >>> 0;
@@ -95,6 +101,25 @@ if(planned !== cfg.goal)
   faults.push(`the cells add up to ${planned}, not the goal of ${cfg.goal}`);
 if(rowed !== count)
   faults.push(`MB_FACE_ROWS accounts for ${rowed} cells, but MB_CELLS declares ${count}`);
+/* --make-order is how you FIX a stale order, so it must not be blocked by
+   one: the checks below are exactly what it is being run to satisfy. */
+const MAKING = process.argv.includes('--make-order');
+if(MAKING){ /* order checks skipped while regenerating it */ }
+else if(!Array.isArray(cfg.order) || cfg.order.length !== count)
+  faults.push(`MB_FACE_ORDER lists ${(cfg.order||[]).length} cells, but MB_CELLS declares ${count}`);
+else {
+  /* the frozen order must be the bill of materials rearranged and nothing
+     else, or the printed face carries denominations the app does not expect */
+  const want = new Map(), got = new Map();
+  cfg.cells.forEach(g => want.set(g.amount, (want.get(g.amount) || 0) + g.count));
+  cfg.order.forEach(a => got.set(a, (got.get(a) || 0) + 1));
+  [...new Set([...want.keys(), ...got.keys()])].forEach(a => {
+    if((want.get(a) || 0) !== (got.get(a) || 0))
+      faults.push(`MB_FACE_ORDER has ${got.get(a) || 0} cells of ₹${a}, but MB_CELLS declares ${want.get(a) || 0}`);
+  });
+  const osum = cfg.order.reduce((n, a) => n + a, 0);
+  if(osum !== cfg.goal) faults.push(`MB_FACE_ORDER adds up to ${osum}, not the goal of ${cfg.goal}`);
+}
 if(faults.length){
   console.error('\nWill not print a face that disagrees with the app:\n');
   faults.forEach(f => console.error('  • ' + f));
@@ -105,7 +130,24 @@ if(faults.length){
 /* ---------- the cell order ---------- */
 const flat = [];
 cfg.cells.forEach(g => { for(let i = 0; i < g.count; i++) flat.push(g.amount); });
-const order = shuffled(flat, OPT.seed);
+
+/* --make-order: regenerate the frozen order and stop. Prints the literal to
+   paste into box/index.html; prints nothing else, so it can be redirected. */
+if(argv.includes('--make-order')){
+  const fresh = shuffled(flat, OPT.seed);
+  const out = [];
+  for(let i = 0; i < fresh.length; i += Math.max(...cfg.rows))
+    out.push('  ' + fresh.slice(i, i + Math.max(...cfg.rows))
+      .map(n => String(n).padStart(4)).join(', ') + ',');
+  console.log('const MB_FACE_ORDER = [');
+  console.log(out.join('\n').replace(/,$/, ''));
+  console.log('];');
+  process.exit(0);
+}
+
+/* the printed order is read, not computed: box/index.html is the one place
+   that says what is on the face and in what order */
+const order = cfg.order;
 const grid = [];
 let k = 0;
 cfg.rows.forEach(n => { grid.push(order.slice(k, k + n)); k += n; });
@@ -248,13 +290,16 @@ function pdf(){
 }
 
 /* ---------- write ---------- */
-const dir = path.join(__dirname, '..', OPT.out);
+/* an absolute --out means that exact directory; path.join would quietly
+   graft it under the repo and write the print files somewhere nobody looks */
+const dir = path.isAbsolute(OPT.out) ? OPT.out : path.join(__dirname, '..', OPT.out);
 fs.mkdirSync(dir, { recursive: true });
 fs.writeFileSync(path.join(dir, 'box-face.svg'), drawFace(true));
 fs.writeFileSync(path.join(dir, 'box-face-proof.svg'), drawFace(false));
 fs.writeFileSync(path.join(dir, 'box-face-proof.pdf'), pdf(), 'binary');
 fs.writeFileSync(path.join(dir, 'box-face.json'), JSON.stringify({
-  goal: cfg.goal, cells: cfg.cells, rows: cfg.rows, seed: OPT.seed,
+  goal: cfg.goal, cells: cfg.cells, rows: cfg.rows,
+  orderSource: 'MB_FACE_ORDER in box/index.html (frozen)',
   cols, rowCount: cfg.rows.length, total: count,
   faceMm: { w: OPT.wmm, h: OPT.hmm }, cellMm: +cell.toFixed(2), dpi: OPT.dpi,
   order: grid
@@ -266,7 +311,7 @@ console.log(`  ${cols} columns x ${cfg.rows.length} rows = ${count} cells, ` +
             `${cfg.cells.map(g => g.count + ' x Rs' + g.amount).join(' + ')} = Rs${planned.toLocaleString('en-IN')}`);
 console.log(`  face ${OPT.wmm} x ${OPT.hmm} mm at ${OPT.dpi} dpi ` +
             `(${Math.round(OPT.wmm * MM)} x ${Math.round(OPT.hmm * MM)} px), cell ${cell.toFixed(1)} mm`);
-console.log(`  seed ${OPT.seed} — re-running gives the identical layout`);
+console.log(`  order read from MB_FACE_ORDER — frozen, so this is the layout on the box`);
 console.log(`  written to ${OPT.out}/box-face.svg  (outlined — this is the print file)`);
 console.log(`             ${OPT.out}/box-face-proof.svg  (live text — screen only)`);
 console.log(`             ${OPT.out}/box-face-proof.pdf  (names Helvetica — screen only)`);
