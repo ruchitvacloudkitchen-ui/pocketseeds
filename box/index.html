@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>My Money Box — PocketSeeds</title>
+<title>My Seed Box — PocketSeeds</title>
 <meta name="description" content="Track a PocketSeeds ₹1,00,000 savings box. Tap a cell each time you drop cash in.">
 <meta name="theme-color" content="#2E8B49">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M7 0h86a7 7 0 0 1 7 7v45.5C100 80.4 77.6 100 50 100S0 80.4 0 52.5V7a7 7 0 0 1 7-7z' fill='%232E8B49'/%3E%3Cpath d='M75.5 29.5C71.2 19.6 61.8 14 49.5 14 34.6 14 24.5 22.2 24.5 33.4c0 12.4 11.4 17.2 25.6 21.2 12.6 3.5 20.4 6.4 20.4 14.2 0 8.2-8.2 13.4-20.6 13.4-12.8 0-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E">
@@ -193,13 +193,13 @@ footer a{color:var(--brand);font-weight:700}
 
 <footer>
   <a href="../">&larr; <span data-t="backApp"></span></a> &nbsp;·&nbsp;
-  <a href="../moneybox/"><span data-t="aboutBox"></span></a>
+  <a href="../seedbox/"><span data-t="aboutBox"></span></a>
 </footer>
 </div>
 
 <script>
 'use strict';
-/* ==================== MONEY BOX — TRACKER ====================
+/* ==================== SEED BOX — TRACKER ====================
    Opened by the QR on the box: /box/?id=BOX0001
 
    THE GRID IS DATA. Everything printed on the box face is MB_CELLS below —
@@ -207,9 +207,15 @@ footer a{color:var(--brand);font-weight:700}
    is asserted on load, because a grid that does not add up to the goal is a
    bug the reader would only find at the very end.
 
+   The feature is called Seed Box in every string a person reads, and
+   moneybox in every key and path they do not. That is deliberate, not a
+   leftover: these keys are already on people's phones, and this page's URL
+   is printed on wooden boxes, so moving either would lose a count or kill a
+   QR code.
+
    Storage is per box, so one person can keep several:
      moneybox:<BOXID> = { boxId, startedAt, goal, cells:[{id,amount,filledAt}],
-                          syncedTotal, updatedAt }
+                          syncedTotal, milestones, updatedAt }
    The app's own store (pocketseeds.v2) is only touched by "Add to my savings",
    and then only by the amount not already sent, so tapping it twice cannot
    double-count.
@@ -308,7 +314,7 @@ const STR = {
     c25:'పావు వంతు అయింది! 🌱', c50:'సగం దాటింది! 🌿', c75:'మూడొంతులు! 🌳',
     c100:'₹1,00,000 పూర్తి! 🎉', reached:'లక్ష్యం చేరింది',
     announce:'{a} దాచారు, {p} శాతం.',
-    shareTxt:'PocketSeeds మనీ బాక్స్‌లో ఇప్పటివరకు {a} దాచాను ({p}%). నువ్వూ మొదలుపెట్టు 👉 ',
+    shareTxt:'PocketSeeds విత్తన పెట్టెలో ఇప్పటివరకు {a} దాచాను ({p}%). నువ్వూ మొదలుపెట్టు 👉 ',
     backApp:'యాప్‌కి తిరిగి', aboutBox:'బాక్స్ గురించి', close:'మూసివేయి'
   },
   en: {
@@ -342,7 +348,7 @@ const STR = {
     c25:'A quarter of the way! 🌱', c50:'Past halfway! 🌿', c75:'Three quarters! 🌳',
     c100:'₹1,00,000 complete! 🎉', reached:'Goal reached',
     announce:'{a} saved, {p} per cent.',
-    shareTxt:'I have saved {a} ({p}%) in my PocketSeeds money box. Start yours 👉 ',
+    shareTxt:'I have saved {a} ({p}%) in my PocketSeeds Seed Box. Start yours 👉 ',
     backApp:'Back to the app', aboutBox:'About the box', close:'Close'
   }
 };
@@ -456,7 +462,9 @@ function addToSavings(){
     const db = JSON.parse(localStorage.getItem(APP_KEY) || 'null');
     if(!db) { cheer(t('nothingNew')); return; }
     db.savings = db.savings || [];
-    db.savings.push({ id:uid(), amount:owed, note:'Money Box ' + BOX.boxId, date:ymd(new Date()) });
+    /* the note is display text in the app's savings list, so it takes the
+       new name; entries written before the rename keep the old wording */
+    db.savings.push({ id:uid(), amount:owed, note:'Seed Box ' + BOX.boxId, date:ymd(new Date()) });
     localStorage.setItem(APP_KEY, JSON.stringify(db));
     BOX.syncedTotal = total(); saveBox(); paintTotals();
     cheer(t('addedSav', { a: money(owed) }));
@@ -703,7 +711,7 @@ function resetBox(){
   saveBox(); render(); announce();
 }
 function share(){
-  const txt = t('shareTxt', { a: money(total()), p: pct1() }) + 'https://pocketseeds.online/moneybox/';
+  const txt = t('shareTxt', { a: money(total()), p: pct1() }) + 'https://pocketseeds.online/seedbox/';
   if(navigator.share){ navigator.share({ text: txt }).catch(()=>{}); return; }
   window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank', 'noopener');
 }

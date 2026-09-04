@@ -62,7 +62,7 @@ node tools/boxes.js --base https://pocketseeds.online --out dist/run1
 
 Writes one QR SVG per box, a labels sheet laid out for guillotining, and a CSV
 of the run. The QR payload is the full production URL
-(`https://pocketseeds.online/box/?id=BOX0001`), and each label prints the box
+(`https://pocketseeds.online/box/?id=BOX0001` — unchanged by the Seed Box rename, and never to be changed), and each label prints the box
 id beside the code in human-readable form — outlined, like the face — so a
 scuffed code is still recoverable by typing the number in.
 

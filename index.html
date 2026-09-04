@@ -114,6 +114,39 @@
 
 /* The pen marks whichever date is selected in the grid above it, so it names
    that date rather than saying "add" — there is no second place to choose. */
+/* ---------- Seed Box banner on the home page ----------
+   Below the balance and above quick add, which is the first place on the
+   page that is not the reader's own numbers. Two shapes: a progress strip
+   once there is a box, and a promo with a Buy button before there is one. */
+.sb{display:flex;align-items:center;gap:12px;width:100%;text-align:left;text-decoration:none;
+  color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:13px 14px;
+  margin-bottom:13px;background:var(--surface);box-shadow:var(--shadow)}
+.sb .ic{width:40px;height:40px;border-radius:13px;flex:0 0 auto;display:grid;place-items:center;
+  background:#2E8B49;color:#fff}
+.sb .ic .i{width:21px;height:21px;stroke-width:2}
+.sb .tx{flex:1;min-width:0}
+.sb .n{display:block;font-size:15px;font-weight:800;letter-spacing:-.01em}
+.sb .s{display:block;font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.35}
+.sb .go{flex:0 0 auto;font-size:15px;font-weight:800;color:#2E8B49}
+.sb .bar{display:block;height:7px;border-radius:999px;background:var(--surface-2);
+  border:1px solid var(--line);overflow:hidden;margin:6px 0 5px}
+.sb .bar i{display:block;height:100%;border-radius:999px;background:#2E8B49}
+
+.sb.promo{align-items:flex-start;background:linear-gradient(140deg,var(--in-bg),var(--surface) 70%)}
+.sb.promo .shot{width:46px;height:46px;border-radius:13px;flex:0 0 auto;display:grid;place-items:center;
+  background:#5B3A21;color:#E8D8C3;box-shadow:inset 0 -2px 0 rgba(0,0,0,.25)}
+.sb.promo .shot .i{width:24px;height:24px;stroke-width:1.9}
+.sb .acts{display:flex;flex-direction:column;gap:6px;flex:0 0 auto;align-items:stretch}
+.sb .buy{background:#2E8B49;color:#fff;border-radius:11px;padding:9px 13px;font-size:13.5px;
+  font-weight:800;text-decoration:none;text-align:center;white-space:nowrap}
+.sb .no{border:0;background:none;color:var(--muted);font-family:inherit;font-size:12px;
+  font-weight:700;cursor:pointer;padding:2px 4px;white-space:nowrap}
+.sb .buy:focus-visible,.sb .no:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
+@media (max-width:359px){
+  .sb.promo{flex-wrap:wrap}
+  .sb .acts{flex-direction:row;width:100%;align-items:center;justify-content:space-between}
+}
+
 /* ---------- money box card on the Savings page ----------
    One card in two states: an invitation before there is a box, and the live
    count once there is one. The tracker lives at its own route, so this reads
@@ -1037,6 +1070,8 @@ table.sip tbody tr:last-child td{font-size:15px}
       </div>
     </div>
 
+    <div id="sbBanner"></div>
+
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="quickAdd">Quick add</h3></div>
       <div class="grid3" id="quickTiles"></div>
@@ -1789,11 +1824,12 @@ const STR = {
     askAPerDay:'a day — what is left to spend for the rest of {m}.',
     askNoIdea:'I could not match that to anything I hold. Try one of the questions below.',
     askScope:'Answers come from what you have entered in this app, on this phone. It is not investment advice and it does not know anything outside your own records.',
-    mMoneyBox:'Money Box',
-    mbPromoT:'₹1,00,000 Money Box', mbPromoS:'A wooden box with a cell for every note. Drop cash in, tap it here.',
+    mMoneyBox:'Seed Box',
+    mbPromoT:'₹1,00,000 Seed Box', mbPromoS:'A wooden box with a cell for every note. Drop cash in, tap it here.',
     mbPromoCta:'See the box',
-    mbLiveT:'Money Box {b}', mbLiveS:'{a} of {g} · {p}%', mbLiveLeft:'{a} to go',
+    mbLiveT:'Seed Box {b}', mbLiveS:'{a} of {g} · {p}%', mbLiveLeft:'{a} to go',
     mbOpen:'Open the box',
+    mbBuy:'Buy now', mbMore:'+{n} more', mbDismiss:'Not now',
     remTitle:'Reminders',
     remSub:'They ring at 7:55 in the morning, before the day starts.',
     remAdd:'Remind me', remWhat:'What is it for?', remTime:'Time',
@@ -2151,11 +2187,12 @@ const STR = {
     askAPerDay:'రోజుకు — {m} మిగిలిన రోజులకు ఖర్చు చేయదగినది.',
     askNoIdea:'అది నాకు అర్థం కాలేదు. కింద ఉన్న ప్రశ్నలు అడిగి చూడండి.',
     askScope:'జవాబులు ఈ ఫోన్‌లో మీరు రాసిన లెక్కల నుంచే వస్తాయి. ఇది పెట్టుబడి సలహా కాదు, మీ లెక్కల బయట దేనీ గురించీ తెలియదు.',
-    mMoneyBox:'మనీ బాక్స్',
-    mbPromoT:'₹1,00,000 మనీ బాక్స్', mbPromoS:'ప్రతి నోటుకూ ఒక గడి ఉన్న కర్ర బాక్స్. డబ్బు వేసి, ఇక్కడ నొక్కండి.',
-    mbPromoCta:'బాక్స్ చూడండి',
-    mbLiveT:'మనీ బాక్స్ {b}', mbLiveS:'{g} లో {a} · {p}%', mbLiveLeft:'ఇంకా {a}',
-    mbOpen:'బాక్స్ తెరువు',
+    mMoneyBox:'విత్తన పెట్టె',
+    mbPromoT:'₹1,00,000 విత్తన పెట్టె', mbPromoS:'ప్రతి నోటుకూ ఒక గడి ఉన్న కర్ర పెట్టె. డబ్బు వేసి, ఇక్కడ నొక్కండి.',
+    mbPromoCta:'పెట్టె చూడండి',
+    mbLiveT:'విత్తన పెట్టె {b}', mbLiveS:'{g} లో {a} · {p}%', mbLiveLeft:'ఇంకా {a}',
+    mbOpen:'పెట్టె తెరువు',
+    mbBuy:'ఇప్పుడే కొనండి', mbMore:'ఇంకా {n}', mbDismiss:'ఇప్పుడు వద్దు',
     remTitle:'గుర్తుంపులు',
     remSub:'ఉదయం 7:55కి — రోజు మొదలవ్వక ముందే.',
     remAdd:'గుర్తు చేయి', remWhat:'దేని కోసం?', remTime:'సమయం',
@@ -5378,7 +5415,7 @@ const MENU = [
   { go:'reports',                      icon:'chart',    t:'mTracker'   },
   { go:'family',                       icon:'people',   t:'mFamily'    },
   { act:'statement',                   icon:'doc',      t:'mStatement' },
-  { href:'moneybox/',                  icon:'box',      t:'mMoneyBox'  },
+  { href:'seedbox/',                   icon:'box',      t:'mMoneyBox'  },
   { go:'invite',                       icon:'gift',     t:'mInvite'    },
   { act:'settings',                    icon:'gear',     t:'mSettings'  }
 ];
@@ -6794,7 +6831,18 @@ document.addEventListener('click', e => {
 
 <script>
 'use strict';
-/* ==================== MONEY BOX — CARD IN THE APP ====================
+/* ==================== SEED BOX — CARD AND BANNER ====================
+
+   ON THE NAME, so this does not read as a bug later: the feature is called
+   Seed Box everywhere a person can see it, and moneybox everywhere they
+   cannot. The storage keys (moneybox:<BOXID>, moneybox.last,
+   moneybox.zoom.<id>, moneybox.promoDismissed) and the tracker's URL
+   (/box/?id=) were fixed before the rename — the keys are on people's phones
+   already, and that URL is printed on physical wooden boxes and can never
+   move. Renaming either would lose someone's count or turn a QR into a dead
+   link, so the internal names stay put deliberately. /moneybox/ redirects to
+   /seedbox/ for links already shared.
+   ====================================================================
    The tracker is its own page at /box/, so this card does not share code with
    it — it reads the same localStorage keys the tracker writes. That keeps the
    two independent: the tracker works with the app closed, and the app shows
@@ -6823,40 +6871,122 @@ function mbActive(){
   if(!all.length) return null;
   return all.sort((a,b) => (b.updatedAt||0) - (a.updatedAt||0))[0];
 }
+
+/* ---- one decision, two surfaces ----
+   The Savings card and the home banner both need to know which of three
+   states we are in. Working it out twice is how they drift apart, so it is
+   worked out here and each of them only draws.
+
+   The promo needs an order number to send anyone to. Until seedBoxWhatsApp
+   is set in config.json there is nowhere to buy, so the promo state is not
+   reachable — a Buy button that goes nowhere is worse than no banner. The
+   progress state never depends on it. */
+const MB_DISMISS_KEY = 'moneybox.promoDismissed';
+const MB_DISMISS_DAYS = 30;
+
+function mbCanBuy(){
+  try{ return !!(CONFIG && typeof CONFIG.seedBoxWhatsApp === 'string'
+                 && CONFIG.seedBoxWhatsApp.trim()); }
+  catch(e){ return false; }      // CONFIG loads in a later block
+}
+function mbPromoDismissed(){
+  try{
+    const at = Number(localStorage.getItem(MB_DISMISS_KEY) || 0);
+    return at > 0 && (Date.now() - at) < MB_DISMISS_DAYS * 864e5;
+  }catch(e){ return false; }
+}
+function mbState(){
+  const all = mbBoxes();
+  if(all.length){
+    const b = all.sort((x,y) => (y.updatedAt||0) - (x.updatedAt||0))[0];
+    const goal = Number(b.goal) || MB_GOAL_APP;
+    const saved = mbTotal(b);
+    return { kind:'progress', box:b, count:all.length, goal, saved,
+             left: Math.max(0, goal - saved),
+             pct: Math.min(100, Math.round(saved / goal * 100)) };
+  }
+  if(!mbCanBuy()) return { kind:'none' };
+  return { kind:'promo' };
+}
 function mbTotal(b){
   return b.cells.reduce((n,c) => n + (c.filledAt ? (Number(c.amount)||0) : 0), 0);
 }
 
+/* The Savings card. It draws whatever mbState() says; the one difference
+   from the home banner is that the promo here is always allowed, since the
+   Savings page is somewhere you have gone looking. */
 function renderMoneyBox(){
   const host = $('#mbBox'); if(!host) return;
-  const b = mbActive();
-  if(!b){
+  const st = mbState();
+  if(st.kind === 'progress'){
+    const b = st.box;
     host.innerHTML = `
-      <a class="mb-card" href="moneybox/">
+      <a class="mb-card" href="box/?id=${esc(b.boxId)}">
         <div class="h">
           <span class="ic">${ic('box')}</span>
-          <span><span class="n">${esc(t('mbPromoT'))}</span>
-            <span class="s">${esc(t('mbPromoS'))}</span></span>
-          <span class="go">${esc(t('mbPromoCta'))} ›</span>
+          <span><span class="n">${esc(t('mbLiveT', { b:b.boxId }))}${
+            st.count > 1 ? ' · ' + esc(t('mbMore', { n: st.count - 1 })) : ''}</span>
+            <span class="s">${esc(t('mbLiveS', { a:money(st.saved), g:money(st.goal), p:st.pct }))}</span></span>
+          <span class="go">${esc(t('mbOpen'))} ›</span>
         </div>
+        <div class="mb-bar"><i style="width:${st.pct}%"></i></div>
+        <div class="mb-meta"><span>${st.pct}%</span>
+          <span>${esc(t('mbLiveLeft', { a: money(st.left) }))}</span></div>
       </a>`;
     return;
   }
-  const goal  = Number(b.goal) || MB_GOAL_APP;
-  const saved = mbTotal(b);
-  const pct   = Math.min(100, Math.round(saved / goal * 100));
   host.innerHTML = `
-    <a class="mb-card" href="box/?id=${esc(b.boxId)}">
+    <a class="mb-card" href="seedbox/">
       <div class="h">
         <span class="ic">${ic('box')}</span>
-        <span><span class="n">${esc(t('mbLiveT', { b:b.boxId }))}</span>
-          <span class="s">${esc(t('mbLiveS', { a:money(saved), g:money(goal), p:pct }))}</span></span>
-        <span class="go">${esc(t('mbOpen'))} ›</span>
+        <span><span class="n">${esc(t('mbPromoT'))}</span>
+          <span class="s">${esc(t('mbPromoS'))}</span></span>
+        <span class="go">${esc(t('mbPromoCta'))} ›</span>
       </div>
-      <div class="mb-bar"><i style="width:${pct}%"></i></div>
-      <div class="mb-meta"><span>${pct}%</span>
-        <span>${esc(t('mbLiveLeft', { a: money(Math.max(0, goal - saved)) }))}</span></div>
     </a>`;
+}
+
+/* The home banner. Same three states, drawn tighter, and the promo is
+   dismissible for a month — home is somewhere you land every day, and an
+   advert you cannot put down is an advert you come to resent. Progress is
+   never dismissible: it is your own money, not a pitch. */
+function renderSeedBanner(){
+  const host = $('#sbBanner'); if(!host) return;
+  const st = mbState();
+
+  if(st.kind === 'progress'){
+    const b = st.box;
+    host.innerHTML = `
+      <a class="sb" href="box/?id=${esc(b.boxId)}">
+        <span class="ic">${ic('box')}</span>
+        <span class="tx">
+          <span class="n">${esc(t('mbLiveT', { b:b.boxId }))}${
+            st.count > 1 ? ' · ' + esc(t('mbMore', { n: st.count - 1 })) : ''}</span>
+          <span class="bar"><i style="width:${st.pct}%"></i></span>
+          <span class="s">${esc(money(st.saved))} · ${esc(t('mbLiveLeft', { a: money(st.left) }))}</span>
+        </span>
+        <span class="go">${st.pct}%</span>
+      </a>`;
+    return;
+  }
+
+  if(st.kind !== 'promo' || mbPromoDismissed()){ host.innerHTML = ''; return; }
+  host.innerHTML = `
+    <div class="sb promo">
+      <span class="shot" aria-hidden="true">${ic('box')}</span>
+      <span class="tx">
+        <span class="n">${esc(t('mbPromoT'))}</span>
+        <span class="s">${esc(t('mbPromoS'))}</span>
+      </span>
+      <span class="acts">
+        <a class="buy" href="seedbox/">${esc(t('mbBuy'))}</a>
+        <button class="no" id="sbNo">${esc(t('mbDismiss'))}</button>
+      </span>
+    </div>`;
+  $('#sbNo').addEventListener('click', () => {
+    try{ localStorage.setItem(MB_DISMISS_KEY, String(Date.now())); }catch(e){}
+    renderSeedBanner();
+  });
 }
 /* ---- Google Drive sync ----------------------------------------------
    The tracker at /box/ owns the moneybox:* keys and knows nothing about DB.
@@ -6900,8 +7030,9 @@ function mbSpread(incoming){
 
 (function(){
   const prev = window.renderAll;
-  window.renderAll = function(){ prev(); try{ renderMoneyBox(); }catch(e){ console.error(e); } };
-  renderMoneyBox();
+  window.renderAll = function(){ prev();
+    try{ renderMoneyBox(); renderSeedBanner(); }catch(e){ console.error(e); } };
+  renderMoneyBox(); renderSeedBanner();
   /* The tracker is a separate page in the same origin, so its writes arrive
      here as a storage event while both are open, and on focus otherwise.
 
@@ -6911,8 +7042,8 @@ function mbSpread(incoming){
      the reader and their data. */
   window.addEventListener('storage', e => {
     if(e.key === KEY){ DB = load(); renderAll(); return; }
-    if(e.key && e.key.startsWith('moneybox:')) renderMoneyBox();
+    if(e.key && e.key.startsWith('moneybox:')){ renderMoneyBox(); renderSeedBanner(); }
   });
-  window.addEventListener('focus', renderMoneyBox);
+  window.addEventListener('focus', () => { renderMoneyBox(); renderSeedBanner(); });
 })();
 </script>
