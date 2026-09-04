@@ -32,19 +32,22 @@ html,body{background:var(--bg);margin:0}
 body{font-family:'Plus Jakarta Sans','Noto Sans Telugu',system-ui,-apple-system,sans-serif;
   color:var(--ink);line-height:1.6;font-size:16px;-webkit-text-size-adjust:100%}
 .wrap{max-width:760px;margin:0 auto;padding:18px 14px 60px}
-header{display:flex;align-items:center;gap:11px;padding:4px 0 14px}
-.mark{width:34px;height:34px;flex:none}
-.brand{font-weight:800;font-size:19px;letter-spacing:-.3px;flex:1}
+header{display:flex;align-items:center;gap:10px;padding:4px 0 14px}
+.mark{width:32px;height:32px;flex:none}
+.brand{font-weight:800;font-size:17px;letter-spacing:-.3px}
 .brand span{color:var(--brand)}
-.lang{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:11px;overflow:hidden}
-.lang button{border:0;background:none;font-family:inherit;font-size:13px;font-weight:800;color:var(--muted);
-  padding:0 10px;height:32px;cursor:pointer}
+.boxid{font-size:11.5px;font-weight:800;letter-spacing:.12em;color:var(--muted);margin-top:1px}
+.tagpill{margin-left:auto;background:var(--in-bg);color:#1B5E34;border-radius:999px;padding:6px 11px;
+  font-size:11px;font-weight:800;line-height:1.3;max-width:44%;text-align:center}
+.lang{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;flex:none}
+.lang button{border:0;background:none;font-family:inherit;font-size:12px;font-weight:800;color:var(--muted);
+  padding:0 8px;height:28px;cursor:pointer}
 .lang button[aria-pressed="true"]{background:#2E8B49;color:#fff}
 
 section{background:var(--surface);border:1px solid var(--line);border-radius:20px;
   padding:17px;margin:0 0 13px;box-shadow:var(--shadow)}
-h2{font-size:17px;margin:0 0 10px;letter-spacing:-.2px}
-.sub{color:var(--muted);font-size:14px;margin:0 0 12px;line-height:1.5}
+h2{font-size:16.5px;margin:0 0 10px;letter-spacing:-.2px}
+.sub{color:var(--muted);font-size:13.5px;margin:0 0 12px;line-height:1.5}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:13px;
   padding:13px 15px;font-family:inherit;font-size:15.5px;font-weight:800;cursor:pointer;text-decoration:none}
 .btn-p{background:#2E8B49;color:#fff}
@@ -52,55 +55,100 @@ h2{font-size:17px;margin:0 0 10px;letter-spacing:-.2px}
 .btn-block{display:flex;width:100%}
 .btn:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.stack{display:flex;flex-direction:column;gap:9px}
 input[type=text]{width:100%;font-family:inherit;font-size:17px;font-weight:700;letter-spacing:.08em;
   padding:13px 14px;border-radius:13px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink)}
 input:focus-visible{outline:3px solid #2E8B49;outline-offset:1px}
 
-/* ---------- the headline numbers ---------- */
-.hd{background:linear-gradient(150deg,#2E8B49,#1B5E34);color:#fff;border:0}
-.hd .id{font-size:12.5px;font-weight:800;letter-spacing:.12em;opacity:.85}
-.hd .big{font-size:38px;font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:5px 0 2px}
-.hd .of{font-size:14px;opacity:.9;font-weight:600}
-.bar{height:11px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden;margin:13px 0 7px}
-.bar i{display:block;height:100%;border-radius:999px;background:#C7F000;
-  transition:width .5s cubic-bezier(.22,.9,.3,1)}
-.hd .meta{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;opacity:.9;font-weight:600}
-.hd .since{font-size:12px;opacity:.75;margin-top:9px}
-.done{background:linear-gradient(150deg,#C7F000,#8ED47E);color:#071C0B}
-.done .bar{background:rgba(7,28,11,.18)} .done .bar i{background:#0B5D2A}
+/* ---------- goal + ring ---------- */
+.goal{text-align:center}
+.goal .gt{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.goal .gs{font-size:13.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.ring{display:block;margin:14px auto 4px;width:172px;height:172px}
+.ring .track{fill:none;stroke:var(--surface-2);stroke-width:13}
+.ring .fill{fill:none;stroke:#2E8B49;stroke-width:13;stroke-linecap:round;
+  transform:rotate(-90deg);transform-origin:50% 50%;
+  transition:stroke-dashoffset 1.1s cubic-bezier(.22,.9,.3,1)}
+.ring .pc{font-size:30px;font-weight:800;fill:var(--ink);letter-spacing:-.03em}
+.ring .pl{font-size:11px;font-weight:700;fill:var(--muted);letter-spacing:.1em}
+@media (prefers-reduced-motion:reduce){ .ring .fill{transition:none} }
+.done .ring .fill{stroke:#C7F000}
 
-/* ---------- the printed grid ---------- */
-.dgroup{margin-top:15px}
-.dgroup h3{font-size:13.5px;margin:0 0 8px;color:var(--muted);font-weight:800;letter-spacing:.03em}
-.cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:7px}
-.cell{min-height:46px;border-radius:11px;border:1.5px solid var(--line);background:var(--surface-2);
-  color:var(--ink);font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer;padding:2px;
-  display:grid;place-items:center;line-height:1.1;transition:background .14s,border-color .14s,color .14s}
-.cell[aria-pressed="true"]{background:#2E8B49;border-color:#2E8B49;color:#fff}
-.cell[aria-pressed="true"]::after{content:'✓';display:block;font-size:11px;opacity:.9}
-.cell:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
-.cell:active{transform:scale(.96)}
+/* ---------- stat tiles ---------- */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media (min-width:560px){ .tiles{grid-template-columns:repeat(4,1fr)} }
+.tile{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:11px 12px}
+.tile .k{font-size:11.5px;color:var(--muted);font-weight:700;letter-spacing:.02em}
+.tile .v{font-size:19px;font-weight:800;letter-spacing:-.02em;margin-top:3px;line-height:1.15}
+.tile.saved .v{color:#2E8B49}
+.tile.left .v{color:#B0431A}
+.tile.prog .v{color:#1163A8}
 
-.kv{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.kv div{background:var(--surface-2);border:1px solid var(--line);border-radius:13px;padding:11px 12px}
-.kv .k{font-size:12px;color:var(--muted);font-weight:700}
-.kv .v{font-size:19px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
-.mrow{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);
-  font-size:14.5px}
-.mrow:last-child{border:0}
-.mrow b{font-weight:800}
-.stack{display:flex;flex-direction:column;gap:9px}
+/* ---------- the board ----------
+   The printed face, drawn in its own row and column order. It must fit a
+   360px screen whole, so the cell size is whatever the width allows and the
+   number scales with it — see the note in the script about the tap target. */
+.board{margin:0 -13px;padding:0 4px}
+.brow{display:grid;grid-template-columns:repeat(var(--cols,10),1fr);gap:3px;margin-bottom:3px}
+.cell{aspect-ratio:1;min-height:0;border-radius:6px;border:0;cursor:pointer;padding:0;
+  font-family:inherit;font-weight:800;line-height:1;
+  font-size:clamp(8px,3vw,13px);
+  background:#5B3A21;color:#E8D8C3;
+  display:grid;place-items:center;
+  box-shadow:inset 0 -1px 0 rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.10);
+  transition:background .14s,color .14s}
+.cell[aria-pressed="true"]{background:#2E8B49;color:#fff;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.28), inset 0 -1px 0 rgba(255,255,255,.14)}
+.cell:focus-visible{outline:2px solid #C7F000;outline-offset:1px;z-index:1}
+.cell:active{filter:brightness(1.14)}
+.fault{background:#FCE6DC;border:1px solid #B0431A;color:#7A2B10;border-radius:12px;
+  padding:11px 13px;margin:0 0 10px;font-size:13px;font-weight:700;line-height:1.45}
+
+/* ---------- last savings ---------- */
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.sec-h h2{margin:0}
+.link{border:0;background:none;color:#2E8B49;font-family:inherit;font-size:13.5px;font-weight:800;
+  cursor:pointer;padding:2px 0}
+table.hist{width:100%;border-collapse:collapse}
+table.hist th{text-align:left;font-size:11.5px;color:var(--muted);font-weight:700;
+  letter-spacing:.04em;padding:0 0 7px}
+table.hist th:last-child, table.hist td:last-child{text-align:right}
+table.hist td{padding:8px 0;border-top:1px dashed var(--line);font-size:14.5px}
+table.hist td:last-child{font-weight:800}
+.mhead{display:flex;justify-content:space-between;gap:10px;margin:14px 0 4px;
+  font-size:13px;font-weight:800;color:#2E8B49}
+.mhead:first-child{margin-top:0}
+
+/* ---------- tips ---------- */
+ol.tips{margin:0;padding:0;list-style:none;counter-reset:tp}
+ol.tips li{counter-increment:tp;display:flex;gap:11px;align-items:flex-start;padding:9px 0;
+  border-bottom:1px dashed var(--line);font-size:14px;line-height:1.5}
+ol.tips li:last-child{border:0;padding-bottom:0}
+ol.tips li::before{content:counter(tp);flex:none;width:24px;height:24px;border-radius:50%;
+  background:var(--in-bg);color:#1B5E34;font-weight:800;font-size:12.5px;display:grid;place-items:center;
+  margin-top:1px}
+
 .boxes{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
 .boxes a{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:7px 13px;
   font-size:13px;font-weight:800;text-decoration:none;color:var(--ink);letter-spacing:.06em}
 .boxes a.on{background:#2E8B49;color:#fff;border-color:#2E8B49}
 
-/* a quiet celebration, never a blocking one */
-.cheer{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140%);z-index:60;max-width:92vw;
+/* ---------- sheet ---------- */
+.scrim{position:fixed;inset:0;background:rgba(14,27,20,.5);z-index:60;display:none}
+.scrim.on{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;background:var(--surface);
+  border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));
+  max-height:82vh;overflow-y:auto;transform:translateY(100%);
+  transition:transform .32s cubic-bezier(.22,.9,.3,1);max-width:760px;margin:0 auto}
+.sheet.on{transform:none}
+.sheet h3{margin:0 0 4px;font-size:18px}
+@media (prefers-reduced-motion:reduce){ .sheet{transition:none} }
+
+.cheer{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140%);z-index:70;max-width:92vw;
   background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 18px;font-weight:800;font-size:15px;
   box-shadow:0 12px 30px rgba(0,0,0,.3);transition:transform .38s cubic-bezier(.22,.9,.3,1)}
 .cheer.on{transform:translate(-50%,0)}
-@media (prefers-reduced-motion:reduce){ .cheer,.bar i{transition:none} }
+@media (prefers-reduced-motion:reduce){ .cheer{transition:none} }
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 footer{text-align:center;color:var(--muted);font-size:14px;padding:20px 0 0;margin-top:16px;
   border-top:1px solid var(--line)}
@@ -112,7 +160,9 @@ footer a{color:var(--brand);font-weight:700}
 <div class="wrap">
 <header>
   <svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><path d="M7 0h86a7 7 0 0 1 7 7v45.5C100 80.4 77.6 100 50 100S0 80.4 0 52.5V7a7 7 0 0 1 7-7z" fill="#2E8B49"/><path d="M75.5 29.5C71.2 19.6 61.8 14 49.5 14 34.6 14 24.5 22.2 24.5 33.4c0 12.4 11.4 17.2 25.6 21.2 12.6 3.5 20.4 6.4 20.4 14.2 0 8.2-8.2 13.4-20.6 13.4-12.8 0-22.4-4.8-27.4-13.6" fill="none" stroke="white" stroke-width="17.5"/></svg>
-  <div class="brand">Pocket<span>Seeds</span></div>
+  <div><div class="brand">Pocket<span>seeds</span></div>
+    <div class="boxid" id="hdrId">—</div></div>
+  <div class="tagpill" data-t="tagline"></div>
   <div class="lang" id="langPick">
     <button data-lang="te" aria-pressed="false">తె</button>
     <button data-lang="en" aria-pressed="false">EN</button>
@@ -122,6 +172,8 @@ footer a{color:var(--brand);font-weight:700}
 <div id="app"></div>
 <p class="sr" id="live" role="status" aria-live="polite"></p>
 <div class="cheer" id="cheer"></div>
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet"></div>
 
 <footer>
   <a href="../">&larr; <span data-t="backApp"></span></a> &nbsp;·&nbsp;
@@ -148,72 +200,120 @@ footer a{color:var(--brand);font-weight:700}
    ============================================================ */
 
 /* ---------------------------------------------------------------
-   THE GRID — edit this and nothing else to change the box face.
-   Each entry is one printed denomination and how many of that cell
-   the box has. They must add up to MB_GOAL exactly.
+   THE PRINTED FACE — these three constants are the box, and the only
+   things to edit when the print changes.
+
+   MB_CELLS is the run of cells in PRINTED ORDER: reading order across the
+   face, left to right then down. Each entry is a denomination and how many
+   of that cell come next. The order here is the order on the box, so it is
+   also the order they are drawn on screen.
+
+   MB_FACE_ROWS is the face's shape: one number per printed row, being how
+   many columns that row has. The app breaks the run of cells into rows using
+   it, so a cell's position on screen is its position on the box. A short
+   final row is fine — say [10,10,10,7].
+
+   Two assertions, both loud, because either being wrong breaks the entire
+   mechanic: fill a printed cell, tap the same cell here.
    --------------------------------------------------------------- */
 const MB_GOAL  = 100000;
+
+/* PROVISIONAL — the printed face is being finalised. Replace both of these
+   together with the real row-by-row layout; do not edit one alone. */
 const MB_CELLS = [
   { amount: 500, count: 140 },   // ₹70,000
   { amount: 200, count: 100 },   // ₹20,000
   { amount: 100, count: 100 }    // ₹10,000
 ];                               // = ₹1,00,000 across 340 cells
+const MB_FACE_ROWS = Array.from({ length: 34 }, () => 10);   // 34 rows of 10
 
 const MB_PLANNED = MB_CELLS.reduce((n, g) => n + g.amount * g.count, 0);
-if(MB_PLANNED !== MB_GOAL){
-  /* loud on purpose: silently shipping a box face that cannot reach the goal
-     is worse than a broken page */
-  console.error('MoneyBox: cells add up to ' + MB_PLANNED + ', not ' + MB_GOAL);
-}
+const MB_COUNT   = MB_CELLS.reduce((n, g) => n + g.count, 0);
+const MB_ROWED   = MB_FACE_ROWS.reduce((n, c) => n + c, 0);
+/* every row is laid out on the widest row's tracks, so the columns line up
+   down the face even when the last row is short */
+const MB_FACE_COLS = Math.max(1, ...MB_FACE_ROWS);
+
+const MB_FAULTS = [];
+if(MB_PLANNED !== MB_GOAL)
+  MB_FAULTS.push('cells add up to ' + MB_PLANNED + ', not ' + MB_GOAL);
+if(MB_ROWED !== MB_COUNT)
+  MB_FAULTS.push('the face has ' + MB_ROWED + ' cells across its rows, but MB_CELLS declares ' + MB_COUNT);
+/* Loud on purpose, and on the page rather than only in the console: a face
+   that does not match the print is not a cosmetic bug, it is the reader
+   tapping the wrong cell. */
+MB_FAULTS.forEach(f => console.error('MoneyBox: ' + f));
 
 const APP_KEY   = 'pocketseeds.v2';
 const LAST_BOX  = 'moneybox.last';
 const BOX_RE    = /^BOX\d{4,6}$/;
 
+const MONTHS = {
+  te:['జన','ఫిబ్ర','మార్చి','ఏప్రి','మే','జూన్','జూలై','ఆగ','సెప్ట','అక్టో','నవం','డిసెం'],
+  en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+};
 const STR = {
   te: {
+    tagline:'ఈరోజు క్రమశిక్షణ, రేపు స్వేచ్ఛ',
     askT:'మీ బాక్స్ నంబర్ ఇవ్వండి', askS:'బాక్స్ మీద ముద్రించి ఉంటుంది — BOX0001 లాగా.',
     askGo:'తెరువు', askBad:'BOX0001 లాగా ఇవ్వండి.',
-    saved:'దాచింది', of:'లో', left:'ఇంకా', pct:'శాతం',
-    since:'{d} నుంచి · {n} రోజులు',
-    filled:'నిండిన గడులు', month:'ఈ నెల', streak:'ఎక్కువ రోజులు వరుసగా', days:'రోజులు',
-    grid:'బాక్స్ ముఖం', gridS:'డబ్బు వేసిన గడిని నొక్కండి. పొరపాటైతే మళ్లీ నొక్కితే వెనక్కి.',
-    d500:'₹500 గడులు', d200:'₹200 గడులు', d100:'₹100 గడులు',
+    goalT:'₹1,00,000 పొదుపు ట్రాకర్', goalS:'లక్ష్యం: {g}',
+    ringL:'పూర్తి',
+    kSaved:'దాచింది', kLeft:'ఇంకా కావాలి', kGoal:'లక్ష్యం', kProg:'పురోగతి',
+    board:'బాక్స్ ముఖం',
+    boardS:'డబ్బు వేసిన గడిని నొక్కండి. బాక్స్ మీద ఎక్కడ ఉందో ఇక్కడా అక్కడే ఉంటుంది.',
+    rowCol:'వరుస {r}, గడి {c}',
     undo:'చివరిది వెనక్కి', addSav:'నా పొదుపులో కలుపు', reset:'బాక్స్ ఖాళీ చేయి',
     share:'ఎంత అయిందో పంపు',
-    history:'నెలవారీ లెక్క', noHistory:'ఇంకా ఏమీ లేదు. ఒక గడి నొక్కి మొదలుపెట్టండి.',
+    lastT:'చివరి 10 పొదుపులు', viewAll:'అన్నీ చూడు', colDate:'తేదీ', colAmt:'మొత్తం',
+    histT:'మొత్తం లెక్క', monthTotal:'నెల మొత్తం',
+    noHistory:'ఇంకా ఏమీ లేదు. ఒక గడి నొక్కి మొదలుపెట్టండి.',
+    tipsT:'పొదుపు చిట్కాలు',
+    tip1:'రోజు మొదట్లోనే వేయండి. నెలాఖరున మిగిలేది దాచడం కంటే, ముందే పక్కన పెట్టడం సులభం.',
+    tip2:'చిన్న గడి ఎంచుకోండి. ₹100 రోజూ వేయగలిగితే, ₹500 అప్పుడప్పుడు వేయడం కంటే మేలు.',
+    tip3:'ఒక రోజు తప్పితే వదిలేయకండి. మరుసటి రోజు మామూలుగా కొనసాగించండి — వరుస కంటే అలవాటు ముఖ్యం.',
+    tip4:'బాక్స్ కనిపించే చోట పెట్టండి. కనపడనిది గుర్తుకు రాదు.',
+    tip5:'నిండిన తర్వాత ఖర్చు చేయకుండా, అత్యవసర నిధిలోకో SIPలోకో మార్చండి.',
     myBoxes:'నా బాక్స్‌లు',
-    resetAsk:'ఈ బాక్స్ లెక్క మొత్తం తీసేయాలా? వెనక్కి తీసుకురాలేం.',
-    resetYes:'అవును, ఖాళీ చేయి', cancel:'వద్దు',
+    resetAsk:'ఈ బాక్స్ లెక్క మొత్తం తీసేయాలా? వెనక్కి తీసుకురాలేం.', resetYes:'అవును, ఖాళీ చేయి',
     addedSav:'{a} పొదుపులో కలిపాం.', nothingNew:'కొత్తగా కలపడానికి ఏమీ లేదు.',
     undone:'వెనక్కి తీసుకున్నాం.', nothingUndo:'వెనక్కి తీసుకోవడానికి ఏమీ లేదు.',
     c25:'పావు వంతు అయింది! 🌱', c50:'సగం దాటింది! 🌿', c75:'మూడొంతులు! 🌳',
-    c100:'₹1,00,000 పూర్తి! 🎉',
-    goalT:'లక్ష్యం చేరింది', announce:'{a} దాచారు, {p} శాతం.',
+    c100:'₹1,00,000 పూర్తి! 🎉', reached:'లక్ష్యం చేరింది',
+    announce:'{a} దాచారు, {p} శాతం.',
     shareTxt:'PocketSeeds మనీ బాక్స్‌లో ఇప్పటివరకు {a} దాచాను ({p}%). నువ్వూ మొదలుపెట్టు 👉 ',
-    backApp:'యాప్‌కి తిరిగి', aboutBox:'బాక్స్ గురించి', copied:'కాపీ అయింది.'
+    backApp:'యాప్‌కి తిరిగి', aboutBox:'బాక్స్ గురించి', close:'మూసివేయి'
   },
   en: {
+    tagline:'Discipline today, freedom tomorrow',
     askT:'Enter your box number', askS:'It is printed on the box — like BOX0001.',
     askGo:'Open', askBad:'It should look like BOX0001.',
-    saved:'saved', of:'of', left:'left', pct:'per cent',
-    since:'Started {d} · {n} days',
-    filled:'Cells filled', month:'This month', streak:'Best streak', days:'days',
-    grid:'The box face', gridS:'Tap the cell you just filled. Tap it again to undo.',
-    d500:'₹500 cells', d200:'₹200 cells', d100:'₹100 cells',
+    goalT:'₹1,00,000 Savings Tracker', goalS:'Goal: {g}',
+    ringL:'COMPLETE',
+    kSaved:'Saved', kLeft:'Remaining', kGoal:'Goal', kProg:'Progress',
+    board:'The box face',
+    boardS:'Tap the cell you just fed. Where it sits here is where it sits on the box.',
+    rowCol:'row {r}, cell {c}',
     undo:'Undo last', addSav:'Add to my savings', reset:'Reset box',
     share:'Share progress',
-    history:'Month by month', noHistory:'Nothing yet. Tap a cell to begin.',
+    lastT:'Last 10 savings', viewAll:'View all', colDate:'Date', colAmt:'Amount',
+    histT:'Everything so far', monthTotal:'Month total',
+    noHistory:'Nothing yet. Tap a cell to begin.',
+    tipsT:'Savings tips',
+    tip1:'Feed it at the start of the day. Setting money aside first is easier than saving whatever survives to month end.',
+    tip2:'Pick a cell you can repeat. ₹100 every day beats ₹500 whenever you remember.',
+    tip3:'A missed day is not a failed month. Carry on the next day — the habit matters more than the streak.',
+    tip4:'Keep the box where you can see it. What is out of sight stays out of mind.',
+    tip5:'When it is full, move the money on — an emergency fund or an SIP — rather than spending it.',
     myBoxes:'My boxes',
-    resetAsk:'Clear everything counted on this box? This cannot be undone.',
-    resetYes:'Yes, clear it', cancel:'Cancel',
+    resetAsk:'Clear everything counted on this box? This cannot be undone.', resetYes:'Yes, clear it',
     addedSav:'{a} added to your savings.', nothingNew:'Nothing new to add.',
     undone:'Undone.', nothingUndo:'Nothing to undo.',
     c25:'A quarter of the way! 🌱', c50:'Past halfway! 🌿', c75:'Three quarters! 🌳',
-    c100:'₹1,00,000 complete! 🎉',
-    goalT:'Goal reached', announce:'{a} saved, {p} per cent.',
+    c100:'₹1,00,000 complete! 🎉', reached:'Goal reached',
+    announce:'{a} saved, {p} per cent.',
     shareTxt:'I have saved {a} ({p}%) in my PocketSeeds money box. Start yours 👉 ',
-    backApp:'Back to the app', aboutBox:'About the box', copied:'Copied.'
+    backApp:'Back to the app', aboutBox:'About the box', close:'Close'
   }
 };
 let LMODE = localStorage.getItem('pocketseeds.lmode') === 'en' ? 'en' : 'te';
@@ -231,6 +331,16 @@ const money = n => '₹' + Math.round(Number(n) || 0).toLocaleString('en-IN');
 const pad = n => String(n).padStart(2,'0');
 const ymd = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+/* the app's own date shape: day then short month, in the reader's language */
+function shortDate(s2){
+  const [y,m,d] = String(s2).split('-').map(Number);
+  if(!y || !m) return String(s2);
+  return d + ' ' + (MONTHS[LMODE] || MONTHS.en)[m-1];
+}
+function monthLabel(k){
+  const [y,m] = String(k).split('-').map(Number);
+  return (MONTHS[LMODE] || MONTHS.en)[m-1] + ' ' + y;
+}
 
 /* ---------------- state ---------------- */
 let BOX = null;
@@ -241,7 +351,7 @@ function blankBox(id){
   MB_CELLS.forEach(g => { for(let i = 0; i < g.count; i++)
     cells.push({ id: g.amount + '-' + i, amount: g.amount, filledAt: null }); });
   return { boxId:id, startedAt:ymd(new Date()), goal:MB_GOAL, cells,
-           syncedTotal:0, updatedAt:Date.now() };
+           syncedTotal:0, milestones:[], updatedAt:Date.now() };
 }
 function loadBox(id){
   try{
@@ -254,6 +364,7 @@ function loadBox(id){
     fresh.cells.forEach(c => { if(filled.has(c.id)) c.filledAt = filled.get(c.id); });
     fresh.startedAt   = raw.startedAt || fresh.startedAt;
     fresh.syncedTotal = Number(raw.syncedTotal) || 0;
+    fresh.milestones  = Array.isArray(raw.milestones) ? raw.milestones : [];
     return fresh;
   }catch(e){ return blankBox(id); }
 }
@@ -272,28 +383,24 @@ function knownBoxes(){
 }
 
 const filledCells = () => BOX.cells.filter(c => c.filledAt);
-const total = () => filledCells().reduce((n, c) => n + c.amount, 0);
-const pctOf = () => Math.min(100, Math.round(total() / BOX.goal * 100));
+const total  = () => filledCells().reduce((n, c) => n + c.amount, 0);
+const pctOf  = () => Math.min(100, total() / BOX.goal * 100);
+const pct1   = () => (Math.round(pctOf() * 10) / 10).toFixed(1);
 
-function bestStreak(){
-  const days = [...new Set(filledCells().map(c => c.filledAt))].sort();
-  let best = 0, run = 0, prev = null;
-  days.forEach(d => {
-    const cur = new Date(d + 'T00:00:00');
-    run = (prev && (cur - prev) === 864e5) ? run + 1 : 1;
-    prev = cur;
-    if(run > best) best = run;
-  });
-  return best;
-}
 function byMonth(){
   const m = {};
   filledCells().forEach(c => { const k = c.filledAt.slice(0,7); m[k] = (m[k]||0) + c.amount; });
   return Object.keys(m).sort().reverse().map(k => ({ k, amount:m[k] }));
 }
+/* newest first; within a day, the later cell in printed order reads as later */
+function recent(n){
+  return filledCells().slice().sort((a,b) =>
+    a.filledAt === b.filledAt ? 0 : (a.filledAt < b.filledAt ? 1 : -1)).slice(0, n);
+}
 
-/* ---------------- celebration ---------------- */
-let CHEERED = {};
+/* ---------------- celebration ----------------
+   Which milestones have been seen lives in the stored box, not in a variable,
+   so reopening the page does not congratulate someone all over again. */
 function cheer(msg){
   const el = $('#cheer'); el.textContent = msg;
   el.classList.add('on');
@@ -302,14 +409,16 @@ function cheer(msg){
 }
 function checkMilestones(){
   const p = pctOf();
+  BOX.milestones = BOX.milestones || [];
   [[100,'c100'],[75,'c75'],[50,'c50'],[25,'c25']].some(([mark, key]) => {
-    if(p >= mark && !CHEERED[mark]){ CHEERED[mark] = 1; cheer(t(key)); return true; }
+    if(p >= mark && BOX.milestones.indexOf(mark) === -1){
+      BOX.milestones.push(mark); saveBox(); cheer(t(key)); return true;
+    }
     return false;
   });
 }
 
 /* ---------------- the app store ---------------- */
-/* Only ever adds the part not already sent, so pressing it twice is safe. */
 function addToSavings(){
   const owed = total() - (BOX.syncedTotal || 0);
   if(owed <= 0){ cheer(t('nothingNew')); return; }
@@ -319,9 +428,39 @@ function addToSavings(){
     db.savings = db.savings || [];
     db.savings.push({ id:uid(), amount:owed, note:'Money Box ' + BOX.boxId, date:ymd(new Date()) });
     localStorage.setItem(APP_KEY, JSON.stringify(db));
-    BOX.syncedTotal = total(); saveBox(); render();
+    BOX.syncedTotal = total(); saveBox(); paintTotals();
     cheer(t('addedSav', { a: money(owed) }));
   }catch(e){ cheer(t('nothingNew')); }
+}
+
+/* ---------------- sheet ---------------- */
+function openSheet(html){
+  $('#sheet').innerHTML = html;
+  $('#scrim').classList.add('on');
+  requestAnimationFrame(() => $('#sheet').classList.add('on'));
+}
+function closeSheet(){
+  $('#sheet').classList.remove('on');
+  $('#scrim').classList.remove('on');
+  setTimeout(() => { if(!$('#sheet').classList.contains('on')) $('#sheet').innerHTML = ''; }, 340);
+}
+$('#scrim').addEventListener('click', closeSheet);
+
+function sheetHistory(){
+  const months = byMonth();
+  openSheet(`
+    <h3>${esc(t('histT'))}</h3>
+    ${months.length ? months.map(m => {
+      const rows = filledCells().filter(c => c.filledAt.slice(0,7) === m.k)
+        .sort((a,b) => a.filledAt < b.filledAt ? 1 : -1);
+      return `<div class="mhead"><span>${esc(monthLabel(m.k))}</span>
+                <span>${esc(t('monthTotal'))} ${esc(money(m.amount))}</span></div>
+        <table class="hist"><tbody>${rows.map(c => `
+          <tr><td>${esc(shortDate(c.filledAt))}</td><td>${esc(money(c.amount))}</td></tr>`).join('')}
+        </tbody></table>`;
+    }).join('') : `<p class="sub">${esc(t('noHistory'))}</p>`}
+    <button class="btn btn-g btn-block" style="margin-top:14px" id="hxClose">${esc(t('close'))}</button>`);
+  $('#hxClose').addEventListener('click', closeSheet);
 }
 
 /* ---------------- views ---------------- */
@@ -351,38 +490,72 @@ function askView(){
   $('#boxIn').focus();
 }
 
-function groupLabel(amount){ return t('d' + amount) || ('₹' + amount); }
+/* the flat run of cells chopped into the printed rows */
+function faceRows(){
+  const rows = [];
+  let i = 0;
+  MB_FACE_ROWS.forEach(n => { rows.push(BOX.cells.slice(i, i + n)); i += n; });
+  if(i < BOX.cells.length) rows.push(BOX.cells.slice(i));
+  return rows.filter(r => r.length);
+}
+
+const RING_R = 62;
+const RING_C = 2 * Math.PI * RING_R;
+
+/* Only this section's markup, so a tap can refresh the list without touching
+   the board — the board must not be re-rendered under a finger. */
+function recentHTML(){
+  const last = recent(10);
+  if(!last.length) return `<p class="sub" style="margin:0">${esc(t('noHistory'))}</p>`;
+  return `<table class="hist">
+    <thead><tr><th>${esc(t('colDate'))}</th><th>${esc(t('colAmt'))}</th></tr></thead>
+    <tbody>${last.map(c => `
+      <tr><td>${esc(shortDate(c.filledAt))}</td><td>${esc(money(c.amount))}</td></tr>`).join('')}
+    </tbody></table>`;
+}
 
 function render(){
   const saved = total(), p = pctOf(), left = Math.max(0, BOX.goal - saved);
-  const started = new Date(BOX.startedAt + 'T00:00:00');
-  const days = Math.max(1, Math.round((Date.now() - started) / 864e5) + 1);
   const boxes = knownBoxes();
-  const months = byMonth();
-  const thisMonth = (months.find(m => m.k === ymd(new Date()).slice(0,7)) || {}).amount || 0;
+  const last  = recent(10);
 
+  $('#hdrId').textContent = BOX.boxId;
   $('#app').innerHTML = `
-    <section class="hd ${p >= 100 ? 'done' : ''}">
-      <div class="id">${esc(BOX.boxId)}${p >= 100 ? ' · ' + esc(t('goalT')) : ''}</div>
-      <div class="big">${esc(money(saved))}</div>
-      <div class="of">${esc(t('of'))} ${esc(money(BOX.goal))}</div>
-      <div class="bar"><i style="width:${p}%"></i></div>
-      <div class="meta"><span>${p}%</span><span>${esc(t('left'))} ${esc(money(left))}</span></div>
-      <div class="since">${esc(t('since', { d:BOX.startedAt, n:days }))}</div>
+    <section class="goal ${p >= 100 ? 'done' : ''}" id="goalSec">
+      <div class="gt">${esc(t('goalT'))}</div>
+      <div class="gs">${esc(t('goalS', { g: money(BOX.goal) }))}</div>
+      <svg class="ring" viewBox="0 0 160 160" role="img"
+           aria-label="${esc(t('announce', { a: money(saved), p: pct1() }))}">
+        <circle class="track" cx="80" cy="80" r="${RING_R}"></circle>
+        <circle class="fill" id="ringFill" cx="80" cy="80" r="${RING_R}"
+          stroke-dasharray="${RING_C.toFixed(1)}" stroke-dashoffset="${RING_C.toFixed(1)}"></circle>
+        <text class="pc" x="80" y="82" text-anchor="middle" id="ringPc">${pct1()}%</text>
+        <text class="pl" x="80" y="101" text-anchor="middle">${esc(p >= 100 ? t('reached') : t('ringL'))}</text>
+      </svg>
     </section>
 
     <section>
-      <h2>${esc(t('grid'))}</h2>
-      <p class="sub">${esc(t('gridS'))}</p>
-      ${MB_CELLS.map(g => `
-        <div class="dgroup">
-          <h3>${esc(groupLabel(g.amount))}</h3>
-          <div class="cells">${
-            BOX.cells.filter(c => c.amount === g.amount).map(c => `
-              <button class="cell" data-cell="${esc(c.id)}" aria-pressed="${!!c.filledAt}"
-                aria-label="${esc(money(c.amount))}">${c.amount}</button>`).join('')
-          }</div>
-        </div>`).join('')}
+      <div class="tiles">
+        <div class="tile saved"><div class="k">${esc(t('kSaved'))}</div>
+          <div class="v" id="tSaved">${esc(money(saved))}</div></div>
+        <div class="tile left"><div class="k">${esc(t('kLeft'))}</div>
+          <div class="v" id="tLeft">${esc(money(left))}</div></div>
+        <div class="tile"><div class="k">${esc(t('kGoal'))}</div>
+          <div class="v">${esc(money(BOX.goal))}</div></div>
+        <div class="tile prog"><div class="k">${esc(t('kProg'))}</div>
+          <div class="v" id="tProg">${pct1()}%</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>${esc(t('board'))}</h2>
+      <p class="sub">${esc(t('boardS'))}</p>
+      ${MB_FAULTS.length ? `<div class="fault">${MB_FAULTS.map(esc).join('<br>')}</div>` : ''}
+      <div class="board" style="--cols:${MB_FACE_COLS}">${faceRows().map((row, r) => `
+        <div class="brow">${row.map((c, i) => `
+          <button class="cell" data-cell="${esc(c.id)}" aria-pressed="${!!c.filledAt}"
+            aria-label="${esc(money(c.amount))} · ${esc(t('rowCol', { r:r+1, c:i+1 }))}"
+            >${c.amount}</button>`).join('')}</div>`).join('')}</div>
       <div class="row2" style="margin-top:14px">
         <button class="btn btn-g" id="undo">${esc(t('undo'))}</button>
         <button class="btn btn-p" id="addSav">${esc(t('addSav'))}</button>
@@ -390,21 +563,16 @@ function render(){
     </section>
 
     <section>
-      <div class="kv">
-        <div><div class="k">${esc(t('filled'))}</div>
-          <div class="v">${filledCells().length} / ${BOX.cells.length}</div></div>
-        <div><div class="k">${esc(t('month'))}</div><div class="v">${esc(money(thisMonth))}</div></div>
-        <div><div class="k">${esc(t('streak'))}</div>
-          <div class="v">${bestStreak()} <span style="font-size:13px;font-weight:700">${esc(t('days'))}</span></div></div>
-        <div><div class="k">${esc(t('pct'))}</div><div class="v">${p}%</div></div>
-      </div>
+      <div class="sec-h"><h2>${esc(t('lastT'))}</h2>
+        <button class="link" id="viewAll" ${last.length ? '' : 'hidden'}>${esc(t('viewAll'))} ›</button></div>
+      <div id="lastBox">${recentHTML()}</div>
     </section>
 
     <section>
-      <h2>${esc(t('history'))}</h2>
-      ${months.length ? months.map(m => `
-        <div class="mrow"><span>${esc(m.k)}</span><b>${esc(money(m.amount))}</b></div>`).join('')
-        : `<p class="sub" style="margin:0">${esc(t('noHistory'))}</p>`}
+      <h2>${esc(t('tipsT'))}</h2>
+      <ol class="tips">
+        ${[1,2,3,4,5].map(i => `<li>${esc(t('tip' + i))}</li>`).join('')}
+      </ol>
     </section>
 
     <section>
@@ -420,48 +588,56 @@ function render(){
   $('#addSav').addEventListener('click', addToSavings);
   $('#share').addEventListener('click', share);
   $('#reset').addEventListener('click', resetBox);
+  if($('#viewAll')) $('#viewAll').addEventListener('click', sheetHistory);
+  paintChrome();
+  /* the sweep runs on load only: the ring starts empty and animates to the
+     real figure once, then every later change is a plain number update */
+  requestAnimationFrame(() => paintRing());
+}
+
+function paintChrome(){
   document.querySelectorAll('.lang button').forEach(b =>
     b.setAttribute('aria-pressed', String(b.dataset.lang === LMODE)));
   document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
 }
-
-function announce(){
-  $('#live').textContent = t('announce', { a: money(total()), p: pctOf() });
+function paintRing(){
+  const f = $('#ringFill'); if(!f) return;
+  f.style.strokeDashoffset = (RING_C * (1 - Math.min(1, pctOf() / 100))).toFixed(1);
 }
+function paintTotals(){
+  const saved = total(), p = pctOf();
+  const set = (id, v) => { const el = $(id); if(el) el.textContent = v; };
+  set('#tSaved', money(saved));
+  set('#tLeft',  money(Math.max(0, BOX.goal - saved)));
+  set('#tProg',  pct1() + '%');
+  set('#ringPc', pct1() + '%');
+  paintRing();
+  const g = $('#goalSec'); if(g) g.classList.toggle('done', p >= 100);
+  const lb = $('#lastBox'); if(lb) lb.innerHTML = recentHTML();
+  const va = $('#viewAll'); if(va) va.hidden = !filledCells().length;
+  const pl = document.querySelector('.ring .pl');
+  if(pl) pl.textContent = p >= 100 ? t('reached') : t('ringL');
+}
+
 function toggleCell(id){
   const c = BOX.cells.find(x => x.id === id);
   if(!c) return;
   c.filledAt = c.filledAt ? null : ymd(new Date());
   saveBox();
-  /* patch the one tile rather than repainting 340 of them — a full re-render
-     on every tap loses the scroll position and the focus ring */
+  /* patch the one tile rather than repainting the whole board — a re-render
+     per tap loses the scroll position and the focus ring */
   const btn = document.querySelector('[data-cell="' + CSS.escape(id) + '"]');
   if(btn) btn.setAttribute('aria-pressed', String(!!c.filledAt));
   paintTotals();
   announce();
   if(c.filledAt) checkMilestones();
 }
-function paintTotals(){
-  const saved = total(), p = pctOf();
-  const hd = document.querySelector('.hd'); if(!hd) return;
-  hd.classList.toggle('done', p >= 100);
-  hd.querySelector('.big').textContent = money(saved);
-  hd.querySelector('.bar i').style.width = p + '%';
-  const meta = hd.querySelectorAll('.meta span');
-  meta[0].textContent = p + '%';
-  meta[1].textContent = t('left') + ' ' + money(Math.max(0, BOX.goal - saved));
-  const kv = document.querySelectorAll('.kv .v');
-  if(kv.length === 4){
-    kv[0].textContent = filledCells().length + ' / ' + BOX.cells.length;
-    const m = byMonth().find(x => x.k === ymd(new Date()).slice(0,7));
-    kv[1].textContent = money(m ? m.amount : 0);
-    kv[3].textContent = p + '%';
-  }
+function announce(){
+  $('#live').textContent = t('announce', { a: money(total()), p: pct1() });
 }
 function undoLast(){
   const filled = filledCells();
   if(!filled.length){ cheer(t('nothingUndo')); return; }
-  /* the most recent day, and within it the last cell in printed order */
   const last = filled.slice().sort((a,b) =>
     a.filledAt === b.filledAt ? 0 : (a.filledAt < b.filledAt ? -1 : 1)).pop();
   last.filledAt = null;
@@ -473,14 +649,12 @@ function undoLast(){
 function resetBox(){
   if(!confirm(t('resetAsk') + '\n\n' + t('resetYes'))) return;
   BOX = blankBox(BOX.boxId);
-  CHEERED = {};
   saveBox(); render(); announce();
 }
 function share(){
-  const txt = t('shareTxt', { a: money(total()), p: pctOf() }) + 'https://pocketseeds.online/moneybox/';
+  const txt = t('shareTxt', { a: money(total()), p: pct1() }) + 'https://pocketseeds.online/moneybox/';
   if(navigator.share){ navigator.share({ text: txt }).catch(()=>{}); return; }
-  const wa = 'https://wa.me/?text=' + encodeURIComponent(txt);
-  window.open(wa, '_blank', 'noopener');
+  window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank', 'noopener');
 }
 
 document.addEventListener('click', e => {
@@ -493,9 +667,7 @@ $('#langPick').addEventListener('click', e => {
   localStorage.setItem('pocketseeds.lmode', LMODE);
   document.documentElement.lang = LMODE;
   BOX ? render() : askView();
-  document.querySelectorAll('.lang button').forEach(x =>
-    x.setAttribute('aria-pressed', String(x.dataset.lang === LMODE)));
-  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+  paintChrome();
 });
 
 /* ---------------- boot ---------------- */
@@ -510,9 +682,6 @@ $('#langPick').addEventListener('click', e => {
   BOX = loadBox(id);
   /* a box opened for the first time starts counting from today */
   if(!localStorage.getItem(boxKey(id))) saveBox();
-  /* milestones already passed should not all fire on open */
-  const p = pctOf();
-  [25,50,75,100].forEach(m => { if(p >= m) CHEERED[m] = 1; });
   render(); announce();
 })();
 </script>

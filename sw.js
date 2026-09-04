@@ -1,6 +1,6 @@
 /* PocketSeeds offline cache — the app itself works fully offline;
    data lives in localStorage on the device. */
-const CACHE = 'pocketseeds-v16';
+const CACHE = 'pocketseeds-v17';
 const ASSETS = ['./', 'index.html', 'manifest.webmanifest', 'privacy/', 'moneybox/', 'box/'];
 
 self.addEventListener('install', e => {
