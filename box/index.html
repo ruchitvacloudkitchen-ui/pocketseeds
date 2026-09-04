@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="te">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>My Money Box — PocketSeeds</title>
+<meta name="description" content="Track a PocketSeeds ₹1,00,000 savings box. Tap a cell each time you drop cash in.">
+<meta name="theme-color" content="#2E8B49">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M7 0h86a7 7 0 0 1 7 7v45.5C100 80.4 77.6 100 50 100S0 80.4 0 52.5V7a7 7 0 0 1 7-7z' fill='%232E8B49'/%3E%3Cpath d='M75.5 29.5C71.2 19.6 61.8 14 49.5 14 34.6 14 24.5 22.2 24.5 33.4c0 12.4 11.4 17.2 25.6 21.2 12.6 3.5 20.4 6.4 20.4 14.2 0 8.2-8.2 13.4-20.6 13.4-12.8 0-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F7F6; --surface:#FFFFFF; --surface-2:#F2F6F3;
+  --ink:#0E1B14; --muted:#6B7A72; --line:#E4EBE6;
+  --brand:#0B7A43; --brand-2:#16A34A;
+  --in-bg:#E6F4EC; --warn:#B45309; --warn-bg:#FEF3C7;
+  --radius:18px; --shadow:0 1px 3px rgba(14,27,20,.06),0 6px 18px rgba(14,27,20,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0A120E;--surface:#121D17;--surface-2:#0E1712;--ink:#E7F0EA;
+  --muted:#8FA398;--line:#1F2E26;--brand:#34D399;--brand-2:#34D399;--in-bg:#0C2A1D;
+  --warn:#FCD34D;--warn-bg:#2E2410;--shadow:0 2px 12px rgba(0,0,0,.45)}
+}
+:root[data-theme="dark"]{--bg:#0A120E;--surface:#121D17;--surface-2:#0E1712;--ink:#E7F0EA;
+  --muted:#8FA398;--line:#1F2E26;--brand:#34D399;--brand-2:#34D399;--in-bg:#0C2A1D;
+  --warn:#FCD34D;--warn-bg:#2E2410;--shadow:0 2px 12px rgba(0,0,0,.45)}
+
+*{box-sizing:border-box}
+html,body{background:var(--bg);margin:0}
+body{font-family:'Plus Jakarta Sans','Noto Sans Telugu',system-ui,-apple-system,sans-serif;
+  color:var(--ink);line-height:1.6;font-size:16px;-webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin:0 auto;padding:18px 14px 60px}
+header{display:flex;align-items:center;gap:11px;padding:4px 0 14px}
+.mark{width:34px;height:34px;flex:none}
+.brand{font-weight:800;font-size:19px;letter-spacing:-.3px;flex:1}
+.brand span{color:var(--brand)}
+.lang{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.lang button{border:0;background:none;font-family:inherit;font-size:13px;font-weight:800;color:var(--muted);
+  padding:0 10px;height:32px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:#2E8B49;color:#fff}
+
+section{background:var(--surface);border:1px solid var(--line);border-radius:20px;
+  padding:17px;margin:0 0 13px;box-shadow:var(--shadow)}
+h2{font-size:17px;margin:0 0 10px;letter-spacing:-.2px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 12px;line-height:1.5}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:13px;
+  padding:13px 15px;font-family:inherit;font-size:15.5px;font-weight:800;cursor:pointer;text-decoration:none}
+.btn-p{background:#2E8B49;color:#fff}
+.btn-g{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+.btn-block{display:flex;width:100%}
+.btn:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+input[type=text]{width:100%;font-family:inherit;font-size:17px;font-weight:700;letter-spacing:.08em;
+  padding:13px 14px;border-radius:13px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink)}
+input:focus-visible{outline:3px solid #2E8B49;outline-offset:1px}
+
+/* ---------- the headline numbers ---------- */
+.hd{background:linear-gradient(150deg,#2E8B49,#1B5E34);color:#fff;border:0}
+.hd .id{font-size:12.5px;font-weight:800;letter-spacing:.12em;opacity:.85}
+.hd .big{font-size:38px;font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:5px 0 2px}
+.hd .of{font-size:14px;opacity:.9;font-weight:600}
+.bar{height:11px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden;margin:13px 0 7px}
+.bar i{display:block;height:100%;border-radius:999px;background:#C7F000;
+  transition:width .5s cubic-bezier(.22,.9,.3,1)}
+.hd .meta{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;opacity:.9;font-weight:600}
+.hd .since{font-size:12px;opacity:.75;margin-top:9px}
+.done{background:linear-gradient(150deg,#C7F000,#8ED47E);color:#071C0B}
+.done .bar{background:rgba(7,28,11,.18)} .done .bar i{background:#0B5D2A}
+
+/* ---------- the printed grid ---------- */
+.dgroup{margin-top:15px}
+.dgroup h3{font-size:13.5px;margin:0 0 8px;color:var(--muted);font-weight:800;letter-spacing:.03em}
+.cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:7px}
+.cell{min-height:46px;border-radius:11px;border:1.5px solid var(--line);background:var(--surface-2);
+  color:var(--ink);font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer;padding:2px;
+  display:grid;place-items:center;line-height:1.1;transition:background .14s,border-color .14s,color .14s}
+.cell[aria-pressed="true"]{background:#2E8B49;border-color:#2E8B49;color:#fff}
+.cell[aria-pressed="true"]::after{content:'✓';display:block;font-size:11px;opacity:.9}
+.cell:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
+.cell:active{transform:scale(.96)}
+
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.kv div{background:var(--surface-2);border:1px solid var(--line);border-radius:13px;padding:11px 12px}
+.kv .k{font-size:12px;color:var(--muted);font-weight:700}
+.kv .v{font-size:19px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+.mrow{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);
+  font-size:14.5px}
+.mrow:last-child{border:0}
+.mrow b{font-weight:800}
+.stack{display:flex;flex-direction:column;gap:9px}
+.boxes{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.boxes a{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:7px 13px;
+  font-size:13px;font-weight:800;text-decoration:none;color:var(--ink);letter-spacing:.06em}
+.boxes a.on{background:#2E8B49;color:#fff;border-color:#2E8B49}
+
+/* a quiet celebration, never a blocking one */
+.cheer{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140%);z-index:60;max-width:92vw;
+  background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 18px;font-weight:800;font-size:15px;
+  box-shadow:0 12px 30px rgba(0,0,0,.3);transition:transform .38s cubic-bezier(.22,.9,.3,1)}
+.cheer.on{transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){ .cheer,.bar i{transition:none} }
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+footer{text-align:center;color:var(--muted);font-size:14px;padding:20px 0 0;margin-top:16px;
+  border-top:1px solid var(--line)}
+footer a{color:var(--brand);font-weight:700}
+.te{font-family:'Noto Sans Telugu','Plus Jakarta Sans',sans-serif}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><path d="M7 0h86a7 7 0 0 1 7 7v45.5C100 80.4 77.6 100 50 100S0 80.4 0 52.5V7a7 7 0 0 1 7-7z" fill="#2E8B49"/><path d="M75.5 29.5C71.2 19.6 61.8 14 49.5 14 34.6 14 24.5 22.2 24.5 33.4c0 12.4 11.4 17.2 25.6 21.2 12.6 3.5 20.4 6.4 20.4 14.2 0 8.2-8.2 13.4-20.6 13.4-12.8 0-22.4-4.8-27.4-13.6" fill="none" stroke="white" stroke-width="17.5"/></svg>
+  <div class="brand">Pocket<span>Seeds</span></div>
+  <div class="lang" id="langPick">
+    <button data-lang="te" aria-pressed="false">తె</button>
+    <button data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<div id="app"></div>
+<p class="sr" id="live" role="status" aria-live="polite"></p>
+<div class="cheer" id="cheer"></div>
+
+<footer>
+  <a href="../">&larr; <span data-t="backApp"></span></a> &nbsp;·&nbsp;
+  <a href="../moneybox/"><span data-t="aboutBox"></span></a>
+</footer>
+</div>
+
+<script>
+'use strict';
+/* ==================== MONEY BOX — TRACKER ====================
+   Opened by the QR on the box: /box/?id=BOX0001
+
+   THE GRID IS DATA. Everything printed on the box face is MB_CELLS below —
+   change the denominations or the counts there and the page follows. The sum
+   is asserted on load, because a grid that does not add up to the goal is a
+   bug the reader would only find at the very end.
+
+   Storage is per box, so one person can keep several:
+     moneybox:<BOXID> = { boxId, startedAt, goal, cells:[{id,amount,filledAt}],
+                          syncedTotal, updatedAt }
+   The app's own store (pocketseeds.v2) is only touched by "Add to my savings",
+   and then only by the amount not already sent, so tapping it twice cannot
+   double-count.
+   ============================================================ */
+
+/* ---------------------------------------------------------------
+   THE GRID — edit this and nothing else to change the box face.
+   Each entry is one printed denomination and how many of that cell
+   the box has. They must add up to MB_GOAL exactly.
+   --------------------------------------------------------------- */
+const MB_GOAL  = 100000;
+const MB_CELLS = [
+  { amount: 500, count: 140 },   // ₹70,000
+  { amount: 200, count: 100 },   // ₹20,000
+  { amount: 100, count: 100 }    // ₹10,000
+];                               // = ₹1,00,000 across 340 cells
+
+const MB_PLANNED = MB_CELLS.reduce((n, g) => n + g.amount * g.count, 0);
+if(MB_PLANNED !== MB_GOAL){
+  /* loud on purpose: silently shipping a box face that cannot reach the goal
+     is worse than a broken page */
+  console.error('MoneyBox: cells add up to ' + MB_PLANNED + ', not ' + MB_GOAL);
+}
+
+const APP_KEY   = 'pocketseeds.v2';
+const LAST_BOX  = 'moneybox.last';
+const BOX_RE    = /^BOX\d{4,6}$/;
+
+const STR = {
+  te: {
+    askT:'మీ బాక్స్ నంబర్ ఇవ్వండి', askS:'బాక్స్ మీద ముద్రించి ఉంటుంది — BOX0001 లాగా.',
+    askGo:'తెరువు', askBad:'BOX0001 లాగా ఇవ్వండి.',
+    saved:'దాచింది', of:'లో', left:'ఇంకా', pct:'శాతం',
+    since:'{d} నుంచి · {n} రోజులు',
+    filled:'నిండిన గడులు', month:'ఈ నెల', streak:'ఎక్కువ రోజులు వరుసగా', days:'రోజులు',
+    grid:'బాక్స్ ముఖం', gridS:'డబ్బు వేసిన గడిని నొక్కండి. పొరపాటైతే మళ్లీ నొక్కితే వెనక్కి.',
+    d500:'₹500 గడులు', d200:'₹200 గడులు', d100:'₹100 గడులు',
+    undo:'చివరిది వెనక్కి', addSav:'నా పొదుపులో కలుపు', reset:'బాక్స్ ఖాళీ చేయి',
+    share:'ఎంత అయిందో పంపు',
+    history:'నెలవారీ లెక్క', noHistory:'ఇంకా ఏమీ లేదు. ఒక గడి నొక్కి మొదలుపెట్టండి.',
+    myBoxes:'నా బాక్స్‌లు',
+    resetAsk:'ఈ బాక్స్ లెక్క మొత్తం తీసేయాలా? వెనక్కి తీసుకురాలేం.',
+    resetYes:'అవును, ఖాళీ చేయి', cancel:'వద్దు',
+    addedSav:'{a} పొదుపులో కలిపాం.', nothingNew:'కొత్తగా కలపడానికి ఏమీ లేదు.',
+    undone:'వెనక్కి తీసుకున్నాం.', nothingUndo:'వెనక్కి తీసుకోవడానికి ఏమీ లేదు.',
+    c25:'పావు వంతు అయింది! 🌱', c50:'సగం దాటింది! 🌿', c75:'మూడొంతులు! 🌳',
+    c100:'₹1,00,000 పూర్తి! 🎉',
+    goalT:'లక్ష్యం చేరింది', announce:'{a} దాచారు, {p} శాతం.',
+    shareTxt:'PocketSeeds మనీ బాక్స్‌లో ఇప్పటివరకు {a} దాచాను ({p}%). నువ్వూ మొదలుపెట్టు 👉 ',
+    backApp:'యాప్‌కి తిరిగి', aboutBox:'బాక్స్ గురించి', copied:'కాపీ అయింది.'
+  },
+  en: {
+    askT:'Enter your box number', askS:'It is printed on the box — like BOX0001.',
+    askGo:'Open', askBad:'It should look like BOX0001.',
+    saved:'saved', of:'of', left:'left', pct:'per cent',
+    since:'Started {d} · {n} days',
+    filled:'Cells filled', month:'This month', streak:'Best streak', days:'days',
+    grid:'The box face', gridS:'Tap the cell you just filled. Tap it again to undo.',
+    d500:'₹500 cells', d200:'₹200 cells', d100:'₹100 cells',
+    undo:'Undo last', addSav:'Add to my savings', reset:'Reset box',
+    share:'Share progress',
+    history:'Month by month', noHistory:'Nothing yet. Tap a cell to begin.',
+    myBoxes:'My boxes',
+    resetAsk:'Clear everything counted on this box? This cannot be undone.',
+    resetYes:'Yes, clear it', cancel:'Cancel',
+    addedSav:'{a} added to your savings.', nothingNew:'Nothing new to add.',
+    undone:'Undone.', nothingUndo:'Nothing to undo.',
+    c25:'A quarter of the way! 🌱', c50:'Past halfway! 🌿', c75:'Three quarters! 🌳',
+    c100:'₹1,00,000 complete! 🎉',
+    goalT:'Goal reached', announce:'{a} saved, {p} per cent.',
+    shareTxt:'I have saved {a} ({p}%) in my PocketSeeds money box. Start yours 👉 ',
+    backApp:'Back to the app', aboutBox:'About the box', copied:'Copied.'
+  }
+};
+let LMODE = localStorage.getItem('pocketseeds.lmode') === 'en' ? 'en' : 'te';
+const t = (k, v) => {
+  let s = (STR[LMODE] && STR[LMODE][k]) || STR.en[k] || k;
+  if(v) Object.keys(v).forEach(x => { s = s.split('{'+x+'}').join(v[x]); });
+  return s;
+};
+(function(){ const v = localStorage.getItem('pocketseeds.theme') || 'auto';
+  if(v !== 'auto') document.documentElement.setAttribute('data-theme', v); })();
+
+const $  = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const money = n => '₹' + Math.round(Number(n) || 0).toLocaleString('en-IN');
+const pad = n => String(n).padStart(2,'0');
+const ymd = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+
+/* ---------------- state ---------------- */
+let BOX = null;
+
+function boxKey(id){ return 'moneybox:' + id; }
+function blankBox(id){
+  const cells = [];
+  MB_CELLS.forEach(g => { for(let i = 0; i < g.count; i++)
+    cells.push({ id: g.amount + '-' + i, amount: g.amount, filledAt: null }); });
+  return { boxId:id, startedAt:ymd(new Date()), goal:MB_GOAL, cells,
+           syncedTotal:0, updatedAt:Date.now() };
+}
+function loadBox(id){
+  try{
+    const raw = JSON.parse(localStorage.getItem(boxKey(id)) || 'null');
+    if(!raw || !Array.isArray(raw.cells)) return blankBox(id);
+    /* the printed face may have been edited since; keep what was filled and
+       re-shape the rest, so a config change never loses someone's count */
+    const filled = new Map(raw.cells.filter(c => c.filledAt).map(c => [c.id, c.filledAt]));
+    const fresh = blankBox(id);
+    fresh.cells.forEach(c => { if(filled.has(c.id)) c.filledAt = filled.get(c.id); });
+    fresh.startedAt   = raw.startedAt || fresh.startedAt;
+    fresh.syncedTotal = Number(raw.syncedTotal) || 0;
+    return fresh;
+  }catch(e){ return blankBox(id); }
+}
+function saveBox(){
+  BOX.updatedAt = Date.now();
+  try{ localStorage.setItem(boxKey(BOX.boxId), JSON.stringify(BOX)); }catch(e){}
+  try{ localStorage.setItem(LAST_BOX, BOX.boxId); }catch(e){}
+}
+function knownBoxes(){
+  const out = [];
+  for(let i = 0; i < localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith('moneybox:')) out.push(k.slice(9));
+  }
+  return out.sort();
+}
+
+const filledCells = () => BOX.cells.filter(c => c.filledAt);
+const total = () => filledCells().reduce((n, c) => n + c.amount, 0);
+const pctOf = () => Math.min(100, Math.round(total() / BOX.goal * 100));
+
+function bestStreak(){
+  const days = [...new Set(filledCells().map(c => c.filledAt))].sort();
+  let best = 0, run = 0, prev = null;
+  days.forEach(d => {
+    const cur = new Date(d + 'T00:00:00');
+    run = (prev && (cur - prev) === 864e5) ? run + 1 : 1;
+    prev = cur;
+    if(run > best) best = run;
+  });
+  return best;
+}
+function byMonth(){
+  const m = {};
+  filledCells().forEach(c => { const k = c.filledAt.slice(0,7); m[k] = (m[k]||0) + c.amount; });
+  return Object.keys(m).sort().reverse().map(k => ({ k, amount:m[k] }));
+}
+
+/* ---------------- celebration ---------------- */
+let CHEERED = {};
+function cheer(msg){
+  const el = $('#cheer'); el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(cheer._t);
+  cheer._t = setTimeout(() => el.classList.remove('on'), 2600);
+}
+function checkMilestones(){
+  const p = pctOf();
+  [[100,'c100'],[75,'c75'],[50,'c50'],[25,'c25']].some(([mark, key]) => {
+    if(p >= mark && !CHEERED[mark]){ CHEERED[mark] = 1; cheer(t(key)); return true; }
+    return false;
+  });
+}
+
+/* ---------------- the app store ---------------- */
+/* Only ever adds the part not already sent, so pressing it twice is safe. */
+function addToSavings(){
+  const owed = total() - (BOX.syncedTotal || 0);
+  if(owed <= 0){ cheer(t('nothingNew')); return; }
+  try{
+    const db = JSON.parse(localStorage.getItem(APP_KEY) || 'null');
+    if(!db) { cheer(t('nothingNew')); return; }
+    db.savings = db.savings || [];
+    db.savings.push({ id:uid(), amount:owed, note:'Money Box ' + BOX.boxId, date:ymd(new Date()) });
+    localStorage.setItem(APP_KEY, JSON.stringify(db));
+    BOX.syncedTotal = total(); saveBox(); render();
+    cheer(t('addedSav', { a: money(owed) }));
+  }catch(e){ cheer(t('nothingNew')); }
+}
+
+/* ---------------- views ---------------- */
+function askView(){
+  const boxes = knownBoxes();
+  $('#app').innerHTML = `
+    <section>
+      <h2>${esc(t('askT'))}</h2>
+      <p class="sub">${esc(t('askS'))}</p>
+      <input id="boxIn" type="text" inputmode="text" autocapitalize="characters"
+        spellcheck="false" placeholder="BOX0001" maxlength="9" aria-label="${esc(t('askT'))}">
+      <p class="sub" id="boxErr" style="color:#B0431A;display:none;margin:9px 0 0"></p>
+      <button class="btn btn-p btn-block" id="boxGo" style="margin-top:11px">${esc(t('askGo'))}</button>
+      ${boxes.length ? `<h2 style="margin-top:18px">${esc(t('myBoxes'))}</h2>
+        <div class="boxes">${boxes.map(b => `<a href="?id=${esc(b)}">${esc(b)}</a>`).join('')}</div>` : ''}
+    </section>`;
+  const go = () => {
+    const v = ($('#boxIn').value || '').trim().toUpperCase();
+    if(!BOX_RE.test(v)){
+      const e = $('#boxErr'); e.textContent = t('askBad'); e.style.display = 'block';
+      $('#boxIn').focus(); return;
+    }
+    location.search = '?id=' + v;
+  };
+  $('#boxGo').addEventListener('click', go);
+  $('#boxIn').addEventListener('keydown', e => { if(e.key === 'Enter') go(); });
+  $('#boxIn').focus();
+}
+
+function groupLabel(amount){ return t('d' + amount) || ('₹' + amount); }
+
+function render(){
+  const saved = total(), p = pctOf(), left = Math.max(0, BOX.goal - saved);
+  const started = new Date(BOX.startedAt + 'T00:00:00');
+  const days = Math.max(1, Math.round((Date.now() - started) / 864e5) + 1);
+  const boxes = knownBoxes();
+  const months = byMonth();
+  const thisMonth = (months.find(m => m.k === ymd(new Date()).slice(0,7)) || {}).amount || 0;
+
+  $('#app').innerHTML = `
+    <section class="hd ${p >= 100 ? 'done' : ''}">
+      <div class="id">${esc(BOX.boxId)}${p >= 100 ? ' · ' + esc(t('goalT')) : ''}</div>
+      <div class="big">${esc(money(saved))}</div>
+      <div class="of">${esc(t('of'))} ${esc(money(BOX.goal))}</div>
+      <div class="bar"><i style="width:${p}%"></i></div>
+      <div class="meta"><span>${p}%</span><span>${esc(t('left'))} ${esc(money(left))}</span></div>
+      <div class="since">${esc(t('since', { d:BOX.startedAt, n:days }))}</div>
+    </section>
+
+    <section>
+      <h2>${esc(t('grid'))}</h2>
+      <p class="sub">${esc(t('gridS'))}</p>
+      ${MB_CELLS.map(g => `
+        <div class="dgroup">
+          <h3>${esc(groupLabel(g.amount))}</h3>
+          <div class="cells">${
+            BOX.cells.filter(c => c.amount === g.amount).map(c => `
+              <button class="cell" data-cell="${esc(c.id)}" aria-pressed="${!!c.filledAt}"
+                aria-label="${esc(money(c.amount))}">${c.amount}</button>`).join('')
+          }</div>
+        </div>`).join('')}
+      <div class="row2" style="margin-top:14px">
+        <button class="btn btn-g" id="undo">${esc(t('undo'))}</button>
+        <button class="btn btn-p" id="addSav">${esc(t('addSav'))}</button>
+      </div>
+    </section>
+
+    <section>
+      <div class="kv">
+        <div><div class="k">${esc(t('filled'))}</div>
+          <div class="v">${filledCells().length} / ${BOX.cells.length}</div></div>
+        <div><div class="k">${esc(t('month'))}</div><div class="v">${esc(money(thisMonth))}</div></div>
+        <div><div class="k">${esc(t('streak'))}</div>
+          <div class="v">${bestStreak()} <span style="font-size:13px;font-weight:700">${esc(t('days'))}</span></div></div>
+        <div><div class="k">${esc(t('pct'))}</div><div class="v">${p}%</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>${esc(t('history'))}</h2>
+      ${months.length ? months.map(m => `
+        <div class="mrow"><span>${esc(m.k)}</span><b>${esc(money(m.amount))}</b></div>`).join('')
+        : `<p class="sub" style="margin:0">${esc(t('noHistory'))}</p>`}
+    </section>
+
+    <section>
+      <div class="stack">
+        <button class="btn btn-g btn-block" id="share">${esc(t('share'))}</button>
+        <button class="btn btn-g btn-block" id="reset" style="color:#B0431A">${esc(t('reset'))}</button>
+      </div>
+      ${boxes.length > 1 ? `<h2 style="margin-top:16px">${esc(t('myBoxes'))}</h2>
+        <div class="boxes">${boxes.map(b => `<a class="${b===BOX.boxId?'on':''}" href="?id=${esc(b)}">${esc(b)}</a>`).join('')}</div>` : ''}
+    </section>`;
+
+  $('#undo').addEventListener('click', undoLast);
+  $('#addSav').addEventListener('click', addToSavings);
+  $('#share').addEventListener('click', share);
+  $('#reset').addEventListener('click', resetBox);
+  document.querySelectorAll('.lang button').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.dataset.lang === LMODE)));
+  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+}
+
+function announce(){
+  $('#live').textContent = t('announce', { a: money(total()), p: pctOf() });
+}
+function toggleCell(id){
+  const c = BOX.cells.find(x => x.id === id);
+  if(!c) return;
+  c.filledAt = c.filledAt ? null : ymd(new Date());
+  saveBox();
+  /* patch the one tile rather than repainting 340 of them — a full re-render
+     on every tap loses the scroll position and the focus ring */
+  const btn = document.querySelector('[data-cell="' + CSS.escape(id) + '"]');
+  if(btn) btn.setAttribute('aria-pressed', String(!!c.filledAt));
+  paintTotals();
+  announce();
+  if(c.filledAt) checkMilestones();
+}
+function paintTotals(){
+  const saved = total(), p = pctOf();
+  const hd = document.querySelector('.hd'); if(!hd) return;
+  hd.classList.toggle('done', p >= 100);
+  hd.querySelector('.big').textContent = money(saved);
+  hd.querySelector('.bar i').style.width = p + '%';
+  const meta = hd.querySelectorAll('.meta span');
+  meta[0].textContent = p + '%';
+  meta[1].textContent = t('left') + ' ' + money(Math.max(0, BOX.goal - saved));
+  const kv = document.querySelectorAll('.kv .v');
+  if(kv.length === 4){
+    kv[0].textContent = filledCells().length + ' / ' + BOX.cells.length;
+    const m = byMonth().find(x => x.k === ymd(new Date()).slice(0,7));
+    kv[1].textContent = money(m ? m.amount : 0);
+    kv[3].textContent = p + '%';
+  }
+}
+function undoLast(){
+  const filled = filledCells();
+  if(!filled.length){ cheer(t('nothingUndo')); return; }
+  /* the most recent day, and within it the last cell in printed order */
+  const last = filled.slice().sort((a,b) =>
+    a.filledAt === b.filledAt ? 0 : (a.filledAt < b.filledAt ? -1 : 1)).pop();
+  last.filledAt = null;
+  saveBox();
+  const btn = document.querySelector('[data-cell="' + CSS.escape(last.id) + '"]');
+  if(btn) btn.setAttribute('aria-pressed', 'false');
+  paintTotals(); announce(); cheer(t('undone'));
+}
+function resetBox(){
+  if(!confirm(t('resetAsk') + '\n\n' + t('resetYes'))) return;
+  BOX = blankBox(BOX.boxId);
+  CHEERED = {};
+  saveBox(); render(); announce();
+}
+function share(){
+  const txt = t('shareTxt', { a: money(total()), p: pctOf() }) + 'https://pocketseeds.online/moneybox/';
+  if(navigator.share){ navigator.share({ text: txt }).catch(()=>{}); return; }
+  const wa = 'https://wa.me/?text=' + encodeURIComponent(txt);
+  window.open(wa, '_blank', 'noopener');
+}
+
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-cell]');
+  if(c) toggleCell(c.dataset.cell);
+});
+$('#langPick').addEventListener('click', e => {
+  const b = e.target.closest('button[data-lang]'); if(!b || b.dataset.lang === LMODE) return;
+  LMODE = b.dataset.lang;
+  localStorage.setItem('pocketseeds.lmode', LMODE);
+  document.documentElement.lang = LMODE;
+  BOX ? render() : askView();
+  document.querySelectorAll('.lang button').forEach(x =>
+    x.setAttribute('aria-pressed', String(x.dataset.lang === LMODE)));
+  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+});
+
+/* ---------------- boot ---------------- */
+(function(){
+  document.documentElement.lang = LMODE;
+  const q = new URLSearchParams(location.search).get('id');
+  const id = (q || localStorage.getItem(LAST_BOX) || '').trim().toUpperCase();
+  document.querySelectorAll('.lang button').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.dataset.lang === LMODE)));
+  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+  if(!id || !BOX_RE.test(id)){ askView(); return; }
+  BOX = loadBox(id);
+  /* a box opened for the first time starts counting from today */
+  if(!localStorage.getItem(boxKey(id))) saveBox();
+  /* milestones already passed should not all fire on open */
+  const p = pctOf();
+  [25,50,75,100].forEach(m => { if(p >= m) CHEERED[m] = 1; });
+  render(); announce();
+})();
+</script>
+</body>
+</html>

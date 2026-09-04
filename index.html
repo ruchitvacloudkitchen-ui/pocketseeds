@@ -114,6 +114,24 @@
 
 /* The pen marks whichever date is selected in the grid above it, so it names
    that date rather than saying "add" — there is no second place to choose. */
+/* ---------- money box card on the Savings page ----------
+   One card in two states: an invitation before there is a box, and the live
+   count once there is one. The tracker lives at its own route, so this reads
+   the same localStorage the tracker writes rather than sharing any code. */
+.mb-card{display:block;text-decoration:none;color:var(--ink);border-radius:20px;padding:16px;
+  margin-bottom:13px;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--surface)}
+.mb-card .h{display:flex;align-items:center;gap:11px}
+.mb-card .ic{width:40px;height:40px;border-radius:13px;flex:0 0 auto;display:grid;place-items:center;
+  background:#2E8B49;color:#fff}
+.mb-card .ic .i{width:21px;height:21px;stroke-width:2}
+.mb-card .n{font-size:16px;font-weight:800;letter-spacing:-.01em}
+.mb-card .s{font-size:13px;color:var(--muted);margin-top:2px;line-height:1.4}
+.mb-card .go{margin-left:auto;flex:0 0 auto;font-size:13px;font-weight:800;color:#2E8B49;white-space:nowrap}
+.mb-bar{height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden;margin:13px 0 7px;
+  border:1px solid var(--line)}
+.mb-bar i{display:block;height:100%;border-radius:999px;background:#2E8B49}
+.mb-meta{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;font-weight:700;color:var(--muted)}
+
 .cal-tools{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 @media (max-width:359px){ .cal-tools{grid-template-columns:1fr} }
 .cal-pen.bell .ic{background:var(--amber);color:#fff}
@@ -782,6 +800,7 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 /* menu tiles */
 .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
 .menu-tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;
+  text-decoration:none;color:var(--ink);
   padding:14px 7px 12px;border-radius:16px;border:1px solid var(--line);background:var(--surface);
   box-shadow:var(--shadow);cursor:pointer;font-family:inherit;text-align:center;min-height:104px}
 .menu-tile:active{transform:scale(.97)}
@@ -1235,6 +1254,8 @@ table.sip tbody tr:last-child td{font-size:15px}
       <div class="t-amt" style="font-size:33.5px" id="sTotal">₹0</div>
       <div class="hint" id="sNote"></div>
     </div>
+
+    <div id="mbBox"></div>
 
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="howMuchSave">How much should I save?</h3></div>
@@ -1768,6 +1789,11 @@ const STR = {
     askAPerDay:'a day — what is left to spend for the rest of {m}.',
     askNoIdea:'I could not match that to anything I hold. Try one of the questions below.',
     askScope:'Answers come from what you have entered in this app, on this phone. It is not investment advice and it does not know anything outside your own records.',
+    mMoneyBox:'Money Box',
+    mbPromoT:'₹1,00,000 Money Box', mbPromoS:'A wooden box with a cell for every note. Drop cash in, tap it here.',
+    mbPromoCta:'See the box',
+    mbLiveT:'Money Box {b}', mbLiveS:'{a} of {g} · {p}%', mbLiveLeft:'{a} to go',
+    mbOpen:'Open the box',
     remTitle:'Reminders',
     remSub:'They ring at 7:55 in the morning, before the day starts.',
     remAdd:'Remind me', remWhat:'What is it for?', remTime:'Time',
@@ -2125,6 +2151,11 @@ const STR = {
     askAPerDay:'రోజుకు — {m} మిగిలిన రోజులకు ఖర్చు చేయదగినది.',
     askNoIdea:'అది నాకు అర్థం కాలేదు. కింద ఉన్న ప్రశ్నలు అడిగి చూడండి.',
     askScope:'జవాబులు ఈ ఫోన్‌లో మీరు రాసిన లెక్కల నుంచే వస్తాయి. ఇది పెట్టుబడి సలహా కాదు, మీ లెక్కల బయట దేనీ గురించీ తెలియదు.',
+    mMoneyBox:'మనీ బాక్స్',
+    mbPromoT:'₹1,00,000 మనీ బాక్స్', mbPromoS:'ప్రతి నోటుకూ ఒక గడి ఉన్న కర్ర బాక్స్. డబ్బు వేసి, ఇక్కడ నొక్కండి.',
+    mbPromoCta:'బాక్స్ చూడండి',
+    mbLiveT:'మనీ బాక్స్ {b}', mbLiveS:'{g} లో {a} · {p}%', mbLiveLeft:'ఇంకా {a}',
+    mbOpen:'బాక్స్ తెరువు',
     remTitle:'గుర్తుంపులు',
     remSub:'ఉదయం 7:55కి — రోజు మొదలవ్వక ముందే.',
     remAdd:'గుర్తు చేయి', remWhat:'దేని కోసం?', remTime:'సమయం',
@@ -2679,6 +2710,7 @@ const ICON = {
   handshake:'<path d="M3 11.5 7 8l3.2 2.6L13 8l4 3.5"/><path d="M3 11.5V16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4.5"/><path d="M10.2 18v-2.4h3.6V18"/>',
   dots:'<circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/>',
   shield:'<path d="M12 3.2 20 6v6.3c0 4.3-3.3 7.5-8 8.9-4.7-1.4-8-4.6-8-8.9V6z"/><path d="M12 8.6v4"/><circle cx="12" cy="15.4" r=".9"/>',
+  box:'<path d="M3.4 7.6 12 3.4l8.6 4.2v8.8L12 20.6 3.4 16.4z"/><path d="M3.4 7.6 12 11.8l8.6-4.2M12 11.8v8.8"/>',
   film:'<rect x="3" y="5" width="18" height="14" rx="2.4"/><path d="M3 9.4h18M3 14.6h18M8.2 5v14M15.8 5v14"/>',
   cup:'<path d="M5.4 7h11l-.9 11.4a2 2 0 0 1-2 1.6H8.3a2 2 0 0 1-2-1.6z"/><path d="M16.2 10.2h1.6a2.4 2.4 0 0 1 0 4.8h-1.2"/><path d="M8.6 4.2v-.9M11.6 4.2v-.9M14.6 4.2v-.9"/>',
   gem:'<path d="M7.6 3.6h8.8L21 9.2 12 20.6 3 9.2z"/><path d="M3 9.2h18M9 9.2 12 20.6l3-11.4M7.6 3.6 9 9.2m7.4-5.6L15 9.2"/>',
@@ -5275,6 +5307,7 @@ const MENU = [
   { go:'reports',                      icon:'chart',    t:'mTracker'   },
   { go:'family',                       icon:'people',   t:'mFamily'    },
   { act:'statement',                   icon:'doc',      t:'mStatement' },
+  { href:'moneybox/',                  icon:'box',      t:'mMoneyBox'  },
   { go:'invite',                       icon:'gift',     t:'mInvite'    },
   { act:'settings',                    icon:'gear',     t:'mSettings'  }
 ];
@@ -5285,12 +5318,14 @@ function tileLabel(key){
 
 function renderMenu(){
   const box = $('#menuGrid'); if(!box) return;
-  box.innerHTML = MENU.map(m => `
-    <button class="menu-tile" ${m.go ? `data-go="${m.go}"` : `data-shortcut="${m.act}"`}
-      ${m.focus ? `data-focus="${m.focus}"` : ''}>
-      <span class="mt-ic">${ic(m.icon)}</span>
-      <span>${tileLabel(m.t)}</span>
-    </button>`).join('');
+  box.innerHTML = MENU.map(m => {
+    const inner = `<span class="mt-ic">${ic(m.icon)}</span><span>${tileLabel(m.t)}</span>`;
+    /* a tile that leaves the app is an anchor, not a button — the money box
+       lives at its own route, the same way the privacy page does */
+    if(m.href) return `<a class="menu-tile" href="${esc(m.href)}">${inner}</a>`;
+    return `<button class="menu-tile" ${m.go ? `data-go="${m.go}"` : `data-shortcut="${m.act}"`}
+      ${m.focus ? `data-focus="${m.focus}"` : ''}>${inner}</button>`;
+  }).join('');
 }
 
 /* a tile that names a section scrolls to it after the page opens */
@@ -6683,5 +6718,84 @@ document.addEventListener('click', e => {
   document.addEventListener('visibilitychange', () => { if(!document.hidden) remTick(); });
   window.addEventListener('focus', remTick);
   remTick();
+})();
+</script>
+
+<script>
+'use strict';
+/* ==================== MONEY BOX — CARD IN THE APP ====================
+   The tracker is its own page at /box/, so this card does not share code with
+   it — it reads the same localStorage keys the tracker writes. That keeps the
+   two independent: the tracker works with the app closed, and the app shows
+   the count without loading the tracker.
+
+   One card, two states: an invitation while there is no box, and the live
+   count once there is one.
+   ==================================================================== */
+const MB_GOAL_APP = 100000;
+
+function mbBoxes(){
+  const out = [];
+  try{
+    for(let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(!k || !k.startsWith('moneybox:')) continue;
+      const b = JSON.parse(localStorage.getItem(k) || 'null');
+      if(b && Array.isArray(b.cells)) out.push(b);
+    }
+  }catch(e){}
+  return out;
+}
+/* the one most recently touched, since that is the one being filled */
+function mbActive(){
+  const all = mbBoxes();
+  if(!all.length) return null;
+  return all.sort((a,b) => (b.updatedAt||0) - (a.updatedAt||0))[0];
+}
+function mbTotal(b){
+  return b.cells.reduce((n,c) => n + (c.filledAt ? (Number(c.amount)||0) : 0), 0);
+}
+
+function renderMoneyBox(){
+  const host = $('#mbBox'); if(!host) return;
+  const b = mbActive();
+  if(!b){
+    host.innerHTML = `
+      <a class="mb-card" href="moneybox/">
+        <div class="h">
+          <span class="ic">${ic('box')}</span>
+          <span><span class="n">${esc(t('mbPromoT'))}</span>
+            <span class="s">${esc(t('mbPromoS'))}</span></span>
+          <span class="go">${esc(t('mbPromoCta'))} ›</span>
+        </div>
+      </a>`;
+    return;
+  }
+  const goal  = Number(b.goal) || MB_GOAL_APP;
+  const saved = mbTotal(b);
+  const pct   = Math.min(100, Math.round(saved / goal * 100));
+  host.innerHTML = `
+    <a class="mb-card" href="box/?id=${esc(b.boxId)}">
+      <div class="h">
+        <span class="ic">${ic('box')}</span>
+        <span><span class="n">${esc(t('mbLiveT', { b:b.boxId }))}</span>
+          <span class="s">${esc(t('mbLiveS', { a:money(saved), g:money(goal), p:pct }))}</span></span>
+        <span class="go">${esc(t('mbOpen'))} ›</span>
+      </div>
+      <div class="mb-bar"><i style="width:${pct}%"></i></div>
+      <div class="mb-meta"><span>${pct}%</span>
+        <span>${esc(t('mbLiveLeft', { a: money(Math.max(0, goal - saved)) }))}</span></div>
+    </a>`;
+}
+(function(){
+  const prev = window.renderAll;
+  window.renderAll = function(){ prev(); try{ renderMoneyBox(); }catch(e){ console.error(e); } };
+  renderMoneyBox();
+  /* the tracker is a separate page in the same origin, so its writes arrive
+     here as a storage event while both are open, and on focus otherwise */
+  window.addEventListener('storage', e => {
+    if(e.key && e.key.startsWith('moneybox:')) renderMoneyBox();
+  });
+  window.addEventListener('focus', renderMoneyBox);
 })();
 </script>
