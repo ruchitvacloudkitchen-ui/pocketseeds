@@ -570,6 +570,50 @@ html[lang="te"] .balance-amt,html[lang="te"] .t-amt,html[lang="te"] .amt,html[la
 .icon-btn{width:34px;height:34px;border-radius:11px;border:1px solid var(--line);background:var(--surface);
   color:var(--ink);font-size:17.5px;cursor:pointer;box-shadow:var(--shadow);flex:0 0 auto}
 .lang-pick button{font-family:'Noto Sans Telugu','Plus Jakarta Sans',sans-serif}
+
+/* ---------- theme switch ----------
+   Appearance only. The three-state model (auto / light / dark) is unchanged:
+   a tap flips light<->dark exactly as the old icon button did, and a long
+   press puts it back to auto. The pill shows the RESOLVED theme, so in auto
+   it tracks the phone; the thin brand ring on the knob is what says "auto".
+   Sun sits right, moon left; the knob rests on whichever one is live. */
+:root{ --ts-bg:#D8E5D8; --ts-line:#B4CEB9; --ts-knob-bg:#FFFFFF;
+       --ts-sun:#2E8B49; --ts-moon:#5E8168; }
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){ --ts-bg:#16301F; --ts-line:#2A4E34; --ts-knob-bg:#DCEBDF;
+       --ts-sun:#6E9C7B; --ts-moon:#1C5230; }
+}
+:root[data-theme="dark"]{ --ts-bg:#16301F; --ts-line:#2A4E34; --ts-knob-bg:#DCEBDF;
+       --ts-sun:#6E9C7B; --ts-moon:#1C5230; }
+
+.theme-sw{--ts-w:56px; --ts-h:34px; --ts-knob:26px; --ts-inset:4px; --ts-ico:16px;
+  position:relative;flex:0 0 auto;width:var(--ts-w);height:var(--ts-h);
+  padding:0;border:0;background:none;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+/* 44px tap target without a 44px visual: a pseudo-element carries the extra
+   height, so the header row keeps the 34px rhythm of the other controls. */
+.theme-sw::before{content:'';position:absolute;left:0;right:0;top:50%;height:44px;
+  transform:translateY(-50%)}
+.ts-track{position:absolute;inset:0;border-radius:999px;background:var(--ts-bg);
+  border:1px solid var(--ts-line);box-shadow:var(--shadow);
+  transition:background .25s,border-color .25s}
+.ts-knob{position:absolute;top:50%;left:var(--ts-inset);z-index:1;
+  width:var(--ts-knob);height:var(--ts-knob);border-radius:50%;background:var(--ts-knob-bg);
+  box-shadow:0 1px 3px rgba(0,0,0,.24);transform:translate(0,-50%);
+  transition:transform .3s cubic-bezier(.34,1.1,.42,1), background .25s}
+.theme-sw[aria-checked="false"] .ts-knob{
+  transform:translate(calc(var(--ts-w) - var(--ts-knob) - var(--ts-inset)*2),-50%)}
+.ts-ico{position:absolute;top:50%;z-index:2;transform:translate(-50%,-50%);
+  pointer-events:none;line-height:0;transition:color .25s}
+.ts-moon{left:calc(var(--ts-inset) + var(--ts-knob)/2);color:var(--ts-moon)}
+.ts-sun{left:calc(var(--ts-w) - var(--ts-inset) - var(--ts-knob)/2);color:var(--ts-sun)}
+.ts-ico .i{width:var(--ts-ico);height:var(--ts-ico);vertical-align:0;display:block}
+.theme-sw.auto .ts-knob{box-shadow:0 0 0 2px var(--brand),0 1px 3px rgba(0,0,0,.24)}
+.theme-sw:focus-visible{outline:3px solid #2E8B49;outline-offset:2px;border-radius:999px}
+@media (prefers-reduced-motion:reduce){
+  .ts-knob,.ts-track,.ts-ico{transition:none}
+}
 /* ---------- cards ---------- */
 /* A <button> takes the UA's own black button text and does not inherit from
    the page, so every button-shaped surface in the app rendered its label black
@@ -785,12 +829,35 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
   .icon-btn{width:29px;height:29px;border-radius:10px}
   .icon-btn .i{width:16px;height:16px}
   .lang-pick button{padding:0 5px;min-width:24px;height:29px;font-size:11.5px}
+  .theme-sw{--ts-w:48px; --ts-h:29px; --ts-knob:22px; --ts-inset:3.5px; --ts-ico:14px}
   .top-tools{gap:4px}
 }
 /* The wordmark costs 83px. Below 360px the row cannot carry it: the compact
    controls alone need 216px and the brand needs 119px, against vw-22. So the
    mark stands alone here, as it already did below 340px. */
 @media (max-width:359px){ .brand span,.brand{font-size:0} .brand .logo{font-size:16px} }
+
+/* ---------- theme switch: where the pill fits ----------
+   The pill needs 354px of header content at the compact sizes and 470px at
+   the full ones. The compact sizes reach 519px, so the pill fits everywhere
+   from 380px up. Below that the row has no room for it, and the SAME control
+   falls back to the circular footprint the other header icons use: same
+   element, same logic, same glyphs, only the knob and the off-state glyph go
+   away. Nothing else in the row is shrunk to make room for it.
+   This tracks the compact breakpoint set above. If that fix is ever reverted,
+   the compact pill sizing goes with it and this fallback has to be widened to
+   match, or the pill gets drawn full-size in a row that cannot hold it. */
+@media (max-width:379px){
+  .theme-sw{--ts-w:29px; --ts-h:29px; --ts-ico:16px}
+  .theme-sw::before{left:-2px;right:-2px}
+  .ts-track{background:var(--surface);border-color:var(--line);border-radius:10px}
+  .ts-knob{display:none}
+  .ts-ico{left:50%;color:var(--ink)}
+  .theme-sw[aria-checked="true"] .ts-sun,
+  .theme-sw[aria-checked="false"] .ts-moon{display:none}
+  .theme-sw.auto .ts-track{box-shadow:0 0 0 2px var(--brand),var(--shadow)}
+  .theme-sw:focus-visible{border-radius:13px}
+}
 
 /* holidays */
 .cal-cell.pub{background:var(--out-bg)}
@@ -1036,7 +1103,12 @@ table.sip tbody tr:last-child td{font-size:15px}
           <button data-lang="te" aria-pressed="false">తె</button>
           <button data-lang="en" aria-pressed="false">EN</button>
         </div>
-        <button class="icon-btn" id="btnTheme" aria-label="theme"></button>
+        <button class="theme-sw" id="btnTheme" role="switch" aria-checked="false" aria-label="theme">
+          <span class="ts-track"></span>
+          <span class="ts-knob"></span>
+          <span class="ts-ico ts-moon" data-icon="moon"></span>
+          <span class="ts-ico ts-sun" data-icon="sun"></span>
+        </button>
         <button class="icon-btn" id="btnSettings" aria-label="settings" data-icon="gear"></button>
       </div>
     </div>
@@ -1914,6 +1986,10 @@ const STR = {
     panNote:'Computed by modern astronomy (drik ganita) for Hyderabad. Traditional vakya panchangams can differ by a few minutes to a couple of hours. For muhurtham, please follow your family panchangam.',
     panNextDay:'⁺ means the next morning',
     theme:'Appearance', themeAuto:'Match phone', themeLight:'Light', themeDark:'Dark',
+    swToDark:'Switch to dark mode.', swToLight:'Switch to light mode.',
+    swAutoNow:'Right now it follows your phone.',
+    swHint:'Press and hold to go back to following your phone. Appearance is also in Settings.',
+    swAutoDone:'Following your phone',
     editEntry:'Edit entry', amountChanged:'Amount updated',
     admin:'Owner panel', adminLocked:'Enter the owner passcode',
     adminHint:'This only hides the panel — anyone can read a web app\'s code, so never keep anything secret here.',
@@ -2279,6 +2355,10 @@ const STR = {
     panNote:'ఆధునిక ఖగోళ గణితం (దృక్ గణితం) ప్రకారం హైదరాబాద్‌కు లెక్కించినవి. సంప్రదాయ వాక్య పంచాంగాలతో కొన్ని నిమిషాల నుంచి రెండు గంటల వరకు తేడా రావచ్చు. ముహూర్తాలకు మీ ఇంటి పంచాంగమే చూడండి.',
     panNextDay:'⁺ అంటే మరుసటి రోజు తెల్లవారుజాము',
     theme:'రూపం', themeAuto:'ఫోన్ ప్రకారం', themeLight:'తెలుపు', themeDark:'నలుపు',
+    swToDark:'నలుపు రూపానికి మార్చండి.', swToLight:'తెలుపు రూపానికి మార్చండి.',
+    swAutoNow:'ఇప్పుడు ఫోన్‌ను బట్టి మారుతోంది.',
+    swHint:'మళ్లీ ఫోన్ ప్రకారం కావాలంటే నొక్కి పట్టుకోండి. రూపం సెట్టింగ్స్‌లో కూడా ఉంది.',
+    swAutoDone:'ఇక ఫోన్ ప్రకారం',
     editEntry:'మార్చు', amountChanged:'మొత్తం మారింది',
     admin:'యజమాని ప్యానెల్', adminLocked:'యజమాని పాస్‌కోడ్ ఇవ్వండి',
     adminHint:'ఇది ప్యానెల్‌ను దాచడమే — వెబ్ యాప్ కోడ్ ఎవరైనా చూడగలరు, కాబట్టి రహస్యమైనవి ఇక్కడ పెట్టవద్దు.',
@@ -2864,6 +2944,8 @@ const ICON = {
   coin:'<circle cx="12" cy="12" r="8.6"/><path d="M12 7.4v9.2"/><path d="M14.4 9.6a2.6 2.6 0 0 0-2.4-1.4c-1.5 0-2.6.9-2.6 2.1s1 1.8 2.6 2.1 2.6.9 2.6 2.1-1.1 2.1-2.6 2.1a2.6 2.6 0 0 1-2.4-1.4"/>',
   goldbar:'<path d="M4.4 12.6h15.2v6.2H4.4z"/><path d="M4.4 12.6 7.7 8.1h8.6l3.3 4.5"/>',
   dot:'<circle cx="12" cy="12" r="3.4"/>',
+  sun:'<circle cx="12" cy="12" r="4.3"/><path d="M12 2.7v2.3M12 19v2.3M4.42 4.42l1.63 1.63M17.95 17.95l1.63 1.63M2.7 12h2.3M19 12h2.3M4.42 19.58l1.63-1.63M17.95 6.05l1.63-1.63"/>',
+  moon:'<path d="M20.6 14.3A8.7 8.7 0 0 1 9.7 3.4 8.7 8.7 0 1 0 20.6 14.3z"/>',
   check:'<path d="M4.6 12.6 9.6 17.6 19.4 6.8"/>',
   x:'<path d="M6 6 18 18M18 6 6 18"/>',
   pencil:'<path d="M4 20.2h4.2L20 8.4a2.4 2.4 0 0 0-3.4-3.4L4.8 16.8z"/><path d="M15.4 6.2 18.8 9.6"/>',
@@ -4054,19 +4136,51 @@ function isDarkTheme(){
   const v = localStorage.getItem('pocketseeds.theme') || 'auto';
   return v === 'dark' || (v === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 }
-/* one control, two states, as asked */
-$('#btnTheme').addEventListener('click', () => {
-  setTheme(isDarkTheme() ? 'light' : 'dark');
-  paintThemeButton();
+function isAutoTheme(){ return (localStorage.getItem('pocketseeds.theme') || 'auto') === 'auto'; }
+function syncThemeRadio(){
   document.querySelectorAll('[data-theme-set]').forEach(x =>
     x.setAttribute('aria-pressed', String(x.dataset.themeSet === THEME)));
+}
+/* Two visible positions on a three-state setting. A tap pins light or dark,
+   exactly as the old icon button did. A long press is the shortcut back to
+   auto — the discoverable control for that is still the radio in Settings,
+   which is why the label names it. */
+const TS_HOLD = 550;
+let tsHeld = false, tsTimer = 0;
+const tsBtn = $('#btnTheme');
+tsBtn.addEventListener('pointerdown', () => {
+  tsHeld = false;
+  clearTimeout(tsTimer);
+  tsTimer = setTimeout(() => {
+    tsHeld = true;
+    setTheme('auto'); paintThemeButton(); syncThemeRadio();
+    toast(t('swAutoDone'));
+    try{ if(navigator.vibrate) navigator.vibrate(14); }catch(e){}
+  }, TS_HOLD);
+});
+['pointerup','pointercancel','pointerleave'].forEach(ev =>
+  tsBtn.addEventListener(ev, () => clearTimeout(tsTimer)));
+/* stop the OS text-selection / callout menu from eating the hold on touch */
+tsBtn.addEventListener('contextmenu', e => e.preventDefault());
+tsBtn.addEventListener('click', e => {
+  if(tsHeld){ tsHeld = false; e.preventDefault(); return; }
+  setTheme(isDarkTheme() ? 'light' : 'dark');
+  paintThemeButton(); syncThemeRadio();
 });
 function paintThemeButton(){
   const b = $('#btnTheme'); if(!b) return;
-  const dark = isDarkTheme();
-  b.innerHTML = ic(dark ? 'bulb' : 'leaf');
-  b.setAttribute('aria-label', dark ? 'switch to light mode' : 'switch to dark mode');
+  const dark = isDarkTheme(), auto = isAutoTheme();
+  b.setAttribute('aria-checked', String(dark));
+  b.classList.toggle('auto', auto);
+  b.setAttribute('aria-label',
+    [t(dark ? 'swToLight' : 'swToDark'), auto ? t('swAutoNow') : '', t('swHint')]
+      .filter(Boolean).join(' '));
 }
+/* auto follows the phone, so repaint the ring when the phone flips */
+try{
+  window.matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', () => { if(isAutoTheme()) paintThemeButton(); });
+}catch(e){}
 $('#btnAddIncome').addEventListener('click', () => sheetTx('income', null, {}, true));
 $('#btnAddExpense').addEventListener('click', () => sheetTx('expense', null, {}, true));
 $('#btnAddSource').addEventListener('click', () => sheetSource());
@@ -6125,6 +6239,7 @@ document.addEventListener('click', e => {
     setTheme(set.dataset.themeSet);
     document.querySelectorAll('[data-theme-set]').forEach(b =>
       b.setAttribute('aria-pressed', String(b.dataset.themeSet === THEME)));
+    paintThemeButton();
     return;
   }
   if(e.target.closest('.brand')){
