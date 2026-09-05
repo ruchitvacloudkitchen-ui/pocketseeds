@@ -7,9 +7,7 @@
 <meta name="description" content="Track a PocketSeeds ₹1,00,000 savings box. Tap a cell each time you drop cash in.">
 <meta name="theme-color" content="#2E8B49">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M7 0h86a7 7 0 0 1 7 7v45.5C100 80.4 77.6 100 50 100S0 80.4 0 52.5V7a7 7 0 0 1 7-7z' fill='%232E8B49'/%3E%3Cpath d='M75.5 29.5C71.2 19.6 61.8 14 49.5 14 34.6 14 24.5 22.2 24.5 33.4c0 12.4 11.4 17.2 25.6 21.2 12.6 3.5 20.4 6.4 20.4 14.2 0 8.2-8.2 13.4-20.6 13.4-12.8 0-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../fonts/fonts.css">
 <style>
 :root{
   --bg:#F5F7F6; --surface:#FFFFFF; --surface-2:#F2F6F3;
@@ -33,6 +31,14 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Telugu',system-ui,-apple-system,
   color:var(--ink);line-height:1.6;font-size:16px;-webkit-text-size-adjust:100%}
 .wrap{max-width:760px;margin:0 auto;padding:18px 14px 60px}
 header{display:flex;align-items:center;gap:10px;padding:4px 0 14px}
+/* Everything flexible in this row must be allowed to shrink. A flex item's
+   default min-width is auto, so the brand block and the tagline pill refused
+   to give ground and pushed the language toggle 3.6px past the viewport --
+   four pixels of sideways scroll on the page a QR scan lands on. It only
+   showed up once the real typefaces were self-hosted and actually loading;
+   with the fallback face the same row happened to fit, which is why no check
+   had ever caught it. */
+header > div{min-width:0}
 /* Home button. Someone who arrived by scanning the QR on a wooden box has no
    history to go back through and no other way into the app; without this the
    page is a dead end. The app's own back arrow, same 1.85 stroke and round
@@ -46,11 +52,13 @@ header{display:flex;align-items:center;gap:10px;padding:4px 0 14px}
   height:44px;transform:translateY(-50%)}
 .homebtn:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
 .mark{width:32px;height:32px;flex:none}
-.brand{font-weight:800;font-size:17px;letter-spacing:-.3px}
+.brand{font-weight:800;font-size:17px;letter-spacing:-.3px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .brand span{color:var(--brand)}
 .boxid{font-size:11.5px;font-weight:800;letter-spacing:.12em;color:var(--muted);margin-top:1px}
 .tagpill{margin-left:auto;background:var(--in-bg);color:#1B5E34;border-radius:999px;padding:6px 11px;
-  font-size:11px;font-weight:800;line-height:1.3;max-width:44%;text-align:center}
+  font-size:11px;font-weight:800;line-height:1.3;max-width:44%;text-align:center;
+  flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lang{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;flex:none}
 .lang button{border:0;background:none;font-family:inherit;font-size:12px;font-weight:800;color:var(--muted);
   padding:0 8px;height:28px;cursor:pointer}

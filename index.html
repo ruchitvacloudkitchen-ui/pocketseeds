@@ -8,9 +8,7 @@
 <meta name="description" content="తెలుగు వారి కోసం డబ్బు యాప్ — ఆదాయం, ఖర్చులు, వడ్డీ అప్పులు, చిట్టీలు, మొయి పుస్తకం, పండుగ పొదుపు.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M7%200h86a7%207%200%200%201%207%207v45.5C100%2080.4%2077.6%20100%2050%20100S0%2080.4%200%2052.5V7a7%207%200%200%201%207-7z' fill='%230A8A66'/%3E%3Cpath d='M75.5%2029.5C71.2%2019.6%2061.8%2014%2049.5%2014%2034.6%2014%2024.5%2022.2%2024.5%2033.4c0%2012.4%2011.4%2017.2%2025.6%2021.2%2012.6%203.5%2020.4%206.4%2020.4%2014.2%200%208.2-8.2%2013.4-20.6%2013.4-12.8%200-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fonts/fonts.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
@@ -849,6 +847,9 @@ html[lang="te"] .tile .t-lbl{text-transform:none;letter-spacing:0;font-size:14px
 /* ---------- buttons / forms ---------- */
 .btn{border:0;border-radius:12px;padding:12px 16px;font-size:17.5px;font-weight:700;cursor:pointer;
   font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+/* the attribute alone loses to display:inline-flex above -- the same trap
+   the backup bar fell into; the mic is hidden this way inside a TWA */
+.btn[hidden]{display:none}
 /* every filled button is the one green, with white on it */
 .btn-p,.btn-in,.btn-save,.btn-plum{background:var(--btn);color:var(--on-btn)}
 .btn-g{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
@@ -4141,7 +4142,36 @@ const IS_TWA = (function(){
     if(document.referrer && document.referrer.indexOf('android-app://') === 0){
       localStorage.setItem('pocketseeds.twa','1'); return true;
     }
-    return localStorage.getItem('pocketseeds.twa') === '1';
+    if(localStorage.getItem('pocketseeds.twa') === '1') return true;
+    /* A TWA is standalone from the first paint, before any referrer is seen
+       and before the flag above has been written, so this is what catches the
+       first launch. An installed PWA answers the same way; treating it as
+       app-like too is the safe direction. */
+    if(window.matchMedia && matchMedia('(display-mode: standalone)').matches){
+      localStorage.setItem('pocketseeds.twa','1'); return true;
+    }
+    return false;
+  }catch(e){ return false; }
+})();
+
+/* Ads fail closed. The rule is not "is this an app?" but "can we positively
+   prove this is an ordinary browser tab?" -- and if we cannot, no ad script
+   loads. The old guard asked the opposite question and answered it from
+   document.referrer, which is only android-app:// on the launch navigation:
+   any deep link, reload or in-app navigation arrives with a same-origin
+   referrer, so a WebView could serve AdSense once before the sticky flag was
+   written. AdSense is a web product and is not permitted in an app, so that
+   one impression risks the AdSense account and the Play listing together.
+   Every uncertain case -- no matchMedia, a thrown exception, an unknown
+   display mode -- now resolves to "not a browser", and the house ads run. */
+const IS_BROWSER = (function(){
+  try{
+    if(IS_TWA) return false;
+    /* Android WebView tags itself; Custom Tabs and Chrome do not */
+    if(/\bwv\b/.test(navigator.userAgent || '')) return false;
+    if(!window.matchMedia) return false;
+    /* the only display mode a real tab reports */
+    return matchMedia('(display-mode: browser)').matches === true;
   }catch(e){ return false; }
 })();
 
@@ -4149,7 +4179,7 @@ function mountAd(){
   const slot = $('#adSlot'), st = DB.settings;
   slot.querySelectorAll('ins').forEach(n => n.remove());
   const house = $('#adHouse');
-  if(st.adClient && st.adSlot && !IS_TWA){
+  if(st.adClient && st.adSlot && IS_BROWSER){
     house.innerHTML = '';
     const ins = document.createElement('ins');
     ins.className = 'adsbygoogle'; ins.style.display = 'block';
@@ -4457,7 +4487,7 @@ const MORE_ITEMS = [
 ];
 function renderMore(){
   const s2 = $('#adSlot2');
-  if(s2 && (!DB.settings.adClient || IS_TWA)){
+  if(s2 && (!DB.settings.adClient || !IS_BROWSER)){
     const a = HOUSE_ADS[1], c = LANG === 'te' ? a.te : a.en;
     $('#adHouse2').innerHTML = `<div class="house-ad" data-ad-url="${a.url}">
       <div class="ha-ic">${ic(a.icon,'i-lg')}</div><div><h4>${c.h}</h4><p>${c.p}</p>
@@ -6723,7 +6753,7 @@ function sheetAsk(prefill = ''){
       placeholder="${esc(t('askPlaceholder'))}"></div>
     <div class="grid2">
       <button class="btn btn-p" id="askGo">${t('askGo')}</button>
-      <button class="btn btn-g" id="askMic">${t('askListen')}</button>
+      <button class="btn btn-g" id="askMic"${IS_TWA ? ' hidden' : ''}>${t('askListen')}</button>
     </div>
     <div id="askOut"></div>
     <div class="hint" style="margin-top:11px;font-weight:700;color:var(--ink)">${t('askTry')}</div>

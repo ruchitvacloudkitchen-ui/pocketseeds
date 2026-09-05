@@ -6,9 +6,7 @@
 <title>Privacy Policy — PocketSeeds</title>
 <meta name="description" content="How PocketSeeds handles your money data. Short version: it stays on your phone.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M7 0h86a7 7 0 0 1 7 7v45.5C100 80.4 77.6 100 50 100S0 80.4 0 52.5V7a7 7 0 0 1 7-7z' fill='%230A8A66'/%3E%3Cpath d='M75.5 29.5C71.2 19.6 61.8 14 49.5 14 34.6 14 24.5 22.2 24.5 33.4c0 12.4 11.4 17.2 25.6 21.2 12.6 3.5 20.4 6.4 20.4 14.2 0 8.2-8.2 13.4-20.6 13.4-12.8 0-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../fonts/fonts.css">
 <style>
 :root{
   --bg:#F5F7F6; --surface:#FFFFFF; --surface-2:#F2F6F3;
@@ -85,7 +83,7 @@ footer a{display:inline-block;margin-top:8px}
 
 <h1>Privacy Policy</h1>
 <p class="te-h1 te">గోప్యతా విధానం</p>
-<p class="updated">Last updated: 25 August 2026</p>
+<p class="updated">Last updated: 5 September 2026</p>
 
 <div class="tldr">
   <p class="te"><strong>మీ డబ్బు వివరాలు మీ ఫోన్‌లోనే ఉంటాయి.</strong> మేము వాటిని ఎక్కడికీ పంపము, ఎవరికీ అమ్మము. మీ ఆదాయం, ఖర్చులు, అప్పులు, చిట్టీలు — అన్నీ మీ ఫోన్ మెమరీలో మాత్రమే నిల్వ ఉంటాయి.</p>
@@ -99,7 +97,10 @@ footer a{display:inline-block;margin-top:8px}
   <ul>
     <li>Income and expense entries, categories and dates</li>
     <li>Hand loans (వడ్డీ), chit funds (చిట్టీలు), gift book (మొయి), credit given (అరువు)</li>
-    <li>Reminders, savings goals, festival funds, family member names you add</li>
+    <li>Reminders, savings goals, festival funds</li>
+    <li><strong>Family member names and their phone numbers</strong>, if you add them for family sharing</li>
+    <li><strong>Emergency contact names and their phone numbers</strong>, if you add your own to the emergency help page</li>
+    <li><strong>Seed Box progress</strong> — your box number and which amounts you have marked as filled</li>
     <li>Your settings — language, theme, interest rate, budget figures</li>
   </ul>
   <p>None of this is transmitted to us. We operate no database and no backend service. If you clear your browser data or uninstall the app, this information is permanently gone — which is why the Google Drive backup below exists.</p>
@@ -112,10 +113,23 @@ footer a{display:inline-block;margin-top:8px}
   <p>If you do use it:</p>
   <ul>
     <li>Google tells the app your <strong>name, email address and profile picture</strong>. This stays on your device and is shown so you know which account is connected.</li>
+    <li><strong>Everything listed above travels in that backup</strong> — including family and emergency contact names and phone numbers, and your Seed Box progress. It is a copy of the whole file, not a summary.</li>
     <li>A copy of your PocketSeeds data is written to your own Google Drive, in a hidden area called <code>appDataFolder</code>. This is a private space that <strong>only this app can read</strong> — other apps cannot, and it does not appear among your normal Drive files.</li>
     <li>We do not receive a copy. The backup goes from your device to your Drive directly. There is no server of ours in between.</li>
   </ul>
   <p>To disconnect, go to <a href="https://myaccount.google.com/permissions" rel="noopener">your Google Account permissions page</a> and remove PocketSeeds. To delete the backup itself, use <strong>Drive → Settings → Manage apps</strong> and choose "Delete hidden app data".</p>
+</section>
+
+<section>
+  <h2><span class="te">విత్తన పెట్టె ఆర్డర్ (WhatsApp)</span>Ordering a Seed Box on WhatsApp</h2>
+  <p class="te">"ఇప్పుడే కొనండి" నొక్కితే WhatsApp తెరుచుకుంటుంది. అప్పుడు మీ ఫోన్ నంబర్ మాకు, WhatsApp కి తెలుస్తుంది.</p>
+  <p>The Seed Box is a physical product, ordered by message rather than through the app. Tapping <strong>Buy now</strong> opens the product page, and the order button there opens <strong>WhatsApp</strong> with a message already written for you. Nothing is sent until you press send yourself.</p>
+  <ul>
+    <li>When you send it, <strong>your WhatsApp phone number and display name become visible to us</strong>, as they would with any message you send — that is how we reply and arrange the order.</li>
+    <li>If you already own a box and reached the page from your tracker, the prefilled message <strong>includes your box number</strong>, so we know which box you are asking about. You can delete it before sending.</li>
+    <li>The message travels through <strong>WhatsApp (Meta)</strong> and is covered by their privacy policy as well as this one. We never send your income, expenses or any other entry — the message contains only what you can read on screen before sending.</li>
+    <li>We keep order messages for as long as we need them to fulfil and support the order. Ask us and we will delete the conversation.</li>
+  </ul>
 </section>
 
 <section>
@@ -148,16 +162,17 @@ footer a{display:inline-block;margin-top:8px}
   <p>Two ordinary technical details, stated for completeness:</p>
   <ul>
     <li>The site is hosted on <strong>GitHub Pages</strong>. Like any web host, GitHub records standard server request logs, which include IP addresses. See <a href="https://docs.github.com/site-policy/privacy-policies/github-privacy-statement" rel="noopener">GitHub's privacy statement</a>.</li>
-    <li>Telugu and English typefaces are loaded from <strong>Google Fonts</strong>, so Google sees the request for the font file, including your IP address.</li>
+    <li>Telugu and English typefaces are <strong>served from this site itself</strong>. They used to come from Google Fonts; they no longer do, so loading the app makes no request to Google for them.</li>
+    <li>The "Worth two minutes" strip shows <strong>thumbnail images from YouTube</strong> (<code>i.ytimg.com</code>). Loading a thumbnail sends your IP address and the fact that you were on this page to Google, in the same way any image hosted elsewhere would. Tapping one opens YouTube, where Google's own policy applies.</li>
   </ul>
-  <p>Neither of these has any access to what you enter in the app.</p>
+  <p>None of these has any access to what you enter in the app.</p>
 </section>
 
 <section>
   <h2><span class="te">మేము చేయనివి</span>What we do not do</h2>
   <p class="te">మేము మీ డేటాను అమ్మము, పంచుకోము, విశ్లేషించము.</p>
   <ul>
-    <li><strong>No analytics.</strong> There is no Google Analytics, no Facebook pixel, no tracking script of any kind in this app.</li>
+    <li><strong>No analytics.</strong> There is no Google Analytics, no Facebook pixel and no tracking or measurement script of any kind in this app. To be precise rather than flattering about it: the YouTube thumbnails described above are images loaded from Google's servers, and any such request reveals your IP address and the page you were on. We would rather say that plainly than claim a clean sweep we cannot honestly claim.</li>
     <li><strong>No accounts.</strong> No password, no phone number, no OTP, no registration.</li>
     <li><strong>No selling or sharing.</strong> We do not sell, rent, trade or share your data, because we do not hold it.</li>
     <li><strong>No profiling.</strong> We do not build a profile of your spending or use it to target anything at you.</li>
@@ -192,6 +207,20 @@ footer a{display:inline-block;margin-top:8px}
   <p class="te">ఏదైనా సందేహం ఉంటే ఈమెయిల్ చేయండి.</p>
   <p>Questions about this policy or about how the app handles data:</p>
   <p><a href="mailto:ruchitvacloudkitchen@gmail.com">ruchitvacloudkitchen@gmail.com</a></p>
+
+  <h3><span class="te">ఫిర్యాదుల అధికారి</span>Grievance Officer</h3>
+  <p class="te">భారత నియమాల ప్రకారం ఫిర్యాదుల అధికారి వివరాలు:</p>
+  <p>As required by the Information Technology (Intermediary Guidelines and Digital Media
+     Ethics Code) Rules, 2021 and the Digital Personal Data Protection Act, 2023:</p>
+  <!-- TO BE FILLED BEFORE PLAY SUBMISSION: a real name, a real postal address and a
+       monitored address. A placeholder left live is worse than no section at all. -->
+  <p>
+    <strong>Name:</strong> [FULL NAME]<br>
+    <strong>Designation:</strong> Grievance Officer, PocketSeeds<br>
+    <strong>Address:</strong> [POSTAL ADDRESS]<br>
+    <strong>Email:</strong> <a href="mailto:ruchitvacloudkitchen@gmail.com">ruchitvacloudkitchen@gmail.com</a>
+  </p>
+  <p>We acknowledge complaints within 24 hours and aim to resolve them within 15 days.</p>
 </section>
 
 <footer>

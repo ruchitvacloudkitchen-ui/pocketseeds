@@ -124,15 +124,27 @@ Both scripts use it instead of naming a font. `text()` throws on a character
 it does not have, rather than dropping it — a missing glyph in a print file is
 worse than a failed build.
 
-## Offline route audit
+## Audits
 
 ```
-node tools/offline-audit.js
-CHROME_PATH=/path/to/chrome node tools/offline-audit.js   # if Chromium isn't on the default path
+sh tools/audit-all.sh
+CHROME_PATH=/path/to/chrome sh tools/audit-all.sh   # if Chromium isn't on the default path
 ```
 
-Needs `playwright-core` (or `playwright`). Exits non-zero on any failure, so it
-can gate a release.
+That runs all three:
+
+| File | Covers |
+|---|---|
+| `app-audit.js` | the app itself — `index.html` |
+| `pages-audit.js` | the standalone pages: `/box/`, `/seedbox/`, `/moneybox/`, `/privacy/` |
+| `offline-audit.js` | every route with the network gone |
+
+Each is standalone: it starts its own HTTP server on a free port, serves the
+repo, and stops the server when it exits. Nothing needs to be running first,
+and they can run in any order. Each needs `playwright-core` (or `playwright`)
+and a Chromium build, and each exits non-zero on any failure, so any of them
+can gate a release. `audit-all.sh` fails if a run dies without printing its
+summary line — a crash is a failure, not a pass.
 
 It starts its own HTTP server, opens the app twice to install the service
 worker and let the boot JSON reach the cache, then **kills the server** and

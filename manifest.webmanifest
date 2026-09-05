@@ -1,4 +1,5 @@
 {
+  "id": "/",
   "name": "PocketSeeds — Money Manager",
   "short_name": "PocketSeeds",
   "description": "Income, expenditure, balance, UPI expense capture, loan reminders and savings suggestions.",
@@ -6,26 +7,11 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F5F7F6",
-  "theme_color": "#0A8A66",
+  "background_color": "#F1F6F0",
+  "theme_color": "#2E8B49",
   "icons": [
-    {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M7%200h86a7%207%200%200%201%207%207v45.5C100%2080.4%2077.6%20100%2050%20100S0%2080.4%200%2052.5V7a7%207%200%200%201%207-7z' fill='%230A8A66'/%3E%3Cpath d='M75.5%2029.5C71.2%2019.6%2061.8%2014%2049.5%2014%2034.6%2014%2024.5%2022.2%2024.5%2033.4c0%2012.4%2011.4%2017.2%2025.6%2021.2%2012.6%203.5%2020.4%206.4%2020.4%2014.2%200%208.2-8.2%2013.4-20.6%2013.4-12.8%200-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M7%200h86a7%207%200%200%201%207%207v45.5C100%2080.4%2077.6%20100%2050%20100S0%2080.4%200%2052.5V7a7%207%200%200%201%207-7z' fill='%230A8A66'/%3E%3Cpath d='M75.5%2029.5C71.2%2019.6%2061.8%2014%2049.5%2014%2034.6%2014%2024.5%2022.2%2024.5%2033.4c0%2012.4%2011.4%2017.2%2025.6%2021.2%2012.6%203.5%2020.4%206.4%2020.4%2014.2%200%208.2-8.2%2013.4-20.6%2013.4-12.8%200-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-22 -22 144 144'%3E%3Crect x='-22' y='-22' width='144' height='144' fill='%230A8A66'/%3E%3Cpath d='M7%200h86a7%207%200%200%201%207%207v45.5C100%2080.4%2077.6%20100%2050%20100S0%2080.4%200%2052.5V7a7%207%200%200%201%207-7z' fill='%230A8A66'/%3E%3Cpath d='M75.5%2029.5C71.2%2019.6%2061.8%2014%2049.5%2014%2034.6%2014%2024.5%2022.2%2024.5%2033.4c0%2012.4%2011.4%2017.2%2025.6%2021.2%2012.6%203.5%2020.4%206.4%2020.4%2014.2%200%208.2-8.2%2013.4-20.6%2013.4-12.8%200-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
-    }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

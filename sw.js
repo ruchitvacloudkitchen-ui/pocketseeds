@@ -1,7 +1,16 @@
 /* PocketSeeds offline cache — the app itself works fully offline;
    data lives in localStorage on the device. */
-const CACHE = 'pocketseeds-v35';
-const ASSETS = ['./', 'index.html', 'manifest.webmanifest', 'privacy/', 'seedbox/', 'moneybox/', 'box/'];
+const CACHE = 'pocketseeds-v36';
+/* The fonts are precached because they are now ours to serve: an offline-first
+   Telugu app that falls back to whatever face the device happens to have is
+   not the same app. addAll is all-or-nothing, so everything listed here must
+   exist in the repo. */
+const ASSETS = ['./', 'index.html', 'manifest.webmanifest', 'privacy/', 'seedbox/', 'moneybox/', 'box/',
+  'fonts/fonts.css',
+  'fonts/noto-sans-telugu-telugu.woff2', 'fonts/noto-sans-telugu-latin.woff2',
+  'fonts/noto-sans-telugu-latin-ext.woff2',
+  'fonts/plus-jakarta-sans-latin.woff2', 'fonts/plus-jakarta-sans-latin-ext.woff2',
+  'icon-192.png', 'icon-512.png', 'icon-512-maskable.png', 'icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
