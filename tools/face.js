@@ -78,7 +78,13 @@ const arg = (name, dflt) => {
 };
 /* PAD/GAP/FOOT are the face's furniture, and --cell needs them to work out
    how big the face has to be, so they are declared before OPT. */
-const PAD = 8, GAP = 1.4, FOOT = 26;
+const PAD = 8, GAP = 1.4;
+/* The footer band has to be at least as deep as whatever sits in it. It was a
+   flat 26mm, which was fine while the QR reserve was 22mm tall and had spare
+   height above it on a tall face; widening the reserve to 30mm pushed it
+   0.66mm off the bottom edge of a square one. Derive it instead, so the two
+   cannot drift apart again. QRH is declared below, hence the literal here. */
+const FOOT = Math.max(26, 30 + 4);
 const OPT = {
   wmm:  Number(arg('w', 0)),
   hmm:  Number(arg('h', 0)),
@@ -325,7 +331,7 @@ const aspect = (OPT.hmm / OPT.wmm).toFixed(2);
 console.log(`\nBox face generated from box/index.html\n`);
 console.log(`  ${cols} columns x ${cfg.rows.length} rows = ${count} cells, ` +
             `${cfg.cells.map(g => g.count + ' x Rs' + g.amount).join(' + ')} = Rs${planned.toLocaleString('en-IN')}`);
-console.log(`  face ${OPT.wmm} x ${OPT.hmm} mm at ${OPT.dpi} dpi ` +
+console.log(`  face ${+OPT.wmm.toFixed(1)} x ${+OPT.hmm.toFixed(1)} mm at ${OPT.dpi} dpi ` +
             `(${Math.round(OPT.wmm * MM)} x ${Math.round(OPT.hmm * MM)} px), cell ${cell.toFixed(1)} mm`);
 console.log(`  order read from MB_FACE_ORDER — frozen, so this is the layout on the box`);
 console.log(`  written to ${OPT.out}/box-face.svg  (outlined — this is the print file)`);

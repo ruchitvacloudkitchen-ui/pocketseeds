@@ -71,6 +71,25 @@ invalidates every box already printed.**
 The script refuses to print at all if the order is not `MB_CELLS` rearranged —
 same denominations, same counts, same total.
 
+### Picking a new ladder — one trap worth knowing
+
+Searching for a set of counts that lands on exactly ₹1,00,000 looks like an
+open problem and is not. Every amount above ₹100 on the ladder is a multiple
+of 50, so once the small band (₹20–₹100) is fixed, the remainder it leaves
+must also be a multiple of 50 or **no solution exists at all**, however long
+the search runs.
+
+That is not hypothetical. A search for a 13×13 and a 14×12 face reported "no
+exact solution" for both, twice, at increasing iteration counts. The
+obstruction was not the grid — it was the search pinning the small band to one
+fixed split. 42 small cells split 8/8/8/9/9 sum to ₹2,580, leaving ₹97,420,
+which is not divisible by 50. Splitting them 8/9/9/8/8 sums to ₹2,500, leaves
+₹97,500, and both grids solve in seconds.
+
+**So: let the small-band split vary, and filter to the splits whose remainder
+is a multiple of 50 before searching at all.** A run that reports "no solution"
+without having done that has proved nothing.
+
 **Send `box-face.svg` to the printer.** Its text is outlined by `glyphs.js`,
 so there is no font name in the file at all — a printer without the font
 cannot substitute one, which is what would otherwise set the wrong character
