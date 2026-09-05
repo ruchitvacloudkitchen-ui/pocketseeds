@@ -14,17 +14,17 @@
 :root{
   --bg:#F5F7F6; --surface:#FFFFFF; --surface-2:#F2F6F3;
   --ink:#0E1B14; --muted:#6B7A72; --line:#E4EBE6;
-  --brand:#0B7A43; --brand-2:#16A34A;
+  --brand:#0B7A43; --brand-2:#16A34A; --on-brand:#FFFFFF;
   --in-bg:#E6F4EC; --warn:#B45309; --warn-bg:#FEF3C7;
   --radius:18px; --shadow:0 1px 3px rgba(14,27,20,.06),0 6px 18px rgba(14,27,20,.05);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){--bg:#0A120E;--surface:#121D17;--surface-2:#0E1712;--ink:#E7F0EA;
-  --muted:#8FA398;--line:#1F2E26;--brand:#34D399;--brand-2:#34D399;--in-bg:#0C2A1D;
+  --muted:#8FA398;--line:#1F2E26;--brand:#34D399;--brand-2:#34D399;--on-brand:#06231A;--in-bg:#0C2A1D;
   --warn:#FCD34D;--warn-bg:#2E2410;--shadow:0 2px 12px rgba(0,0,0,.45)}
 }
 :root[data-theme="dark"]{--bg:#0A120E;--surface:#121D17;--surface-2:#0E1712;--ink:#E7F0EA;
-  --muted:#8FA398;--line:#1F2E26;--brand:#34D399;--brand-2:#34D399;--in-bg:#0C2A1D;
+  --muted:#8FA398;--line:#1F2E26;--brand:#34D399;--brand-2:#34D399;--on-brand:#06231A;--in-bg:#0C2A1D;
   --warn:#FCD34D;--warn-bg:#2E2410;--shadow:0 2px 12px rgba(0,0,0,.45)}
 
 *{box-sizing:border-box}
@@ -41,7 +41,7 @@ header{display:flex;align-items:center;gap:11px;padding:4px 0 14px}
 .lang{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:11px;overflow:hidden}
 .lang button{border:0;background:none;font-family:inherit;font-size:13px;font-weight:800;color:var(--muted);
   padding:0 10px;height:32px;cursor:pointer}
-.lang button[aria-pressed="true"]{background:#2E8B49;color:#fff}
+.lang button[aria-pressed="true"]{background:var(--brand);color:var(--on-brand)}
 
 /* ---------- hero ---------- */
 .hero{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:22px;
@@ -53,16 +53,14 @@ header{display:flex;align-items:center;gap:11px;padding:4px 0 14px}
   background:var(--surface-2);border:1px solid var(--line)}
 /* The tagline sits under the title and stays on one line — it is a saying,
    and a saying broken across two lines stops sounding like one. */
-.tagline{margin:9px 0 0;font-size:14.5px;font-weight:700;color:#2E8B49;line-height:1.35;
+.tagline{margin:9px 0 0;font-size:14.5px;font-weight:700;color:var(--brand);line-height:1.35;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .tagline{color:#7BD189} }
-:root[data-theme="dark"] .tagline{color:#7BD189}
 .ribbon{position:absolute;top:16px;right:-42px;transform:rotate(45deg);background:#B0431A;color:#fff;
   font-size:11px;font-weight:800;letter-spacing:.04em;padding:6px 46px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
 .cta{display:flex;flex-direction:column;gap:9px;margin-top:15px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:13px;
   padding:14px 16px;font-family:inherit;font-size:16.5px;font-weight:800;cursor:pointer;text-decoration:none}
-.btn-p{background:#2E8B49;color:#fff}
+.btn-p{background:var(--brand);color:var(--on-brand)}
 .btn-g{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
 .btn:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
 
@@ -107,7 +105,7 @@ ol.steps li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;pad
   border-bottom:1px dashed var(--line)}
 ol.steps li:last-child{border:0;padding-bottom:0}
 ol.steps li::before{content:counter(s);flex:none;width:29px;height:29px;border-radius:50%;
-  background:#2E8B49;color:#fff;font-weight:800;font-size:14px;display:grid;place-items:center}
+  background:var(--brand);color:var(--on-brand);font-weight:800;font-size:14px;display:grid;place-items:center}
 ol.steps b{display:block;font-size:15.5px}
 ol.steps p{margin:2px 0 0;font-size:13.5px;color:var(--muted);line-height:1.45}
 
