@@ -162,8 +162,13 @@ if(OPT.cell > 0){
   faceW = cell * cols  + GAP * (cols  - 1) + PAD * 2;
   faceH = cell * rowsN + GAP * (rowsN - 1) + PAD * 2 + FOOT;
 }else{
-  faceW = OPT.wmm > 0 ? OPT.wmm : 236.6;         // 13.4mm cells on a 15x15 face
-  faceH = OPT.hmm > 0 ? OPT.hmm : 262.6;
+  /* Derive the default face from the grid, never from stored millimetres: a
+     hard-coded size outlives the grid it was measured for, and the next
+     regrid silently squashes the cells to fit it. DEFAULT_CELL is the one
+     number here, and it is a cell you can write a tick in. */
+  const DEFAULT_CELL = 13.4;
+  faceW = OPT.wmm > 0 ? OPT.wmm : DEFAULT_CELL * cols  + GAP * (cols  - 1) + PAD * 2;
+  faceH = OPT.hmm > 0 ? OPT.hmm : DEFAULT_CELL * rowsN + GAP * (rowsN - 1) + PAD * 2 + FOOT;
   const cw = (faceW - PAD * 2 - GAP * (cols - 1)) / cols;
   const ch = (faceH - PAD * 2 - FOOT - GAP * (rowsN - 1)) / rowsN;
   cell = Math.min(cw, ch);                       // square cells

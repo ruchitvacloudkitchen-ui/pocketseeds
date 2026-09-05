@@ -150,7 +150,20 @@
    The tagline is one line and must stay one line; if it ever wraps, the fix
    is the copy, not a smaller type size. */
 .sb.promo.big{align-items:flex-start;gap:12px;padding:13px 14px;border-radius:20px;
-  position:relative;overflow:hidden;flex-wrap:nowrap}
+  position:relative;overflow:hidden;flex-wrap:nowrap;
+  /* Sitting proud, the one thing worth taking from the reference layout: a
+     deeper shadow and a pale rim so the card reads as an object on the page
+     rather than another row. Done with shadow rather than a negative margin,
+     because the height budget on a 360x640 screen is already spent getting
+     Quick add above the fold. */
+  border-color:rgba(46,139,73,.30);
+  box-shadow:0 1px 2px rgba(34,36,46,.05), 0 10px 22px -8px rgba(34,36,46,.20)}
+:root[data-theme="dark"] .sb.promo.big{border-color:rgba(123,209,137,.28);
+  box-shadow:0 2px 20px rgba(0,0,0,.55)}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .sb.promo.big{border-color:rgba(123,209,137,.28);
+    box-shadow:0 2px 20px rgba(0,0,0,.55)}
+}
 .sb.promo.big::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(120% 130% at 0% 45%, rgba(86,197,150,.20) 0%, rgba(86,197,150,0) 64%)}
 .sb.promo.big > *{position:relative}

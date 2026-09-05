@@ -29,20 +29,47 @@ Exits non-zero, saying which, if the cells do not add up to the goal or do not
 fit the declared rows — and again if a font reference somehow reaches the
 print file.
 
-Sizes for the 15 x 15 face (8mm margin, 1.4mm gutter, 26mm footer band):
+Sizes for the 10 x 20 face (8mm margin, 1.4mm gutter, 26mm footer band):
 
 | cell | face |
 |---|---|
-| 12 mm | 215.6 x 241.6 mm |
-| 13 mm | 230.6 x 256.6 mm |
-| **13.4 mm** | **236.6 x 262.6 mm** |
-| 14 mm | 245.6 x 271.6 mm |
+| 12 mm | 148.6 x 308.6 mm |
+| 13 mm | 158.6 x 328.6 mm |
+| **13.4 mm** | **162.6 x 336.6 mm** |
+| 14 mm | 168.6 x 348.6 mm |
 
-Or from the other end: `--w 220` gives a 12.29mm cell on a 220 x 246mm face.
+With no arguments at all the face is derived from the grid at a 13.4mm cell.
+Nothing here is a stored millimetre measurement: a hard-coded default outlives
+the grid it was measured for, and the next regrid would quietly squash the
+cells to fit it.
 
-Cell order is shuffled with a fixed seed so the face reads as mixed rather
-than blocked, and so re-running produces the identical layout. Changing
-`--seed` invalidates any box already printed.
+At 2.07:1 this face is a tall panel, not a cube face. The script says so on
+every run. If it has to sit on a cube, the column count is what changes.
+
+## The cell order is frozen, not shuffled at print time
+
+`MB_FACE_ORDER` in `box/index.html` is the printed sequence, written down. The
+app draws from it and this script prints from it, so the screen and the box
+cannot drift apart — which matters, because the whole mechanic is "fill a
+printed cell, tap the same cell here".
+
+`MB_CELLS` beside it is only a bill of materials: how many of each
+denomination the face carries, in no particular order. Reading *that* in order
+is what once drew the board as twenty solid bands while the print was mixed.
+
+To re-cut the face:
+
+```
+node tools/face.js --make-order
+```
+
+It prints a `MB_FACE_ORDER` literal to paste over the existing one, shuffled
+with a fixed seed so the face reads as mixed rather than blocked. It skips the
+order checks, since those are what it is being run to satisfy. **Doing this
+invalidates every box already printed.**
+
+The script refuses to print at all if the order is not `MB_CELLS` rearranged —
+same denominations, same counts, same total.
 
 **Send `box-face.svg` to the printer.** Its text is outlined by `glyphs.js`,
 so there is no font name in the file at all — a printer without the font
