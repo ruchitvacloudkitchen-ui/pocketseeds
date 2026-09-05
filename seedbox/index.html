@@ -76,11 +76,20 @@ header{display:flex;align-items:center;gap:11px;padding:4px 0 14px}
 /* The ribbon crosses the top-right corner, and the tagline is the hero's
    first line now that the eyebrow and the pill have gone — without this the
    English line runs straight under it. */
-.tagline{margin:2px 84px 0 0;font-size:19px;font-weight:800;color:var(--brand);
+.tagline{margin:0;font-size:19px;font-weight:800;color:var(--brand);
   line-height:1.3;letter-spacing:-.01em}
-@media (max-width:400px){ .tagline{margin-right:64px} }
-.ribbon{position:absolute;top:16px;right:-42px;transform:rotate(45deg);background:#B0431A;color:#fff;
-  font-size:11px;font-weight:800;letter-spacing:.04em;padding:6px 46px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+/* This was a 45-degree corner ribbon, and at 360px it was not a corner ribbon
+   at all: rotated, the band was 302px long in English and ran diagonally
+   across the whole card, hiding the end of the tagline and a third of the
+   Order button, with its own text clipped at both ends by the hero's
+   overflow:hidden. A corner flag has room for roughly ten characters at this
+   width; "Discipline Today - Freedom Tomorrow" is thirty-five, and the Telugu
+   is no shorter. The words are worth keeping and the diagonal is not, so it
+   is a horizontal band above the tagline: same words, fully readable, and
+   overlapping nothing. */
+.ribbon{display:inline-block;margin:0 0 9px;background:#B0431A;color:#fff;
+  font-size:11px;font-weight:800;letter-spacing:.04em;line-height:1.35;
+  padding:5px 11px;border-radius:999px;max-width:100%}
 .cta{display:flex;flex-direction:column;gap:9px;margin-top:15px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:13px;
   padding:14px 16px;font-family:inherit;font-size:16.5px;font-weight:800;cursor:pointer;text-decoration:none}

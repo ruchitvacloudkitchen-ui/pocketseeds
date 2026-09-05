@@ -1588,7 +1588,12 @@ table.sip tbody tr:last-child td{font-size:15px}
 
   <!-- ===================== MORE HUB ===================== -->
   <section class="page" id="page-more">
-    <div class="sec" style="margin-top:4px">
+    <!-- the same Seed Box card Home shows, from the same builder and the same
+         mbState() -- More is where someone goes looking for things the app
+         has, so the card belongs above the grid rather than as one tile in it -->
+    <div class="sec" style="margin-top:4px"><div id="sbBannerMore"></div></div>
+
+    <div class="sec">
       <div class="card" style="padding:16px" id="fundsBox"></div>
     </div>
 
@@ -5693,7 +5698,8 @@ const MENU = [
   { go:'reports',                      icon:'chart',    t:'mTracker'   },
   { go:'family',                       icon:'people',   t:'mFamily'    },
   { act:'statement',                   icon:'doc',      t:'mStatement' },
-  { href:'seedbox/',                   icon:'box',      t:'mMoneyBox'  },
+  /* the Seed Box tile is gone: the card above the grid is the one answer now,
+     and it says more than a tile could -- state, total, and the right action */
   { go:'invite',                       icon:'gift',     t:'mInvite'    },
   { act:'settings',                    icon:'gear',     t:'mSettings'  }
 ];
@@ -7231,16 +7237,13 @@ function renderMoneyBox(){
 }
 
 
-/* The home card. Always on screen, never dismissible, and what it says is
-   the whole of the difference: someone without a box is shown the box, and
-   someone with one is shown their own count and never sold a box again. */
-function renderSeedBanner(){
-  const host = $('#sbBanner'); if(!host) return;
-  const st = mbState();
-
-  /* kind 'none' means no order number is set, and a card whose only action is
-     a dead button is worse than no card */
-  if(st.kind === 'none'){ host.innerHTML = ''; return; }
+/* The card. Always on screen, never dismissible, and what it says is the
+   whole of the difference: someone without a box is shown the box, and someone
+   with one is shown their own count and never sold a box again.
+   Home and More show the same card. One builder, one mbState() call, so the
+   two can never drift into saying different things about the same box. */
+function seedCardHTML(st){
+  if(st.kind === 'none') return '';
 
   const progress = st.kind === 'progress';
   /* The status line carries the total AND the goal again: the note has its own
@@ -7267,7 +7270,7 @@ function renderSeedBanner(){
     ? `<a class="sb-go2" href="seedbox/">${esc(t('mbBuy'))}</a>`
     : '';
 
-  host.innerHTML = `
+  return `
     <div class="sb-card">
       ${badge}
       <div class="sb-head"><span class="sb-ico">${ic('gift')}</span><h4 class="sb-t">${esc(t('mbCardT'))}</h4></div>
@@ -7278,6 +7281,17 @@ function renderSeedBanner(){
         <span class="sb-right">${secondary}${primary}</span>
       </div>
     </div>`;
+}
+
+function renderSeedBanner(){
+  /* kind 'none' means no order number is set, and a card whose only action is
+     a dead button is worse than no card -- seedCardHTML returns '' for it, so
+     both hosts simply empty out. */
+  const st = mbState();
+  const html = seedCardHTML(st);
+  ['#sbBanner', '#sbBannerMore'].forEach(sel => {
+    const host = $(sel); if(host) host.innerHTML = html;
+  });
 }
 
 /* ---- Google Drive sync ----------------------------------------------
