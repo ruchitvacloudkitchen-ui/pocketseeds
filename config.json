@@ -7,5 +7,5 @@
     "url": ""
   },
   "note": "Edited through the owner panel in the app, then committed here. Leave theme empty to use the app's own palette — a colour set here is written as an inline style on the root element and so overrides BOTH light and dark themes, which stops dark mode lightening the brand for contrast. Blank ad fields mean the built-in house ads keep rotating. seedBoxWhatsApp is the number Seed Box orders go to, digits only with country code (e.g. 919876543210). While it is empty the product page's order button stays inert and the home promo banner does not render at all — a Buy button that goes nowhere is worse than no banner.",
-  "seedBoxWhatsApp": ""
+  "seedBoxWhatsApp": "917989964542"
 }

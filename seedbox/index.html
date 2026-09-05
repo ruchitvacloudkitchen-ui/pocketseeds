@@ -248,7 +248,9 @@ const STR = {
     q4:'తప్పు నొక్కితే?', a4:'మళ్లీ నొక్కితే వెనక్కి వెళ్తుంది. "చివరిది వెనక్కి" బటన్ కూడా ఉంది.',
     q5:'ఒకటి కంటే ఎక్కువ బాక్స్‌లు ఉంటే?', a5:'ఉండొచ్చు. ప్రతి బాక్స్ దాని నంబర్‌తో విడిగా లెక్కలో ఉంటుంది.',
     closeT:'మొదలుపెడదామా?', closeS:'ఒక గడి. ఒక రోజు. ఒక లక్ష.',
-    backApp:'యాప్‌కి తిరిగి', waMsg:'నమస్తే! PocketSeeds ₹1,00,000 పొదుపు బాక్స్ కావాలి.'
+    backApp:'యాప్‌కి తిరిగి',
+    waMsg:'నమస్తే! PocketSeeds విత్తన పెట్టె (₹1,00,000 పొదుపు ట్రాకర్) కావాలి.',
+    waMsgRef:'నమస్తే! PocketSeeds విత్తన పెట్టె (₹1,00,000 పొదుపు ట్రాకర్) కావాలి. నా దగ్గర ఉన్న పెట్టె: {b}'
   },
   en: {
     eyebrow:'Save Smart. Track Easy. Achieve Big.',
@@ -281,13 +283,19 @@ const STR = {
     q4:'What if I tap the wrong cell?', a4:'Tap it again to undo, or use the "Undo last" button.',
     q5:'Can I track more than one box?', a5:'Yes. Each box is counted separately under its own number.',
     closeT:'Shall we start?', closeS:'One cell. One day. One lakh.',
-    backApp:'Back to the app', waMsg:'Hello! I would like the PocketSeeds ₹1,00,000 savings box.'
+    backApp:'Back to the app',
+    waMsg:'Hello! I would like a PocketSeeds Seed Box (₹1,00,000 savings tracker).',
+    waMsgRef:'Hello! I would like a PocketSeeds Seed Box (₹1,00,000 savings tracker). My current box: {b}'
   }
 };
 
 /* the language and theme the app is already set to, so nothing changes underfoot */
 let LMODE = localStorage.getItem('pocketseeds.lmode') === 'en' ? 'en' : 'te';
-const t = k => (STR[LMODE] && STR[LMODE][k]) || STR.en[k] || k;
+const t = (k, vars) => {
+  let out = (STR[LMODE] && STR[LMODE][k]) || STR.en[k] || k;
+  if(vars) Object.keys(vars).forEach(n => { out = out.split('{' + n + '}').join(vars[n]); });
+  return out;
+};
 
 (function theme(){
   const v = localStorage.getItem('pocketseeds.theme') || 'auto';
@@ -319,7 +327,19 @@ function paint(){
 
   /* With no number set the button would be a dead link, so it says so instead
      of pretending to work. */
-  const href = MB_WA ? 'https://wa.me/' + MB_WA + '?text=' + encodeURIComponent(t('waMsg')) : '';
+  /* ?ref=BOX0311 arrives when the reader came from a box they already own, so
+     the order can name it. Validated against the same shape the tracker
+     accepts before it is used — the query string is not to be trusted, and it
+     ends up in a message sent to a real person. */
+  const ref = (() => {
+    try{
+      const r = new URLSearchParams(location.search).get('ref') || '';
+      return /^BOX\d{4,6}$/.test(r.trim().toUpperCase()) ? r.trim().toUpperCase() : '';
+    }catch(e){ return ''; }
+  })();
+  const msg = ref ? t('waMsgRef', { b: ref }) : t('waMsg');
+  /* wa.me wants the digits only, and the text percent-encoded */
+  const href = MB_WA ? 'https://wa.me/' + MB_WA + '?text=' + encodeURIComponent(msg) : '';
   ['waBtn','waBtn2'].forEach(id => {
     const b = document.getElementById(id);
     if(!b) return;

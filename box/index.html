@@ -193,7 +193,7 @@ footer a{color:var(--brand);font-weight:700}
 
 <footer>
   <a href="../">&larr; <span data-t="backApp"></span></a> &nbsp;·&nbsp;
-  <a href="../seedbox/"><span data-t="aboutBox"></span></a>
+  <a href="../seedbox/" id="aboutBox"><span data-t="aboutBox"></span></a>
 </footer>
 </div>
 
@@ -626,6 +626,11 @@ function recentHTML(){
 }
 
 function render(){
+  /* Carry this box's id across to the product page, so an order started from
+     a box someone already owns can say which one it was. Only the id — the
+     page validates it again before it goes anywhere near a message. */
+  const ab = document.getElementById('aboutBox');
+  if(ab && BOX && BOX.boxId) ab.href = '../seedbox/?ref=' + encodeURIComponent(BOX.boxId);
   const saved = total(), p = pctOf(), left = Math.max(0, BOX.goal - saved);
   const boxes = knownBoxes();
   const last  = recent(10);
