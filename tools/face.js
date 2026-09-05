@@ -154,7 +154,14 @@ cfg.rows.forEach(n => { grid.push(order.slice(k, k + n)); k += n; });
 
 /* ---------- geometry, in mm, then scaled ---------- */
 const MM = OPT.dpi / 25.4;                       // px per mm at the chosen dpi
-const QRW = 30, QRH = 22;                        // mm reserved for the QR label
+/* Reserved for the QR label, which is an applied sticker rather than
+   engraving: a code burned into dark timber often fails to scan because the
+   burn and the grain sit too close in value, and that is the sort of thing
+   you discover after the run. 34 x 30 holds a 24 x 24 code — 20mm of symbol
+   plus a 4-module quiet zone — with the human-readable box id beneath it, and
+   1mm of slack all round so the label can be applied without fouling the
+   grid. */
+const QRW = 34, QRH = 30;
 const rowsN = cfg.rows.length;
 let cell, faceW, faceH;
 if(OPT.cell > 0){
@@ -224,17 +231,21 @@ function drawFace(outlined){
          + `font-size="${px(subCap * 1.35)}" fill="${INK}">Small Amounts Become Big Savings</text>\n`;
   }
 
-  /* the space the QR label and the box ID are stuck into afterwards */
+  /* The space the label is applied into afterwards.
+     THE PRINT FILE LEAVES IT EMPTY. It used to carry a dashed rectangle and
+     the words "QR LABEL + BOX ID", both outlined paths — which a laser would
+     have burned into every box in the run, under a sticker meant to cover
+     clean timber. The guide belongs on the proof, where a person reads it,
+     and nowhere near the file that drives the machine. */
   const qx = x0 + usedW - QRW, qy = fy - 1;
-  out += `<rect x="${px(qx)}" y="${px(qy)}" width="${px(QRW)}" height="${px(QRH)}" `
-       + `fill="none" stroke="${LINE}" stroke-width="${px(0.3)}" `
-       + `stroke-dasharray="${px(1.5)} ${px(1.5)}" rx="${px(1.5)}"/>\n`;
-  const label = 'QR LABEL + BOX ID';
-  out += outlined
-    ? OUT.text(label, px(qx + QRW / 2), px(qy + QRH / 2), px(2.4),
-               { anchor:'middle', stroke:INK, weight:0.11 })
-    : `<text x="${px(qx + QRW / 2)}" y="${px(qy + QRH / 2)}" text-anchor="middle" `
-      + `font-family="Helvetica,Arial,sans-serif" font-size="${px(3.2)}" fill="${INK}">${label}</text>`;
+  if(!outlined){
+    out += `<rect x="${px(qx)}" y="${px(qy)}" width="${px(QRW)}" height="${px(QRH)}" `
+         + `fill="none" stroke="${LINE}" stroke-width="${px(0.3)}" `
+         + `stroke-dasharray="${px(1.5)} ${px(1.5)}" rx="${px(1.5)}"/>\n`;
+    out += `<text x="${px(qx + QRW / 2)}" y="${px(qy + QRH / 2)}" text-anchor="middle" `
+         + `font-family="Helvetica,Arial,sans-serif" font-size="${px(3.2)}" fill="${INK}">`
+         + `LABEL AREA — DO NOT ENGRAVE</text>`;
+  }
   out += `\n</svg>\n`;
   return out;
 }
