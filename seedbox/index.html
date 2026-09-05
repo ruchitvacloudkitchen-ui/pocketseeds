@@ -63,9 +63,13 @@ header{display:flex;align-items:center;gap:11px;padding:4px 0 14px}
    the tag reserve the space before it loads, so nothing below it jumps. */
 .shot-sec{padding:14px}
 /* Capped and centred: at full column width on a desktop this is a 700px-wide,
-   1050px-tall billboard, which is not what a product photograph is for. */
+   1050px-tall billboard, which is not what a product photograph is for.
+   No hardcoded aspect-ratio: it used to say 2/3, and the moment the poster
+   stopped being exactly 2:3 that rule silently squashed it. The width and
+   height attributes on the img reserve the box instead, so the shape follows
+   whatever file is actually there and a new poster needs no CSS change. */
 .shot{display:block;width:100%;max-width:420px;margin:0 auto;height:auto;
-  aspect-ratio:2/3;border-radius:14px;background:var(--surface-2)}
+  border-radius:14px;background:var(--surface-2)}
 .shot-cap{margin:11px 2px 0;font-size:13.5px;line-height:1.5;color:var(--muted)}
 /* The tagline sits under the title and stays on one line — it is a saying,
    and a saying broken across two lines stops sounding like one. */
@@ -174,16 +178,15 @@ footer a{color:var(--brand);font-weight:700}
 </div>
 
 <!-- The photograph, at its own size, with the caption the image cannot
-     carry. Below the fold, so it is lazy; width and height are set so the
-     page does not jump when it arrives. The 720 is served to phones and the
-     1200 to everything else — the full 1686 the camera produced is four times
-     the pixels a 360px screen can use. -->
+     carry. Below the fold, so it is lazy; width and height are the file's real
+     intrinsic size so the page does not jump when it arrives. There is no
+     srcset: the poster is 361px wide, narrower than any phone slot it fills,
+     so a second "mobile" source could only be an upscale of this one — more
+     bytes, no more detail. Restore srcset the day a >=1200px export exists. -->
 <section class="shot-sec">
   <img class="shot" id="shot"
-       src="../seedbox-hero-720.jpg"
-       srcset="../seedbox-hero-720.jpg 720w, ../seedbox-hero.jpg 1200w"
-       sizes="(max-width:452px) calc(100vw - 32px), 420px"
-       width="1200" height="1800"
+       src="../seedbox-hero.jpg"
+       width="361" height="548"
        alt="" data-t-alt="shotAlt" loading="lazy" decoding="async">
   <p class="shot-cap" data-t="shotCap"></p>
 </section>
