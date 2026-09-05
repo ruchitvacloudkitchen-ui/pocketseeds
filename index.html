@@ -1203,6 +1203,10 @@ table.sip tbody tr:last-child td{font-size:15px}
 .save-bar .sb-g{color:var(--muted);flex:0 0 auto}
 .save-bar.on .sb-ic{background:var(--in-bg);color:var(--brand)}
 .save-bar.busy{opacity:.6;pointer-events:none}
+/* go() sets .hidden on this off the home tab, but display:flex above beats the
+   attribute on its own, so the bar was showing on every tab regardless. Same
+   one-line pattern the file already uses for .rem-bar and .reel-arw. */
+.save-bar[hidden]{display:none}
 
 /* single-colour icon system */
 .i{width:20px;height:20px;display:inline-block;vertical-align:-4px;flex:0 0 auto}
