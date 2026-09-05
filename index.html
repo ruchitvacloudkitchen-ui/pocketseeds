@@ -99,15 +99,33 @@
 /* The total card is a light lavender, so its ink is dark — a near-white
    heading would vanish on it. Like the three blocks below, it carries its own
    background and ink and so looks the same in both themes. */
-/* One flat green for every panel of the coach — the ramp is gone, this is the
-   single colour asked for. Set it once here and all four follow.
-   Near-black-green ink on it measures 10.06:1. */
-:root{--sc:#8ED47E; --sc-ink:#071C0B}
+/* One flat tint for every panel of the coach. Set it once here and all four
+   follow. Dark text on a light tint, light tint text on a dark ground — never
+   white on a pastel, which lands near 1.3:1 and cannot be read.
+     light  #07242B on #D6F0F5 = 13.61:1
+     dark   #D6F0F5 on #123C44 = 10.05:1
+   The bloom, the drop shadow and the percentage chip are tokens too, because
+   all three were mixed from the old green and would read as a grey smudge and
+   a green stain once the panel turned blue. */
+:root{--sc:#D6F0F5; --sc-ink:#07242B;
+  --sc-bloom:rgba(255,255,255,.42); --sc-glow:rgba(24,86,100,.22);
+  --sc-chip:rgba(7,36,43,.10); --sc-chip-line:rgba(7,36,43,.22);
+  --sc-ic:rgba(255,255,255,.55); --sc-ic-line:rgba(7,36,43,.10)}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--sc:#123C44; --sc-ink:#D6F0F5;
+    --sc-bloom:rgba(214,240,245,.10); --sc-glow:rgba(0,0,0,.45);
+    --sc-chip:rgba(214,240,245,.14); --sc-chip-line:rgba(214,240,245,.26);
+    --sc-ic:rgba(214,240,245,.14); --sc-ic-line:rgba(214,240,245,.22)}
+}
+:root[data-theme="dark"]{--sc:#123C44; --sc-ink:#D6F0F5;
+  --sc-bloom:rgba(214,240,245,.10); --sc-glow:rgba(0,0,0,.45);
+  --sc-chip:rgba(214,240,245,.14); --sc-chip-line:rgba(214,240,245,.26);
+  --sc-ic:rgba(214,240,245,.14); --sc-ic-line:rgba(214,240,245,.22)}
 .sc-top{border-radius:22px;padding:18px 19px;color:var(--sc-ink);position:relative;overflow:hidden;
   background:var(--sc);
-  box-shadow:0 10px 28px rgba(60,110,45,.24)}
+  box-shadow:0 10px 28px var(--sc-glow)}
 .sc-top::after{content:'';position:absolute;right:-38px;top:-46px;width:150px;height:150px;border-radius:50%;
-  background:radial-gradient(circle, rgba(255,255,255,.42), rgba(255,255,255,0) 68%)}
+  background:radial-gradient(circle, var(--sc-bloom), transparent 68%)}
 .sc-top .sc-k{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.8}
 .sc-top .sc-amt{font-size:36px;font-weight:800;letter-spacing:-.03em;margin:3px 0 2px;line-height:1.05}
 .sc-top .sc-of{font-size:14px;font-weight:600;opacity:.88}
@@ -149,32 +167,43 @@
    type sizes — so the two read as one family down the page.
    The tagline is one line and must stay one line; if it ever wraps, the fix
    is the copy, not a smaller type size. */
+/* The full promo carries its own tint rather than the app's surface, so it
+   reads as the product's own card. Dark text on the light tint, tint text on
+   the dark ground; nothing white on the pastel, which would be 1.2:1.
+     light  #22242E on #FBD7EC = 11.79:1, tagline #4A1F3D = 10.31:1
+     dark   #FBD7EC on #4A1F3D = 10.31:1
+   The Buy button is #2A7F42 rather than the brand #2E8B49: on this ground the
+   brand green only reaches 2.65:1 and the button loses its edge, and its
+   white label was under AA at 4.28:1 anyway. #2A7F42 gives 4.98:1 on the
+   label and 3.81:1 against the card.
+   It also sits proud, the one thing worth taking from the reference layout:
+   a deeper shadow and a rim so it reads as an object rather than another row,
+   done with shadow rather than a negative margin because the height budget on
+   a 360x640 screen is already spent getting Quick add above the fold. */
+:root{--sbx:#FBD7EC; --sbx-ink:#22242E; --sbx-tag:#4A1F3D;
+  --sbx-rim:rgba(74,31,61,.24); --sbx-btn:#2A7F42; --sbx-btn-ink:#FFFFFF;
+  --sbx-shadow:0 1px 2px rgba(34,36,46,.05), 0 10px 22px -8px rgba(34,36,46,.20)}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--sbx:#4A1F3D; --sbx-ink:#FBD7EC; --sbx-tag:#FBD7EC;
+    --sbx-rim:rgba(251,215,236,.28); --sbx-btn:#FBD7EC; --sbx-btn-ink:#3A1030;
+    --sbx-shadow:0 2px 20px rgba(0,0,0,.55)}
+}
+:root[data-theme="dark"]{--sbx:#4A1F3D; --sbx-ink:#FBD7EC; --sbx-tag:#FBD7EC;
+  --sbx-rim:rgba(251,215,236,.28); --sbx-btn:#FBD7EC; --sbx-btn-ink:#3A1030;
+  --sbx-shadow:0 2px 20px rgba(0,0,0,.55)}
+
 .sb.promo.big{align-items:flex-start;gap:12px;padding:13px 14px;border-radius:20px;
   position:relative;overflow:hidden;flex-wrap:nowrap;
-  /* Sitting proud, the one thing worth taking from the reference layout: a
-     deeper shadow and a pale rim so the card reads as an object on the page
-     rather than another row. Done with shadow rather than a negative margin,
-     because the height budget on a 360x640 screen is already spent getting
-     Quick add above the fold. */
-  border-color:rgba(46,139,73,.30);
-  box-shadow:0 1px 2px rgba(34,36,46,.05), 0 10px 22px -8px rgba(34,36,46,.20)}
-:root[data-theme="dark"] .sb.promo.big{border-color:rgba(123,209,137,.28);
-  box-shadow:0 2px 20px rgba(0,0,0,.55)}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]) .sb.promo.big{border-color:rgba(123,209,137,.28);
-    box-shadow:0 2px 20px rgba(0,0,0,.55)}
-}
-.sb.promo.big::before{content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(120% 130% at 0% 45%, rgba(86,197,150,.20) 0%, rgba(86,197,150,0) 64%)}
+  background:var(--sbx);border-color:var(--sbx-rim);box-shadow:var(--sbx-shadow)}
+.sb.promo.big .n{color:var(--sbx-ink)}
+.sb.promo.big .buy{background:var(--sbx-btn);color:var(--sbx-btn-ink)}
 .sb.promo.big > *{position:relative}
 .sb.promo.big .shot{width:54px;height:54px;border-radius:15px;overflow:hidden}
 .sb.promo.big .shot .i{width:30px;height:30px}
 .sb.promo.big .shot img{width:100%;height:100%;object-fit:cover;display:block}
 .sb.promo.big .n{font-size:16.5px}
 .sb.promo.big .tag{display:block;font-size:13.5px;font-weight:700;
-  color:#2E8B49;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-:root[data-theme="dark"] .sb.promo.big .tag{color:var(--brand)}
-@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .sb.promo.big .tag{color:var(--brand)} }
+  color:var(--sbx-tag);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Thumbnail, title and the one action share the top row; the tagline takes
    the width underneath. Two earlier shapes both broke something: giving the
    action its own row cost 45px and pushed Quick add off a 640px screen, and
@@ -253,19 +282,20 @@
 .sc-bento{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .sc-b{position:relative;overflow:hidden;border-radius:20px;padding:15px 16px;min-height:118px;
   display:flex;flex-direction:column;justify-content:space-between;
-  box-shadow:0 6px 18px rgba(14,27,20,.12)}
+  box-shadow:0 6px 18px var(--sc-glow)}
 .sc-b.wide{grid-column:1 / -1;min-height:104px}
 .sc-b::after{content:'';position:absolute;right:-30px;top:-34px;width:118px;height:118px;border-radius:50%;
-  background:radial-gradient(circle, rgba(255,255,255,.38), rgba(255,255,255,0) 66%)}
+  background:radial-gradient(circle, var(--sc-bloom), transparent 66%)}
 .sc-b > *{position:relative}
 .sc-b .sc-h{display:flex;align-items:center;gap:8px}
-/* the overlays were white, which vanishes on a light green ground */
+/* the overlays were white, which vanishes on a light ground and glares on a
+   dark one, so both the fill and its hairline follow the tint */
 .sc-b .sc-ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
-  background:rgba(255,255,255,.5);box-shadow:inset 0 0 0 1px rgba(7,28,11,.10)}
+  background:var(--sc-ic);box-shadow:inset 0 0 0 1px var(--sc-ic-line)}
 .sc-b .sc-ic .i{width:16px;height:16px}
 .sc-b .sc-nm{font-size:14px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
 .sc-b .sc-pc{margin-left:auto;font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:999px;
-  background:rgba(83,136,62,.22);box-shadow:inset 0 0 0 1px rgba(83,136,62,.32)}
+  background:var(--sc-chip);box-shadow:inset 0 0 0 1px var(--sc-chip-line)}
 .sc-b .sc-v{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-top:10px}
 /* class names kept — they are the bucket's identity in SC_PARTS, not a colour.
    All three are the same green now; the icon and the name tell them apart. */
