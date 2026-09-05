@@ -35,6 +35,18 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Telugu',system-ui,-apple-system,
 
 /* ---------- chrome ---------- */
 header{display:flex;align-items:center;gap:11px;padding:4px 0 14px}
+/* Home button. Someone who arrived by scanning the QR on a wooden box has no
+   history to go back through and no other way into the app; without this the
+   page is a dead end. The app's own back arrow, same 1.85 stroke and round
+   caps as every icon in it, at a 44px target with the visual kept at 34px by
+   padding rather than by growing the glyph. */
+.homebtn{flex:0 0 auto;display:grid;place-items:center;width:34px;height:34px;
+  border-radius:11px;border:1px solid var(--line);background:var(--surface);
+  color:var(--ink);text-decoration:none;position:relative;box-shadow:var(--shadow)}
+.homebtn svg{width:19px;height:19px;display:block}
+.homebtn::before{content:'';position:absolute;left:-5px;right:-5px;top:50%;
+  height:44px;transform:translateY(-50%)}
+.homebtn:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
 .mark{width:34px;height:34px;flex:none}
 .brand{font-weight:800;font-size:19px;letter-spacing:-.3px;flex:1}
 .brand span{color:var(--brand)}
@@ -136,6 +148,7 @@ footer a{color:var(--brand);font-weight:700}
 <div class="wrap">
 
 <header>
+  <a class="homebtn" href="../" id="homeBtn" aria-label="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M11.4 5.4 4.8 12l6.6 6.6"/></svg></a>
   <svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><path d="M7 0h86a7 7 0 0 1 7 7v45.5C100 80.4 77.6 100 50 100S0 80.4 0 52.5V7a7 7 0 0 1 7-7z" fill="#2E8B49"/><path d="M75.5 29.5C71.2 19.6 61.8 14 49.5 14 34.6 14 24.5 22.2 24.5 33.4c0 12.4 11.4 17.2 25.6 21.2 12.6 3.5 20.4 6.4 20.4 14.2 0 8.2-8.2 13.4-20.6 13.4-12.8 0-22.4-4.8-27.4-13.6" fill="none" stroke="white" stroke-width="17.5"/></svg>
   <div class="brand">Pocket<span>Seeds</span></div>
   <div class="lang" id="langPick">
@@ -244,7 +257,7 @@ const MB_GOAL = 100000;
 
 const STR = {
   te: {
-    tagline:'నీటిబొట్లు కలిస్తే సముద్రం.',
+    tagline:'ఒక్కో నీటిబొట్టు కలిస్తే సముద్రం.',
     shotAlt:'చెక్కతో చేసిన విత్తన పెట్టె, ముఖంపై ₹1,00,000 వరకు మొత్తాల గడులు చెక్కి ఉన్నాయి',
     shotCap:'చేతితో తయారు చేసిన కర్ర పెట్టె. ప్రతి గడికి ఒక మొత్తం — నింపిన గడిని యాప్‌లో నొక్కండి.',
     ribbon:'ఈరోజు క్రమశిక్షణ · రేపు స్వేచ్ఛ',
@@ -274,6 +287,7 @@ const STR = {
     q4:'తప్పు నొక్కితే?', a4:'మళ్లీ నొక్కితే వెనక్కి వెళ్తుంది. "చివరిది వెనక్కి" బటన్ కూడా ఉంది.',
     q5:'ఒకటి కంటే ఎక్కువ బాక్స్‌లు ఉంటే?', a5:'ఉండొచ్చు. ప్రతి బాక్స్ దాని నంబర్‌తో విడిగా లెక్కలో ఉంటుంది.',
     closeT:'మొదలుపెడదామా?', closeS:'ఒక గడి. ఒక రోజు. ఒక లక్ష.',
+    homeLabel:'PocketSeeds యాప్‌కి తిరిగి వెళ్లండి',
     backApp:'యాప్‌కి తిరిగి',
     waMsg:'నమస్తే! PocketSeeds విత్తన పెట్టె (₹1,00,000 పొదుపు ట్రాకర్) కావాలి.',
     waMsgRef:'నమస్తే! PocketSeeds విత్తన పెట్టె (₹1,00,000 పొదుపు ట్రాకర్) కావాలి. నా దగ్గర ఉన్న పెట్టె: {b}'
@@ -309,6 +323,7 @@ const STR = {
     q4:'What if I tap the wrong cell?', a4:'Tap it again to undo, or use the "Undo last" button.',
     q5:'Can I track more than one box?', a5:'Yes. Each box is counted separately under its own number.',
     closeT:'Shall we start?', closeS:'One cell. One day. One lakh.',
+    homeLabel:'Back to the PocketSeeds app',
     backApp:'Back to the app',
     waMsg:'Hello! I would like a PocketSeeds Seed Box (₹1,00,000 savings tracker).',
     waMsgRef:'Hello! I would like a PocketSeeds Seed Box (₹1,00,000 savings tracker). My current box: {b}'
@@ -341,6 +356,9 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':
 function paint(){
   document.documentElement.lang = LMODE;
   document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+  /* the home button has no text of its own, so its label is set here */
+  const hb = document.getElementById('homeBtn');
+  if(hb) hb.setAttribute('aria-label', t('homeLabel'));
   /* alt text is content too, and it changes with the language */
   document.querySelectorAll('[data-t-alt]').forEach(el => { el.alt = t(el.dataset.tAlt); });
   document.querySelectorAll('#langPick button').forEach(b =>

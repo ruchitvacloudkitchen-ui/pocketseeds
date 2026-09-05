@@ -133,33 +133,35 @@
 /* The pen marks whichever date is selected in the grid above it, so it names
    that date rather than saying "add" — there is no second place to choose. */
 /* ---------- Seed Box card on the home page ----------
-   A white card sitting on a coloured strip, the strip showing at the edges,
-   so the card reads as an object laid on the page rather than another row of
-   it. Title, then the tagline as the second-loudest thing on the card, then a
-   row at the foot: a quiet line of state on the left and the one action on
-   the right. Text-only actions, no filled pill — the card itself is the
-   emphasis, and a filled button inside it would compete with the balance card
-   above.
+   Pink edge to edge on the page's own ground, rounded, with a soft shadow so
+   it lifts off the page. Title, then the saying in Telugu with the English
+   under it smaller and lighter, then a rule and a foot row: what is in the
+   box on the left, the actions on the right.
 
-   One action, never two. There is no honest second action in either state:
-   in the promo, "see the box" and "buy now" are the same page; in progress,
-   the card is already the way to the box. So the left slot carries a line of
-   state instead of a button that does not exist. */
-.sb-strip{border-radius:22px;padding:13px 9px;margin-bottom:13px;
-  background:var(--sbx);box-shadow:var(--sbx-shadow)}
-.sb-card{display:block;position:relative;border-radius:17px;padding:15px 16px 11px;
-  background:var(--sb-card);text-decoration:none;color:var(--ink)}
-.sb-t{margin:0;font-size:21px;font-weight:800;letter-spacing:-.02em;color:var(--brand);
+   Buy now is present in BOTH states and always goes to /seedbox/, never
+   straight to WhatsApp — the product page is where someone decides, and it is
+   the only place a visitor who has never seen the box learns it exists. In
+   progress state Save now is the primary and Buy now sits beside it, smaller:
+   an owner may want a second box for a child or a gift. */
+.sb-card{display:block;position:relative;border-radius:20px;padding:15px 16px 11px;
+  margin-bottom:13px;background:var(--sbx);box-shadow:var(--sbx-shadow);
+  text-decoration:none;color:var(--sb-ink)}
+.sb-t{margin:0;font-size:21px;font-weight:800;letter-spacing:-.02em;color:var(--sb-green);
   padding-right:52px}
-.sb-tag{margin:5px 0 0;font-size:16.5px;font-weight:500;line-height:1.35;color:var(--ink)}
-.sb-acts{display:flex;align-items:center;justify-content:space-between;gap:12px;
+.sb-tag{margin:5px 0 0;font-size:16.5px;font-weight:500;line-height:1.35;color:var(--sb-ink)}
+/* the English line second, smaller and lighter — one saying, two voices */
+.sb-tag2{margin:2px 0 0;font-size:14px;font-weight:400;line-height:1.35;color:var(--sb-ink-2)}
+.sb-acts{display:flex;align-items:center;justify-content:space-between;gap:10px;
   margin-top:13px;padding-top:10px;border-top:1px solid var(--sb-rule)}
-.sb-note{font-size:13.5px;font-weight:600;color:var(--muted);min-width:0;
+.sb-note{font-size:13.5px;font-weight:600;color:var(--sb-muted);min-width:0;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sb-go{flex:0 0 auto;font-size:15.5px;font-weight:800;color:var(--brand);
-  text-decoration:none;background:none;border:0;font-family:inherit;cursor:pointer;
-  padding:6px 2px;white-space:nowrap}
-.sb-go:focus-visible{outline:3px solid #2E8B49;outline-offset:2px;border-radius:6px}
+.sb-right{display:flex;align-items:baseline;gap:12px;flex:0 0 auto}
+.sb-go{font-size:15.5px;font-weight:800;color:var(--sb-green);white-space:nowrap;
+  text-decoration:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:6px 2px}
+/* the secondary action, smaller, still a real link */
+.sb-go2{font-size:13px;font-weight:700;color:var(--sb-muted);white-space:nowrap;
+  text-decoration:none;padding:6px 2px}
+.sb-go:focus-visible,.sb-go2:focus-visible{outline:3px solid #2E8B49;outline-offset:2px;border-radius:6px}
 .sb-card:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
 /* the badge carries the percentage once there is one to carry, and is absent
    before that — a decorative dot on a card that has nothing to say is noise */
@@ -187,17 +189,26 @@
    a deeper shadow and a rim so it reads as an object rather than another row,
    done with shadow rather than a negative margin because the height budget on
    a 360x640 screen is already spent getting Quick add above the fold. */
-/* The strip behind the card, and the card laid on it. Dark text throughout in
-   light mode; in dark the card goes dark and the ink light, because a white
-   card on a deep plum ground glares. */
-:root{--sbx:#FBD7EC; --sb-card:#FFFFFF; --sb-rule:rgba(34,36,46,.10);
-  --sb-badge-bg:#F3E2EC; --sb-badge-ink:#4A1F3D;
+/* The card IS the tint — pink edge to edge, on the page's own background,
+   rather than a white card floating on a pink strip.
+
+   The app's brand green does not survive on it: #25743D reads 4.40:1 against
+   #FBD7EC, under AA. So the title and the action use a darker green on this
+   card only, which is why --sb-green exists rather than reusing --brand. */
+:root{--sbx:#FBD7EC; --sb-green:#1F6234; --sb-ink:#22242E; --sb-ink-2:#4A3843;
+  --sb-muted:#5A4450; --sb-rule:rgba(74,31,61,.18);
+  --sb-badge-bg:#F3BFDD; --sb-badge-ink:#4A1F3D;
   --sbx-shadow:0 1px 2px rgba(34,36,46,.05), 0 10px 22px -8px rgba(34,36,46,.20)}
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--sbx:#4A1F3D; --sb-card:#24262F;
-    --sb-rule:rgba(255,255,255,.13);
+  :root:not([data-theme="light"]){--sbx:#4A1F3D; --sb-green:#7BD189; --sb-ink:#FBD7EC;
+    --sb-ink-2:#D8B6C8; --sb-muted:#C9A8BB; --sb-rule:rgba(251,215,236,.20);
     --sb-badge-bg:#3A1030; --sb-badge-ink:#FBD7EC;
     --sbx-shadow:0 2px 20px rgba(0,0,0,.55)}
+}
+:root[data-theme="dark"]{--sbx:#4A1F3D; --sb-green:#7BD189; --sb-ink:#FBD7EC;
+  --sb-ink-2:#D8B6C8; --sb-muted:#C9A8BB; --sb-rule:rgba(251,215,236,.20);
+  --sb-badge-bg:#3A1030; --sb-badge-ink:#FBD7EC;
+  --sbx-shadow:0 2px 20px rgba(0,0,0,.55)}
 }
 :root[data-theme="dark"]{--sbx:#4A1F3D; --sb-card:#24262F;
   --sb-rule:rgba(255,255,255,.13);
@@ -2020,8 +2031,8 @@ const STR = {
     mbOpen:'Open the box',
     mbBuy:'Buy now', mbSave:'Save now', mbMore:'+{n} more',
     mbCardT:'Seed Box',
-    mbNoteSaved:'{a} of {g} saved', mbNoteGoal:'₹1,00,000 goal',
-    mbTagline:'A little every day — a lakh in a year.',
+    mbTagTe:'ఒక్కో నీటిబొట్టు కలిస్తే సముద్రం.', mbTagEn:'A little every day — a lakh in a year.',
+    mbNoteSaved:'{a} saved', mbNoteGoal:'₹1,00,000 goal',
     remTitle:'Reminders',
     remSub:'They ring at 7:55 in the morning, before the day starts.',
     remAdd:'Remind me', remWhat:'What is it for?', remTime:'Time',
@@ -2390,8 +2401,8 @@ const STR = {
     mbOpen:'పెట్టె తెరువు',
     mbBuy:'ఇప్పుడే కొనండి', mbSave:'ఇప్పుడే దాచు', mbMore:'ఇంకా {n}',
     mbCardT:'విత్తన పెట్టె',
-    mbNoteSaved:'{g}లో {a} జమ', mbNoteGoal:'₹1,00,000 లక్ష్యం',
-    mbTagline:'నీటిబొట్లు కలిస్తే సముద్రం.',
+    mbTagTe:'ఒక్కో నీటిబొట్టు కలిస్తే సముద్రం.', mbTagEn:'A little every day — a lakh in a year.',
+    mbNoteSaved:'{a} జమ', mbNoteGoal:'₹1,00,000 లక్ష్యం',
     remTitle:'గుర్తుంపులు',
     remSub:'ఉదయం 7:55కి — రోజు మొదలవ్వక ముందే.',
     remAdd:'గుర్తు చేయి', remWhat:'దేని కోసం?', remTime:'సమయం',
@@ -7204,8 +7215,6 @@ function renderSeedBanner(){
   if(st.kind === 'none'){ host.innerHTML = ''; return; }
 
   const progress = st.kind === 'progress';
-  const href  = progress ? 'box/?id=' + encodeURIComponent(st.box.boxId) : 'seedbox/';
-  const act   = t(progress ? 'mbSave' : 'mbBuy');
   /* left of the action row: a line of state, not a second button. In progress
      it is what is in the box; in the promo it is what the box is for. */
   /* With one box the money is the useful thing to say. With several, WHICH
@@ -7214,20 +7223,36 @@ function renderSeedBanner(){
      The old card carried the id always; this carries it when it disambiguates. */
   const note  = !progress ? t('mbNoteGoal')
     : st.count > 1 ? st.box.boxId + ' · ' + t('mbMore', { n: st.count - 1 })
-    : t('mbNoteSaved', { a: money(st.saved), g: money(st.goal) });
+    /* the goal is already in the badge as a percentage, and with two actions
+       on the right there is not room to repeat it — the ellipsis it caused was
+       worse than the omission */
+    : t('mbNoteSaved', { a: money(st.saved) });
   const badge = progress ? `<span class="sb-badge">${st.pct}%</span>` : '';
 
+  /* The card is a link to the primary destination; the secondary action is a
+     real link inside it, so it needs its own stop — nested <a> is invalid, so
+     the card is a div and both actions are links. */
+  const primary = progress
+    ? `<a class="sb-go" href="box/?id=${esc(st.box.boxId)}">${esc(t('mbSave'))} ›</a>`
+    : `<a class="sb-go" href="seedbox/">${esc(t('mbBuy'))} ›</a>`;
+  /* Buy now is in both states and always goes to the product page, never
+     straight to WhatsApp: /seedbox/ is where the number lives, where someone
+     new finds out what this is, and the one place that stays right if the
+     ordering route ever changes. */
+  const secondary = progress
+    ? `<a class="sb-go2" href="seedbox/">${esc(t('mbBuy'))}</a>`
+    : '';
+
   host.innerHTML = `
-    <div class="sb-strip">
-      <a class="sb-card" href="${esc(href)}">
-        ${badge}
-        <h4 class="sb-t">${esc(t('mbCardT'))}</h4>
-        <p class="sb-tag">${esc(t('mbTagline'))}</p>
-        <span class="sb-acts">
-          <span class="sb-note">${esc(note)}</span>
-          <span class="sb-go">${esc(act)} ›</span>
-        </span>
-      </a>
+    <div class="sb-card">
+      ${badge}
+      <h4 class="sb-t">${esc(t('mbCardT'))}</h4>
+      <p class="sb-tag">${esc(t('mbTagTe'))}</p>
+      <p class="sb-tag2">${esc(t('mbTagEn'))}</p>
+      <div class="sb-acts">
+        <span class="sb-note">${esc(note)}</span>
+        <span class="sb-right">${secondary}${primary}</span>
+      </div>
     </div>`;
 }
 
