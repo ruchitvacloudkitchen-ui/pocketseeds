@@ -132,34 +132,41 @@
 
 /* The pen marks whichever date is selected in the grid above it, so it names
    that date rather than saying "add" — there is no second place to choose. */
-/* ---------- Seed Box banner on the home page ----------
-   Below the balance and above quick add, which is the first place on the
-   page that is not the reader's own numbers. Two shapes: a progress strip
-   once there is a box, and a promo with a Buy button before there is one. */
-.sb{display:flex;align-items:center;gap:12px;width:100%;text-align:left;text-decoration:none;
-  color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:13px 14px;
-  margin-bottom:13px;background:var(--surface);box-shadow:var(--shadow)}
-.sb .ic{width:40px;height:40px;border-radius:13px;flex:0 0 auto;display:grid;place-items:center;
-  background:var(--brand);color:var(--on-brand)}
-.sb .ic .i{width:21px;height:21px;stroke-width:2}
-.sb .tx{flex:1;min-width:0}
-.sb .n{display:block;font-size:15px;font-weight:800;letter-spacing:-.01em}
-.sb .s{display:block;font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.35}
-.sb .go{flex:0 0 auto;font-size:15px;font-weight:800;color:var(--brand)}
-.sb .bar{display:block;height:7px;border-radius:999px;background:var(--surface-2);
-  border:1px solid var(--line);overflow:hidden;margin:6px 0 5px}
-.sb .bar i{display:block;height:100%;border-radius:999px;background:var(--brand)}
+/* ---------- Seed Box card on the home page ----------
+   A white card sitting on a coloured strip, the strip showing at the edges,
+   so the card reads as an object laid on the page rather than another row of
+   it. Title, then the tagline as the second-loudest thing on the card, then a
+   row at the foot: a quiet line of state on the left and the one action on
+   the right. Text-only actions, no filled pill — the card itself is the
+   emphasis, and a filled button inside it would compete with the balance card
+   above.
 
-.sb.promo{align-items:flex-start;background:linear-gradient(140deg,var(--in-bg),var(--surface) 70%)}
-.sb.promo .shot{width:46px;height:46px;border-radius:13px;flex:0 0 auto;display:grid;place-items:center;
-  background:#5B3A21;color:#E8D8C3;box-shadow:inset 0 -2px 0 rgba(0,0,0,.25)}
-.sb.promo .shot .i{width:24px;height:24px;stroke-width:1.9}
-.sb .acts{display:flex;flex-direction:column;gap:6px;flex:0 0 auto;align-items:stretch}
-.sb .buy{background:var(--brand);color:var(--on-brand);border-radius:11px;padding:9px 13px;font-size:13.5px;
-  font-weight:800;text-decoration:none;text-align:center;white-space:nowrap}
-.sb .no{border:0;background:none;color:var(--muted);font-family:inherit;font-size:12px;
-  font-weight:700;cursor:pointer;padding:2px 4px;white-space:nowrap}
-.sb .buy:focus-visible,.sb .no:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
+   One action, never two. There is no honest second action in either state:
+   in the promo, "see the box" and "buy now" are the same page; in progress,
+   the card is already the way to the box. So the left slot carries a line of
+   state instead of a button that does not exist. */
+.sb-strip{border-radius:22px;padding:13px 9px;margin-bottom:13px;
+  background:var(--sbx);box-shadow:var(--sbx-shadow)}
+.sb-card{display:block;position:relative;border-radius:17px;padding:15px 16px 11px;
+  background:var(--sb-card);text-decoration:none;color:var(--ink)}
+.sb-t{margin:0;font-size:21px;font-weight:800;letter-spacing:-.02em;color:var(--brand);
+  padding-right:52px}
+.sb-tag{margin:5px 0 0;font-size:16.5px;font-weight:500;line-height:1.35;color:var(--ink)}
+.sb-acts{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-top:13px;padding-top:10px;border-top:1px solid var(--sb-rule)}
+.sb-note{font-size:13.5px;font-weight:600;color:var(--muted);min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-go{flex:0 0 auto;font-size:15.5px;font-weight:800;color:var(--brand);
+  text-decoration:none;background:none;border:0;font-family:inherit;cursor:pointer;
+  padding:6px 2px;white-space:nowrap}
+.sb-go:focus-visible{outline:3px solid #2E8B49;outline-offset:2px;border-radius:6px}
+.sb-card:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
+/* the badge carries the percentage once there is one to carry, and is absent
+   before that — a decorative dot on a card that has nothing to say is noise */
+.sb-badge{position:absolute;top:13px;right:14px;min-width:38px;height:26px;
+  border-radius:999px;display:grid;place-items:center;padding:0 9px;
+  font-size:12.5px;font-weight:800;letter-spacing:-.01em;
+  background:var(--sb-badge-bg);color:var(--sb-badge-ink)}
 
 /* The full promo, for someone who has neither a box nor a single saving
    recorded: they have never met the product, so it gets the card treatment
@@ -180,16 +187,21 @@
    a deeper shadow and a rim so it reads as an object rather than another row,
    done with shadow rather than a negative margin because the height budget on
    a 360x640 screen is already spent getting Quick add above the fold. */
-:root{--sbx:#FBD7EC; --sbx-ink:#22242E; --sbx-tag:#4A1F3D;
-  --sbx-rim:rgba(74,31,61,.24); --sbx-btn:#2A7F42; --sbx-btn-ink:#FFFFFF;
+/* The strip behind the card, and the card laid on it. Dark text throughout in
+   light mode; in dark the card goes dark and the ink light, because a white
+   card on a deep plum ground glares. */
+:root{--sbx:#FBD7EC; --sb-card:#FFFFFF; --sb-rule:rgba(34,36,46,.10);
+  --sb-badge-bg:#F3E2EC; --sb-badge-ink:#4A1F3D;
   --sbx-shadow:0 1px 2px rgba(34,36,46,.05), 0 10px 22px -8px rgba(34,36,46,.20)}
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--sbx:#4A1F3D; --sbx-ink:#FBD7EC; --sbx-tag:#FBD7EC;
-    --sbx-rim:rgba(251,215,236,.28); --sbx-btn:#FBD7EC; --sbx-btn-ink:#3A1030;
+  :root:not([data-theme="light"]){--sbx:#4A1F3D; --sb-card:#24262F;
+    --sb-rule:rgba(255,255,255,.13);
+    --sb-badge-bg:#3A1030; --sb-badge-ink:#FBD7EC;
     --sbx-shadow:0 2px 20px rgba(0,0,0,.55)}
 }
-:root[data-theme="dark"]{--sbx:#4A1F3D; --sbx-ink:#FBD7EC; --sbx-tag:#FBD7EC;
-  --sbx-rim:rgba(251,215,236,.28); --sbx-btn:#FBD7EC; --sbx-btn-ink:#3A1030;
+:root[data-theme="dark"]{--sbx:#4A1F3D; --sb-card:#24262F;
+  --sb-rule:rgba(255,255,255,.13);
+  --sb-badge-bg:#3A1030; --sb-badge-ink:#FBD7EC;
   --sbx-shadow:0 2px 20px rgba(0,0,0,.55)}
 
 .sb.promo.big{align-items:flex-start;gap:12px;padding:13px 14px;border-radius:20px;
@@ -1247,13 +1259,13 @@ table.sip tbody tr:last-child td{font-size:15px}
       </div>
     </div>
 
-    <div id="sbBanner"></div>
-
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="quickAdd">Quick add</h3></div>
       <div class="grid3" id="quickTiles"></div>
       <div class="hint" data-i18n="quickAddHint">Tap one — change the amount if yours is different.</div>
     </div>
+
+    <div id="sbBanner"></div>
 
     <div class="sec">
       <button class="ask-banner" id="askBanner">
@@ -2006,7 +2018,9 @@ const STR = {
     mbPromoCta:'See the box',
     mbLiveT:'Seed Box {b}', mbLiveS:'{a} of {g} · {p}%', mbLiveLeft:'{a} to go',
     mbOpen:'Open the box',
-    mbBuy:'Buy now', mbMore:'+{n} more',
+    mbBuy:'Buy now', mbSave:'Save now', mbMore:'+{n} more',
+    mbCardT:'Seed Box',
+    mbNoteSaved:'{a} of {g} saved', mbNoteGoal:'₹1,00,000 goal',
     mbTagline:'A little every day — a lakh in a year.',
     remTitle:'Reminders',
     remSub:'They ring at 7:55 in the morning, before the day starts.',
@@ -2374,7 +2388,9 @@ const STR = {
     mbPromoCta:'పెట్టె చూడండి',
     mbLiveT:'విత్తన పెట్టె {b}', mbLiveS:'{g} లో {a} · {p}%', mbLiveLeft:'ఇంకా {a}',
     mbOpen:'పెట్టె తెరువు',
-    mbBuy:'ఇప్పుడే కొనండి', mbMore:'ఇంకా {n}',
+    mbBuy:'ఇప్పుడే కొనండి', mbSave:'ఇప్పుడే దాచు', mbMore:'ఇంకా {n}',
+    mbCardT:'విత్తన పెట్టె',
+    mbNoteSaved:'{g}లో {a} జమ', mbNoteGoal:'₹1,00,000 లక్ష్యం',
     mbTagline:'నీటిబొట్లు కలిస్తే సముద్రం.',
     remTitle:'గుర్తుంపులు',
     remSub:'ఉదయం 7:55కి — రోజు మొదలవ్వక ముందే.',
@@ -7175,27 +7191,6 @@ function renderMoneyBox(){
     </a>`;
 }
 
-/* The thumbnail on the full promo. seedbox-hero.jpg is the owner's product
-   photo and may not exist yet, so the drawn box is what is rendered and the
-   photo replaces it only once a probe says it is there — the same trick the
-   app icon uses, and for the same reason: never a broken image. */
-function mbShotHTML(){ return ic('box'); }
-function mbShotArtwork(){
-  const slot = document.querySelector('.sb.promo.big .shot');
-  if(!slot || slot.dataset.probed) return;
-  slot.dataset.probed = '1';
-  const KEY = 'moneybox.shot';
-  let memo = {};
-  try{ memo = JSON.parse(localStorage.getItem(KEY) || '{}'); }catch(e){}
-  const weekAgo = Date.now() - 7 * 864e5;
-  const show = () => { slot.innerHTML = '<img src="seedbox-hero.jpg" alt="">'; };
-  if(memo.found && memo.at > weekAgo) return show();
-  if(memo.found === false && memo.at > weekAgo) return;
-  const probe = new Image();
-  probe.onload  = () => { localStorage.setItem(KEY, JSON.stringify({found:true,  at:Date.now()})); show(); };
-  probe.onerror = () => { localStorage.setItem(KEY, JSON.stringify({found:false, at:Date.now()})); };
-  probe.src = 'seedbox-hero.jpg';
-}
 
 /* The home card. Always on screen, never dismissible, and what it says is
    the whole of the difference: someone without a box is shown the box, and
@@ -7204,50 +7199,38 @@ function renderSeedBanner(){
   const host = $('#sbBanner'); if(!host) return;
   const st = mbState();
 
-  if(st.kind === 'progress'){
-    const b = st.box;
-    host.innerHTML = `
-      <a class="sb" href="box/?id=${esc(b.boxId)}">
-        <span class="ic">${ic('box')}</span>
-        <span class="tx">
-          <span class="n">${esc(t('mbLiveT', { b:b.boxId }))}${
-            st.count > 1 ? ' · ' + esc(t('mbMore', { n: st.count - 1 })) : ''}</span>
-          <span class="bar"><i style="width:${st.pct}%"></i></span>
-          <span class="s">${esc(money(st.saved))} · ${esc(t('mbLiveLeft', { a: money(st.left) }))}</span>
+  /* kind 'none' means no order number is set, and a card whose only action is
+     a dead button is worse than no card */
+  if(st.kind === 'none'){ host.innerHTML = ''; return; }
+
+  const progress = st.kind === 'progress';
+  const href  = progress ? 'box/?id=' + encodeURIComponent(st.box.boxId) : 'seedbox/';
+  const act   = t(progress ? 'mbSave' : 'mbBuy');
+  /* left of the action row: a line of state, not a second button. In progress
+     it is what is in the box; in the promo it is what the box is for. */
+  /* With one box the money is the useful thing to say. With several, WHICH
+     box is — the concept card has no room for both, and a card that cannot
+     tell you which of your boxes it means is worse than one without a total.
+     The old card carried the id always; this carries it when it disambiguates. */
+  const note  = !progress ? t('mbNoteGoal')
+    : st.count > 1 ? st.box.boxId + ' · ' + t('mbMore', { n: st.count - 1 })
+    : t('mbNoteSaved', { a: money(st.saved), g: money(st.goal) });
+  const badge = progress ? `<span class="sb-badge">${st.pct}%</span>` : '';
+
+  host.innerHTML = `
+    <div class="sb-strip">
+      <a class="sb-card" href="${esc(href)}">
+        ${badge}
+        <h4 class="sb-t">${esc(t('mbCardT'))}</h4>
+        <p class="sb-tag">${esc(t('mbTagline'))}</p>
+        <span class="sb-acts">
+          <span class="sb-note">${esc(note)}</span>
+          <span class="sb-go">${esc(act)} ›</span>
         </span>
-        <span class="go">${st.pct}%</span>
-      </a>`;
-    return;
-  }
-
-  /* kind 'none' means no order number is set, and a permanent card with a
-     dead Buy button is worse than no card */
-  if(st.kind !== 'promo'){ host.innerHTML = ''; return; }
-
-  /* One action, never two: this is the promo state, so it is Buy now. "Add
-     savings" belongs to the progress state and the two never share a card. */
-  const acts = `
-      <span class="acts">
-        <a class="buy" href="seedbox/">${esc(t('mbBuy'))}</a>
-      </span>`;
-
-  host.innerHTML = st.weight === 'full' ? `
-    <div class="sb promo big">
-      <span class="shot" aria-hidden="true">${mbShotHTML()}</span>
-      <span class="tx"><span class="n">${esc(t('mbPromoT'))}</span></span>
-      ${acts}
-      <span class="tag">${esc(t('mbTagline'))}</span>
-    </div>` : `
-    <div class="sb promo">
-      <span class="shot" aria-hidden="true">${ic('box')}</span>
-      <span class="tx">
-        <span class="n">${esc(t('mbPromoT'))}</span>
-        <span class="s">${esc(t('mbPromoS'))}</span>
-      </span>
-      ${acts}
+      </a>
     </div>`;
-  mbShotArtwork();
 }
+
 /* ---- Google Drive sync ----------------------------------------------
    The tracker at /box/ owns the moneybox:* keys and knows nothing about DB.
    So DB.boxes is a mirror, not a second copy anyone writes to: filled in
