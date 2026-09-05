@@ -123,3 +123,35 @@ A monoline vector alphabet covering only the characters this project prints.
 Both scripts use it instead of naming a font. `text()` throws on a character
 it does not have, rather than dropping it — a missing glyph in a print file is
 worse than a failed build.
+
+## Offline route audit
+
+```
+node tools/offline-audit.js
+CHROME_PATH=/path/to/chrome node tools/offline-audit.js   # if Chromium isn't on the default path
+```
+
+Needs `playwright-core` (or `playwright`). Exits non-zero on any failure, so it
+can gate a release.
+
+It starts its own HTTP server, opens the app twice to install the service
+worker and let the boot JSON reach the cache, then **kills the server** and
+loads every route with nothing to reach. It checks pages by what rendered, not
+by the URL.
+
+Two things it exists to protect, both learned the hard way:
+
+- **`/box/?id=BOX0001` must open the tracker offline.** That URL is printed on
+  every physical box. The cache key includes the query string, so before the
+  `ignoreSearch` fallback this missed and fell through to the `index.html`
+  shell — someone scanning their own box with no signal got the app's home
+  screen instead of their tracker. Same for `/seedbox/?ref=` and `/moneybox/?`.
+- **The server must actually be down.** `context.setOffline(true)` left
+  loopback reachable from inside the service worker, and an earlier version of
+  this audit "passed" against a live server while proving nothing. If you
+  change how the network is cut, re-check that the first assertion in the file
+  still holds.
+
+Note that the app's own audit suites are not in this repo; this one is, because
+the failure it catches is silent, offline-only, and lands on the one journey
+the product is built around.
