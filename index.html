@@ -146,21 +146,40 @@
 .sb-card{display:block;position:relative;border-radius:20px;padding:15px 16px 11px;
   margin-bottom:13px;background:var(--sbx);box-shadow:var(--sbx-shadow);
   text-decoration:none;color:var(--sb-ink)}
+/* The icon sits on the title line only, not beside the whole text block: an
+   icon column would narrow the taglines by ~44px and wrap the Telugu line,
+   which is the one thing this card cannot afford. It is the app's own gift
+   glyph via ic(), not a new drawing. */
+.sb-head{display:flex;align-items:center;gap:9px;padding-right:52px}
+.sb-ico{flex:0 0 auto;display:grid;place-items:center;width:32px;height:32px;
+  color:var(--sb-ico)}
+.sb-ico .i{width:29px;height:29px}
 .sb-t{margin:0;font-size:21px;font-weight:800;letter-spacing:-.02em;color:var(--sb-green);
-  padding-right:52px}
-.sb-tag{margin:5px 0 0;font-size:16.5px;font-weight:500;line-height:1.35;color:var(--sb-ink)}
+  min-width:0}
+/* the Telugu line is the second-largest thing on the card, ahead of the
+   action — it is the sentence that does the persuading */
+.sb-tag{margin:7px 0 0;font-size:18px;font-weight:600;line-height:1.34;color:var(--sb-ink)}
 /* the English line second, smaller and lighter — one saying, two voices */
-.sb-tag2{margin:2px 0 0;font-size:14px;font-weight:400;line-height:1.35;color:var(--sb-ink-2)}
-.sb-acts{display:flex;align-items:center;justify-content:space-between;gap:10px;
-  margin-top:13px;padding-top:10px;border-top:1px solid var(--sb-rule)}
-.sb-note{font-size:13.5px;font-weight:600;color:var(--sb-muted);min-width:0;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sb-right{display:flex;align-items:baseline;gap:12px;flex:0 0 auto}
+.sb-tag2{margin:2px 0 0;font-size:14.5px;font-weight:400;line-height:1.35;color:var(--sb-ink-2)}
+/* Two rows, not one. The status line now carries the goal as well as the
+   total, and "Rs1,750 of Rs1,00,000 saved" plus two actions cannot share a
+   296px row — that collision is exactly what truncated it to an ellipsis and
+   forced the short form last time. So the note takes a full-width row and the
+   actions sit right-aligned beneath it, and nothing has to be cut. */
+.sb-acts{display:flex;align-items:center;flex-wrap:wrap;gap:2px 10px;
+  margin-top:12px;padding-top:10px;border-top:1px solid var(--sb-rule)}
+.sb-note{flex:1 1 100%;font-size:13.5px;font-weight:600;color:var(--sb-muted);min-width:0}
+.sb-right{display:flex;align-items:center;gap:6px;margin-left:auto}
+/* The primary action is a tinted pill so the hierarchy survives a glance:
+   shape, not just weight, is what separates it from the secondary. Green ink
+   on the pale pink pill — a filled green button would need white text, and
+   nothing on this card is white. */
 .sb-go{font-size:15.5px;font-weight:800;color:var(--sb-green);white-space:nowrap;
-  text-decoration:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:6px 2px}
-/* the secondary action, smaller, still a real link */
-.sb-go2{font-size:13px;font-weight:700;color:var(--sb-muted);white-space:nowrap;
-  text-decoration:none;padding:6px 2px}
+  text-decoration:none;background:var(--sb-pill);border:0;border-radius:999px;
+  font-family:inherit;cursor:pointer;padding:9px 15px;line-height:1}
+/* the secondary action stays plain text — no shape, lighter, smaller */
+.sb-go2{font-size:13.5px;font-weight:600;color:var(--sb-muted);white-space:nowrap;
+  text-decoration:none;padding:9px 6px;line-height:1}
 .sb-go:focus-visible,.sb-go2:focus-visible{outline:3px solid #2E8B49;outline-offset:2px;border-radius:6px}
 .sb-card:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
 /* the badge carries the percentage once there is one to carry, and is absent
@@ -198,16 +217,25 @@
 :root{--sbx:#FBD7EC; --sb-green:#1F6234; --sb-ink:#22242E; --sb-ink-2:#4A3843;
   --sb-muted:#5A4450; --sb-rule:rgba(74,31,61,.18);
   --sb-badge-bg:#F3BFDD; --sb-badge-ink:#4A1F3D;
+  /* the icon takes the same green as the title so the card reads as one
+     colour idea; --sb-ico is its own token so the deeper-pink alternative
+     is a one-line swap (#9B2C6F light / #F0A6D0 dark) rather than a rewrite */
+  --sb-ico:#1F6234;
+  /* the primary action is a tinted pill, not a filled green button: a filled
+     one would need white text, and nothing on this pink is white */
+  --sb-pill:#F3BFDD;
   --sbx-shadow:0 1px 2px rgba(34,36,46,.05), 0 10px 22px -8px rgba(34,36,46,.20)}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){--sbx:#4A1F3D; --sb-green:#7BD189; --sb-ink:#FBD7EC;
     --sb-ink-2:#D8B6C8; --sb-muted:#C9A8BB; --sb-rule:rgba(251,215,236,.20);
     --sb-badge-bg:#3A1030; --sb-badge-ink:#FBD7EC;
+    --sb-ico:#7BD189; --sb-pill:#3A1030;
     --sbx-shadow:0 2px 20px rgba(0,0,0,.55)}
 }
 :root[data-theme="dark"]{--sbx:#4A1F3D; --sb-green:#7BD189; --sb-ink:#FBD7EC;
   --sb-ink-2:#D8B6C8; --sb-muted:#C9A8BB; --sb-rule:rgba(251,215,236,.20);
   --sb-badge-bg:#3A1030; --sb-badge-ink:#FBD7EC;
+  --sb-ico:#7BD189; --sb-pill:#3A1030;
   --sbx-shadow:0 2px 20px rgba(0,0,0,.55)}
 }
 :root[data-theme="dark"]{--sbx:#4A1F3D; --sb-card:#24262F;
@@ -2032,7 +2060,7 @@ const STR = {
     mbBuy:'Buy now', mbSave:'Save now', mbMore:'+{n} more',
     mbCardT:'Seed Box',
     mbTagTe:'ఒక్కో నీటిబొట్టు కలిస్తే సముద్రం.', mbTagEn:'A little every day — a lakh in a year.',
-    mbNoteSaved:'{a} saved', mbNoteGoal:'₹1,00,000 goal',
+    mbNoteSaved:'{a} of {g} saved', mbNoteGoal:'₹1,00,000 goal',
     remTitle:'Reminders',
     remSub:'They ring at 7:55 in the morning, before the day starts.',
     remAdd:'Remind me', remWhat:'What is it for?', remTime:'Time',
@@ -2402,7 +2430,7 @@ const STR = {
     mbBuy:'ఇప్పుడే కొనండి', mbSave:'ఇప్పుడే దాచు', mbMore:'ఇంకా {n}',
     mbCardT:'విత్తన పెట్టె',
     mbTagTe:'ఒక్కో నీటిబొట్టు కలిస్తే సముద్రం.', mbTagEn:'A little every day — a lakh in a year.',
-    mbNoteSaved:'{a} జమ', mbNoteGoal:'₹1,00,000 లక్ష్యం',
+    mbNoteSaved:'{g}లో {a} జమ', mbNoteGoal:'₹1,00,000 లక్ష్యం',
     remTitle:'గుర్తుంపులు',
     remSub:'ఉదయం 7:55కి — రోజు మొదలవ్వక ముందే.',
     remAdd:'గుర్తు చేయి', remWhat:'దేని కోసం?', remTime:'సమయం',
@@ -7215,18 +7243,14 @@ function renderSeedBanner(){
   if(st.kind === 'none'){ host.innerHTML = ''; return; }
 
   const progress = st.kind === 'progress';
-  /* left of the action row: a line of state, not a second button. In progress
-     it is what is in the box; in the promo it is what the box is for. */
-  /* With one box the money is the useful thing to say. With several, WHICH
-     box is — the concept card has no room for both, and a card that cannot
-     tell you which of your boxes it means is worse than one without a total.
-     The old card carried the id always; this carries it when it disambiguates. */
+  /* The status line carries the total AND the goal again: the note has its own
+     full-width row now, so the ellipsis that forced the short form is gone.
+     With several boxes the id still leads, because a card that cannot tell you
+     which of your boxes it means is worse than one without a total. */
+  const saved = t('mbNoteSaved', { a: money(st.saved), g: money(st.box ? st.box.goal : 100000) });
   const note  = !progress ? t('mbNoteGoal')
-    : st.count > 1 ? st.box.boxId + ' · ' + t('mbMore', { n: st.count - 1 })
-    /* the goal is already in the badge as a percentage, and with two actions
-       on the right there is not room to repeat it — the ellipsis it caused was
-       worse than the omission */
-    : t('mbNoteSaved', { a: money(st.saved) });
+    : st.count > 1 ? st.box.boxId + ' · ' + saved
+    : saved;
   const badge = progress ? `<span class="sb-badge">${st.pct}%</span>` : '';
 
   /* The card is a link to the primary destination; the secondary action is a
@@ -7246,7 +7270,7 @@ function renderSeedBanner(){
   host.innerHTML = `
     <div class="sb-card">
       ${badge}
-      <h4 class="sb-t">${esc(t('mbCardT'))}</h4>
+      <div class="sb-head"><span class="sb-ico">${ic('gift')}</span><h4 class="sb-t">${esc(t('mbCardT'))}</h4></div>
       <p class="sb-tag">${esc(t('mbTagTe'))}</p>
       <p class="sb-tag2">${esc(t('mbTagEn'))}</p>
       <div class="sb-acts">
