@@ -171,15 +171,19 @@
 .sb.promo.big .shot .i{width:30px;height:30px}
 .sb.promo.big .shot img{width:100%;height:100%;object-fit:cover;display:block}
 .sb.promo.big .n{font-size:16.5px}
-.sb.promo.big .tag{display:block;margin-top:4px;font-size:13.5px;font-weight:700;
+.sb.promo.big .tag{display:block;font-size:13.5px;font-weight:700;
   color:#2E8B49;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 :root[data-theme="dark"] .sb.promo.big .tag{color:var(--brand)}
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .sb.promo.big .tag{color:var(--brand)} }
-/* the actions sit on their own row under the text, as a row of two */
-.sb.promo.big{flex-wrap:wrap}
-.sb.promo.big .acts{flex-direction:row-reverse;width:100%;align-items:center;
-  justify-content:space-between;gap:10px;margin-top:9px}
-.sb.promo.big .buy{padding:10px 18px;font-size:14px}
+/* Thumbnail, title and the one action share the top row; the tagline takes
+   the width underneath. Two earlier shapes both broke something: giving the
+   action its own row cost 45px and pushed Quick add off a 640px screen, and
+   sitting the tagline beside the action clipped it to an ellipsis. This gives
+   the saying the full width it needs and still fits. */
+.sb.promo.big{align-items:center;flex-wrap:wrap;row-gap:7px}
+.sb.promo.big .acts{flex:0 0 auto;align-items:center;margin-top:0}
+.sb.promo.big .buy{padding:10px 16px;font-size:13.5px}
+.sb.promo.big .tag{width:100%;margin-top:0}
 @media (max-width:359px){
   .sb.promo{flex-wrap:wrap}
   .sb .acts{flex-direction:row;width:100%;align-items:center;justify-content:space-between}
@@ -601,6 +605,13 @@ html[lang="te"] .balance-amt,html[lang="te"] .t-amt,html[lang="te"] .amt,html[la
 .lang-pick button{border:0;background:none;font-family:inherit;font-size:13px;font-weight:800;
   color:var(--muted);padding:0 9px;height:34px;cursor:pointer;min-width:34px}
 .lang-pick button[aria-pressed="true"]{background:var(--btn);color:var(--on-btn)}
+/* The month nav gets a row to itself now, so the label can breathe and the
+   two arrows sit at the ends where a thumb reaches them. */
+.lead{padding-top:4px}
+.month-row{margin-bottom:11px}
+.month-row .month-pick{width:100%;justify-content:space-between;padding:3px;border-radius:14px}
+.month-row .month-label{flex:1;min-width:0;font-size:15px}
+.month-row .month-pick button{padding:4px 14px;font-size:19px}
 .month-pick{display:flex;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--line);
   border-radius:999px;padding:3px;box-shadow:var(--shadow)}
 .month-pick button{background:none;border:0;color:var(--muted);font-size:17.5px;padding:4px 8px;border-radius:999px;cursor:pointer}
@@ -1132,11 +1143,6 @@ table.sip tbody tr:last-child td{font-size:15px}
     <div class="top-row">
       <div class="brand"><div class="logo" id="logoIcon"></div>PocketSeeds</div>
       <div class="top-tools">
-        <div class="month-pick">
-          <button id="mPrev" aria-label="prev">‹</button>
-          <div class="month-label" id="mLabel">—</div>
-          <button id="mNext" aria-label="next">›</button>
-        </div>
         <div class="lang-pick" id="langPick">
           <button data-lang="te" aria-pressed="false">తె</button>
           <button data-lang="en" aria-pressed="false">EN</button>
@@ -1152,13 +1158,30 @@ table.sip tbody tr:last-child td{font-size:15px}
     </div>
   </header>
 
-  <!-- ===================== HOME ===================== -->
-  <section class="page on" id="page-home">
+  <!-- Under the header rather than inside it. Both rows want the full width,
+       and a sticky header carrying all three would eat a quarter of a 640px
+       screen. The month nav lives here rather than on the home page because
+       it drives Income, Expenses and the rest too; the save bar is home-only
+       and go() hides it elsewhere, which is the only time the month row
+       moves. Signing in does not move it: the bar keeps both its lines and
+       only changes what they say. -->
+  <div class="lead">
     <button class="save-bar" id="btnSaveData">
       <span class="sb-ic" data-icon="cloud"></span>
       <span class="sb-txt"><b id="sbTitle">Save my data</b><i id="sbSub">Sign in with Google</i></span>
       <span class="sb-g" data-icon="google"></span>
     </button>
+    <div class="month-row">
+      <div class="month-pick">
+        <button id="mPrev" aria-label="prev">‹</button>
+        <div class="month-label" id="mLabel">—</div>
+        <button id="mNext" aria-label="next">›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== HOME ===================== -->
+  <section class="page on" id="page-home">
 
     <div class="card balance-card">
       <div>
@@ -1948,7 +1971,7 @@ const STR = {
     mbPromoCta:'See the box',
     mbLiveT:'Seed Box {b}', mbLiveS:'{a} of {g} · {p}%', mbLiveLeft:'{a} to go',
     mbOpen:'Open the box',
-    mbBuy:'Buy now', mbMore:'+{n} more', mbDismiss:'Not now',
+    mbBuy:'Buy now', mbMore:'+{n} more',
     mbTagline:'A little every day — a lakh in a year.',
     remTitle:'Reminders',
     remSub:'They ring at 7:55 in the morning, before the day starts.',
@@ -2316,7 +2339,7 @@ const STR = {
     mbPromoCta:'పెట్టె చూడండి',
     mbLiveT:'విత్తన పెట్టె {b}', mbLiveS:'{g} లో {a} · {p}%', mbLiveLeft:'ఇంకా {a}',
     mbOpen:'పెట్టె తెరువు',
-    mbBuy:'ఇప్పుడే కొనండి', mbMore:'ఇంకా {n}', mbDismiss:'ఇప్పుడు వద్దు',
+    mbBuy:'ఇప్పుడే కొనండి', mbMore:'ఇంకా {n}',
     mbTagline:'నీటిబొట్లు కలిస్తే సముద్రం.',
     remTitle:'గుర్తుంపులు',
     remSub:'ఉదయం 7:55కి — రోజు మొదలవ్వక ముందే.',
@@ -4080,6 +4103,8 @@ function go(tab){
   TAB = tab;
   if(typeof paintFab === 'function') paintFab();
   $$('.page').forEach(p => p.classList.toggle('on', p.id === 'page-'+tab));
+  /* the backup prompt belongs to home; the month row below it does not */
+  const sbar = $('#btnSaveData'); if(sbar) sbar.hidden = tab !== 'home';
   $$('.nav button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.go === tab)));
   window.scrollTo({top:0, behavior:'smooth'});
 }
@@ -7000,7 +7025,7 @@ document.addEventListener('click', e => {
    ON THE NAME, so this does not read as a bug later: the feature is called
    Seed Box everywhere a person can see it, and moneybox everywhere they
    cannot. The storage keys (moneybox:<BOXID>, moneybox.last,
-   moneybox.zoom.<id>, moneybox.promoDismissed) and the tracker's URL
+   moneybox.zoom.<id>) and the tracker's URL
    (/box/?id=) were fixed before the rename — the keys are on people's phones
    already, and that URL is printed on physical wooden boxes and can never
    move. Renaming either would lose someone's count or turn a QR into a dead
@@ -7045,19 +7070,15 @@ function mbActive(){
    is set in config.json there is nowhere to buy, so the promo state is not
    reachable — a Buy button that goes nowhere is worse than no banner. The
    progress state never depends on it. */
-const MB_DISMISS_KEY = 'moneybox.promoDismissed';
-const MB_DISMISS_DAYS = 30;
+/* The card is permanent. There is no dismissal — no control, no stored flag,
+   no re-show window — because it is not an advert once you own a box: the
+   same card becomes your count. What changes is what it SAYS, never whether
+   it is there. The one thing that can hide it is having nowhere to buy. */
 
 function mbCanBuy(){
   try{ return !!(CONFIG && typeof CONFIG.seedBoxWhatsApp === 'string'
                  && CONFIG.seedBoxWhatsApp.trim()); }
   catch(e){ return false; }      // CONFIG loads in a later block
-}
-function mbPromoDismissed(){
-  try{
-    const at = Number(localStorage.getItem(MB_DISMISS_KEY) || 0);
-    return at > 0 && (Date.now() - at) < MB_DISMISS_DAYS * 864e5;
-  }catch(e){ return false; }
 }
 function mbState(){
   const all = mbBoxes();
@@ -7082,9 +7103,11 @@ function mbTotal(b){
   return b.cells.reduce((n,c) => n + (c.filledAt ? (Number(c.amount)||0) : 0), 0);
 }
 
-/* The Savings card. It draws whatever mbState() says; the one difference
-   from the home banner is that the promo here is always allowed, since the
-   Savings page is somewhere you have gone looking. */
+/* The Savings card. It draws whatever mbState() says, and now that means
+   exactly what the home card means — including the gate. It used to allow the
+   promo through even with no order number set, on the reasoning that the
+   Savings page is somewhere you went looking; that made the two surfaces
+   disagree, which is the one thing a shared helper exists to prevent. */
 function renderMoneyBox(){
   const host = $('#mbBox'); if(!host) return;
   const st = mbState();
@@ -7105,6 +7128,7 @@ function renderMoneyBox(){
       </a>`;
     return;
   }
+  if(st.kind !== 'promo'){ host.innerHTML = ''; return; }
   host.innerHTML = `
     <a class="mb-card" href="seedbox/">
       <div class="h">
@@ -7138,10 +7162,9 @@ function mbShotArtwork(){
   probe.src = 'seedbox-hero.jpg';
 }
 
-/* The home banner. Same three states, drawn tighter, and the promo is
-   dismissible for a month — home is somewhere you land every day, and an
-   advert you cannot put down is an advert you come to resent. Progress is
-   never dismissible: it is your own money, not a pitch. */
+/* The home card. Always on screen, never dismissible, and what it says is
+   the whole of the difference: someone without a box is shown the box, and
+   someone with one is shown their own count and never sold a box again. */
 function renderSeedBanner(){
   const host = $('#sbBanner'); if(!host) return;
   const st = mbState();
@@ -7162,24 +7185,23 @@ function renderSeedBanner(){
     return;
   }
 
-  if(st.kind !== 'promo' || mbPromoDismissed()){ host.innerHTML = ''; return; }
+  /* kind 'none' means no order number is set, and a permanent card with a
+     dead Buy button is worse than no card */
+  if(st.kind !== 'promo'){ host.innerHTML = ''; return; }
 
   /* One action, never two: this is the promo state, so it is Buy now. "Add
      savings" belongs to the progress state and the two never share a card. */
   const acts = `
       <span class="acts">
         <a class="buy" href="seedbox/">${esc(t('mbBuy'))}</a>
-        <button class="no" id="sbNo">${esc(t('mbDismiss'))}</button>
       </span>`;
 
   host.innerHTML = st.weight === 'full' ? `
     <div class="sb promo big">
       <span class="shot" aria-hidden="true">${mbShotHTML()}</span>
-      <span class="tx">
-        <span class="n">${esc(t('mbPromoT'))}</span>
-        <span class="tag">${esc(t('mbTagline'))}</span>
-      </span>
+      <span class="tx"><span class="n">${esc(t('mbPromoT'))}</span></span>
       ${acts}
+      <span class="tag">${esc(t('mbTagline'))}</span>
     </div>` : `
     <div class="sb promo">
       <span class="shot" aria-hidden="true">${ic('box')}</span>
@@ -7189,10 +7211,6 @@ function renderSeedBanner(){
       </span>
       ${acts}
     </div>`;
-  $('#sbNo').addEventListener('click', () => {
-    try{ localStorage.setItem(MB_DISMISS_KEY, String(Date.now())); }catch(e){}
-    renderSeedBanner();
-  });
   mbShotArtwork();
 }
 /* ---- Google Drive sync ----------------------------------------------
