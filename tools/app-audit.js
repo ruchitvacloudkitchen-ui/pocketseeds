@@ -227,21 +227,53 @@ const settle = async pg => { try{ await pg.evaluate(()=>document.fonts.ready); }
   /* The property is "one flat colour across all four panels, no ramp", not a
      particular hex — the tint is a token now and moves with the theme, which
      is why naming the green here would only ever be a hex to update. */
+  /* The coach's fill moved from .sc-b up to .sc-cell, so a whole card -- the
+     amount, the "Where to start" label and the provider chips -- is one
+     surface with nothing white inside it. That makes .sc-b transparent, and
+     these checks used to read its own backgroundColor, which is now
+     rgba(0,0,0,0). Reading the EFFECTIVE ground is what they meant all along:
+     composite down the ancestor chain to the colour an eye actually sees.
+     Accepting "transparent is fine" would have stopped them looking. */
   ok('every coach panel is the one tint, with no gradient left', await p.evaluate(()=>{
+     const ground = el => { let n = el; const st = [];
+       while(n){ const m = String(getComputedStyle(n).backgroundColor).match(/[\d.]+/g);
+         if(m){ const a = m.length > 3 ? +m[3] : 1;
+           if(a > 0){ st.push([+m[0], +m[1], +m[2], a]); if(a >= 1) break; } }
+         n = n.parentElement; }
+       let o = [255,255,255];
+       for(let i = st.length - 1; i >= 0; i--){ const [r,g,b,a] = st[i];
+         o = [r*a + o[0]*(1-a), g*a + o[1]*(1-a), b*a + o[2]*(1-a)]; }
+       return 'rgb(' + o.map(v => Math.round(v)).join(', ') + ')'; };
      const sels = ['.sc-top','.sc-pink','.sc-amber','.sc-green'];
-     const bgs = sels.map(s2=>getComputedStyle(document.querySelector(s2)).backgroundColor);
+     const bgs = sels.map(s2=>ground(document.querySelector(s2)));
      const imgs = sels.map(s2=>getComputedStyle(document.querySelector(s2)).backgroundImage);
      return new Set(bgs).size === 1
             && bgs[0] !== 'rgba(0, 0, 0, 0)'
             && imgs.every(i=>i === 'none'); }),
      await p.evaluate(()=>['.sc-top','.sc-pink','.sc-amber','.sc-green']
        .map(s2=>getComputedStyle(document.querySelector(s2)).backgroundColor).join(' / ')));
+  /* the point of the whole change */
+  ok('no card in the coach contains a white surface', await p.evaluate(()=>
+     ![...document.querySelectorAll('.sc-cell, .sc-top')].some(c =>
+       [...c.querySelectorAll('*')].some(e => {
+         const m = String(getComputedStyle(e).backgroundColor).match(/[\d.]+/g);
+         return m && (m.length < 4 || +m[3] >= 1)
+                && +m[0] > 245 && +m[1] > 245 && +m[2] > 245; }))));
   ok('its ink clears 4.5:1 on that green', await p.evaluate(()=>{
      const lin=c=>{c/=255;return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);};
      const lum=rgb=>{const [r,g,b]=rgb.match(/\d+/g).map(Number);
        return 0.2126*lin(r)+0.7152*lin(g)+0.0722*lin(b);};
+     const ground = el => { let n = el; const st = [];
+       while(n){ const m = String(getComputedStyle(n).backgroundColor).match(/[\d.]+/g);
+         if(m){ const a = m.length > 3 ? +m[3] : 1;
+           if(a > 0){ st.push([+m[0], +m[1], +m[2], a]); if(a >= 1) break; } }
+         n = n.parentElement; }
+       let o = [255,255,255];
+       for(let i = st.length - 1; i >= 0; i--){ const [r,g,b,a] = st[i];
+         o = [r*a + o[0]*(1-a), g*a + o[1]*(1-a), b*a + o[2]*(1-a)]; }
+       return 'rgb(' + o.map(v => Math.round(v)).join(', ') + ')'; };
      const el = document.querySelector('.sc-green');
-     const a = lum(getComputedStyle(el).color), b = lum(getComputedStyle(el).backgroundColor);
+     const a = lum(getComputedStyle(el).color), b = lum(ground(el));
      const hi = Math.max(a,b), lo = Math.min(a,b);
      return (hi+0.05)/(lo+0.05) >= 4.5; }));
   /* Each block must set BOTH its ink and its ground rather than inheriting
@@ -253,11 +285,20 @@ const settle = async pg => { try{ await pg.evaluate(()=>document.fonts.ready); }
          const lin=c=>{c/=255;return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);};
          const lum=rgb=>{const [r,g,b]=rgb.match(/\d+/g).map(Number);
            return 0.2126*lin(r)+0.7152*lin(g)+0.0722*lin(b);};
+         const ground = el => { let n = el; const st = [];
+           while(n){ const m = String(getComputedStyle(n).backgroundColor).match(/[\d.]+/g);
+             if(m){ const a = m.length > 3 ? +m[3] : 1;
+               if(a > 0){ st.push([+m[0], +m[1], +m[2], a]); if(a >= 1) break; } }
+             n = n.parentElement; }
+           let o = [255,255,255];
+           for(let i = st.length - 1; i >= 0; i--){ const [r,g,b,a] = st[i];
+             o = [r*a + o[0]*(1-a), g*a + o[1]*(1-a), b*a + o[2]*(1-a)]; }
+           return 'rgb(' + o.map(v => Math.round(v)).join(', ') + ')'; };
          const page = getComputedStyle(document.body).backgroundColor;
          return [...document.querySelectorAll('.sc-b')].every(x=>{
-           const c=getComputedStyle(x);
-           if(c.backgroundColor==='rgba(0, 0, 0, 0)' || c.backgroundColor===page) return false;
-           const a=lum(c.color), b=lum(c.backgroundColor);
+           const bg = ground(x);
+           if(bg === 'rgba(0, 0, 0, 0)' || bg === page) return false;
+           const a=lum(getComputedStyle(x).color), b=lum(bg);
            return (Math.max(a,b)+0.05)/(Math.min(a,b)+0.05) >= 4.5; });
        });
        await p.evaluate(()=>setTheme('light')); await p.waitForTimeout(250);
@@ -1654,11 +1695,14 @@ const settle = async pg => { try{ await pg.evaluate(()=>document.fonts.ready); }
     return p.evaluate(()=>{
       const cs = s => { const e=document.querySelector(s); return e?getComputedStyle(e):null; };
       const card=cs('.sb-card'), n=cs('.sb-t'), tag=cs('.sb-tag'),
-            buy=cs('.sb-go'), strip=cs('.sb-strip'), top=cs('.sc-top'), bento=cs('.sc-b');
+            buy=cs('.sb-go'), strip=cs('.sb-strip'), top=cs('.sc-top'), bento=cs('.sc-b'),
+            bentoCell=document.querySelector('.sc-cell');
       return { cardBg:card&&card.backgroundColor, title:n&&n.color, tag:tag&&tag.color,
                stripBg:strip&&strip.backgroundColor, buyInk:buy&&buy.color,
                coachBg:top&&top.backgroundColor, coachInk:top&&top.color,
-               bentoBg:bento&&bento.backgroundColor, bentoInk:bento&&bento.color };
+               /* the bucket's ground is its cell now, not the .sc-b inside it */
+               bentoBg:bentoCell&&getComputedStyle(bentoCell).backgroundColor,
+               bentoInk:bento&&bento.color };
     });
   };
   for(const theme of ['light','dark']){

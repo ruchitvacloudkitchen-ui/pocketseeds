@@ -1,6 +1,6 @@
 /* PocketSeeds offline cache — the app itself works fully offline;
    data lives in localStorage on the device. */
-const CACHE = 'pocketseeds-v36';
+const CACHE = 'pocketseeds-v37';
 /* The fonts are precached because they are now ours to serve: an offline-first
    Telugu app that falls back to whatever face the device happens to have is
    not the same app. addAll is all-or-nothing, so everything listed here must

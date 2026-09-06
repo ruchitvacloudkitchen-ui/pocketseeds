@@ -108,17 +108,26 @@
 :root{--sc:#D6F0F5; --sc-ink:#07242B;
   --sc-bloom:rgba(255,255,255,.42); --sc-glow:rgba(24,86,100,.22);
   --sc-chip:rgba(7,36,43,.10); --sc-chip-line:rgba(7,36,43,.22);
-  --sc-ic:rgba(255,255,255,.55); --sc-ic-line:rgba(7,36,43,.10)}
+  --sc-ic:rgba(255,255,255,.55); --sc-ic-line:rgba(7,36,43,.10);
+  /* the provider chips: a near-white lift off the tint, not a white box.
+     --sc-label is a solid colour rather than the ink at reduced opacity, so
+     its contrast is a number we can state rather than one we composite. */
+  --sc-chip-bg:rgba(255,255,255,.78); --sc-chip-brd:rgba(7,36,43,.16);
+  --sc-label:#3D6771}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){--sc:#123C44; --sc-ink:#D6F0F5;
     --sc-bloom:rgba(214,240,245,.10); --sc-glow:rgba(0,0,0,.45);
     --sc-chip:rgba(214,240,245,.14); --sc-chip-line:rgba(214,240,245,.26);
-    --sc-ic:rgba(214,240,245,.14); --sc-ic-line:rgba(214,240,245,.22)}
+    --sc-ic:rgba(214,240,245,.14); --sc-ic-line:rgba(214,240,245,.22);
+    --sc-chip-bg:rgba(214,240,245,.13); --sc-chip-brd:rgba(214,240,245,.28);
+    --sc-label:#A8CBD3}
 }
 :root[data-theme="dark"]{--sc:#123C44; --sc-ink:#D6F0F5;
   --sc-bloom:rgba(214,240,245,.10); --sc-glow:rgba(0,0,0,.45);
   --sc-chip:rgba(214,240,245,.14); --sc-chip-line:rgba(214,240,245,.26);
-  --sc-ic:rgba(214,240,245,.14); --sc-ic-line:rgba(214,240,245,.22)}
+  --sc-ic:rgba(214,240,245,.14); --sc-ic-line:rgba(214,240,245,.22);
+  --sc-chip-bg:rgba(214,240,245,.13); --sc-chip-brd:rgba(214,240,245,.28);
+  --sc-label:#A8CBD3}
 .sc-top{border-radius:22px;padding:18px 19px;color:var(--sc-ink);position:relative;overflow:hidden;
   background:var(--sc);
   box-shadow:0 10px 28px var(--sc-glow)}
@@ -329,26 +338,33 @@
 @media (prefers-reduced-motion:reduce){ .rem-card{transition:none} }
 
 .sc-bento{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.sc-b{position:relative;overflow:hidden;border-radius:20px;padding:15px 16px;min-height:118px;
-  display:flex;flex-direction:column;justify-content:space-between;
-  box-shadow:0 6px 18px var(--sc-glow)}
-.sc-b.wide{grid-column:1 / -1;min-height:104px}
-.sc-b::after{content:'';position:absolute;right:-30px;top:-34px;width:118px;height:118px;border-radius:50%;
-  background:radial-gradient(circle, var(--sc-bloom), transparent 66%)}
+.sc-b{position:relative;padding:15px 16px 0;
+  display:flex;flex-direction:column;gap:10px}
+.sc-b.wide{grid-column:1 / -1}
 .sc-b > *{position:relative}
-.sc-b .sc-h{display:flex;align-items:center;gap:8px}
+.sc-b .sc-h{display:flex;align-items:center;gap:8px;position:relative}
 /* the overlays were white, which vanishes on a light ground and glares on a
    dark one, so both the fill and its hairline follow the tint */
 .sc-b .sc-ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
   background:var(--sc-ic);box-shadow:inset 0 0 0 1px var(--sc-ic-line)}
 .sc-b .sc-ic .i{width:16px;height:16px}
-.sc-b .sc-nm{font-size:14px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
-.sc-b .sc-pc{margin-left:auto;font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:999px;
-  background:var(--sc-chip);box-shadow:inset 0 0 0 1px var(--sc-chip-line)}
+/* The badge is pinned to the corner rather than sharing the header row. In a
+   half-width cell at 360px "Emergency fund" plus a badge does not fit on one
+   line: laid out inline the badge was first pushed off the card edge, then --
+   once it was allowed to hold its width -- overlapped by the wrapping name.
+   Out of flow it cannot collide with anything, and the header simply reserves
+   the space it occupies. */
+.sc-b .sc-h{padding-right:50px}
+.sc-b .sc-nm{flex:1 1 auto;min-width:0;font-size:14px;font-weight:700;
+  letter-spacing:-.01em;line-height:1.2}
+.sc-b .sc-pc{position:absolute;top:0;right:0;font-size:11.5px;font-weight:800;padding:3px 9px;
+  border-radius:999px;background:var(--sc-chip);box-shadow:inset 0 0 0 1px var(--sc-chip-line)}
 .sc-b .sc-v{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-top:10px}
 /* class names kept — they are the bucket's identity in SC_PARTS, not a colour.
    All three are the same green now; the icon and the name tell them apart. */
-.sc-pink, .sc-amber, .sc-green{background:var(--sc); color:var(--sc-ink)}
+/* the fill moved up to .sc-cell so the whole card is one surface; these keep
+   their names because SC_PARTS identifies buckets by them */
+.sc-pink, .sc-amber, .sc-green{background:transparent; color:inherit}
 
 /* Each bucket carries its own two starting points, in a panel tucked under the
    coloured box so the pair reads as one unit rather than a loose list. */
@@ -384,24 +400,51 @@
 .sos-row .num{font-size:19px;font-weight:800;color:var(--out);white-space:nowrap;letter-spacing:-.01em}
 .sos-del{border:0;background:none;color:var(--muted);font-family:inherit;font-size:13px;
   font-weight:700;cursor:pointer;padding:6px 8px;flex:0 0 auto}
-.sc-cell{display:flex;flex-direction:column;min-width:0}
+/* One card, not a coloured box with a white tray tucked under it. The tint,
+   the radius, the shadow and the bloom all live on the cell now, and the two
+   parts inside it are just sections -- so "Where to start" and its chips sit
+   on the same blue as the amount above them, with nothing white anywhere
+   inside a card. */
+.sc-cell{display:flex;flex-direction:column;min-width:0;position:relative;overflow:hidden;
+  border-radius:20px;background:var(--sc);color:var(--sc-ink);
+  box-shadow:0 6px 18px var(--sc-glow)}
 .sc-cell.wide{grid-column:1 / -1}
-.sc-cell .sc-b{z-index:1}
-.sc-where{background:var(--surface);border:1px solid var(--line);border-top:0;
-  border-radius:0 0 18px 18px;margin:-15px 7px 0;padding:22px 11px 11px}
-.sc-wl{font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:7px}
+.sc-cell::after{content:'';position:absolute;right:-30px;top:-34px;width:118px;height:118px;
+  border-radius:50%;background:radial-gradient(circle, var(--sc-bloom), transparent 66%);
+  pointer-events:none}
+.sc-cell > *{position:relative}
+.sc-where{padding:13px 16px 14px}
+.sc-wl{font-size:11.5px;font-weight:700;color:var(--sc-label);margin-bottom:7px}
 .sc-links{display:flex;flex-wrap:wrap;gap:6px}
-.sc-links a{flex:0 1 auto;min-width:0;text-decoration:none;background:var(--surface-2);
-  border:1px solid var(--line);border-radius:999px;padding:6px 11px;
-  font-size:12.5px;font-weight:700;color:var(--ink);white-space:nowrap}
+/* lighter than the card and softly outlined, so they still read as things you
+   can tap rather than text lying on the tint */
+.sc-links a{flex:0 1 auto;min-width:0;text-decoration:none;background:var(--sc-chip-bg);
+  border:1px solid var(--sc-chip-brd);border-radius:999px;padding:6px 11px;
+  font-size:12.5px;font-weight:700;color:var(--sc-ink);white-space:nowrap}
 /* Half-width cells cannot fit two names on one line, and stacking them read as
    a list rather than a pair. Two equal columns keep them side by side at any
    width; a long name wraps inside its own pill instead of pushing the other
    one down. */
+/* Half-width cards cannot fit "Emergency fund" and the badge on one line at
+   360px -- the mockup's canvas is wider than a phone. Flexed, the name either
+   pushed the badge out or was overlapped by it, and forcing a break split the
+   word into "Emerge / ncy". Floating the icon and the badge lets the name flow
+   around both and wrap on a real word boundary, which is what the mockup shows
+   at its own width and the nearest honest thing at this one. */
+.sc-cell:not(.wide) .sc-h{display:block;padding-right:0}
+.sc-cell:not(.wide) .sc-h::after{content:'';display:block;clear:both}
+.sc-cell:not(.wide) .sc-ic{float:left;margin-right:8px}
+.sc-cell:not(.wide) .sc-pc{position:static;float:right;margin-left:8px}
+.sc-cell:not(.wide) .sc-nm{display:block;font-size:13.5px}
 .sc-cell:not(.wide) .sc-links{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.sc-cell:not(.wide) .sc-links a{white-space:normal;text-align:center;padding:6px 7px;
+/* a little smaller in the half-width cells so the common provider names land
+   on one line at 360px; the mockup's canvas is wider than a phone, and a name
+   that still will not fit wraps inside its own pill rather than shunting the
+   other one onto a second row */
+.sc-cell:not(.wide) .sc-links a{white-space:normal;text-align:center;padding:5px 7px;
+  font-size:11.5px;letter-spacing:-.01em;border-radius:14px;
   font-size:11.5px;line-height:1.25;overflow-wrap:anywhere}
-.sc-cell:not(.wide) .sc-where{padding:22px 8px 11px}
+.sc-cell:not(.wide) .sc-where{padding:13px 10px 14px}
 .sc-note{margin-top:10px;border-radius:16px;padding:12px 14px;font-size:14px;line-height:1.45;font-weight:600}
 .sc-ok{background:var(--in-bg);color:var(--in)}
 .sc-short{background:var(--warn-bg);color:var(--warn)}
