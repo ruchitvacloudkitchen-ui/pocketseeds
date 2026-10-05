@@ -34,7 +34,7 @@
      chips. White on it measures 2.14:1, below the 4.5:1 a label needs and the
      3:1 an icon needs — a deliberate choice, made after being flagged. Change
      this one value to adjust every button and chip together. */
-  --btn:#56C596; --btn-2:#7BE495; --on-btn:#0C2B1A;
+  --btn:#064E3B; --btn-2:#0A5C36; --on-btn:#FFFFFF;
   --radius:18px; --shadow:0 1px 3px rgba(34,36,46,.06),0 6px 18px rgba(34,36,46,.06);
   --card-h:154px;
 }
@@ -53,7 +53,7 @@
   --brand:#7BD189;--brand-2:#9CE0A6;--amber:#FF9163;--amber-2:#FFA87F;
   --in:#7BD189;--in-bg:rgba(99,190,113,.16);--out:#FF9163;--out-bg:rgba(242,107,58,.16);
   --warn:#F5C56B;--warn-bg:rgba(245,197,107,.14);--save:#7BD189;--save-bg:rgba(99,190,113,.16);
-  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--btn:#56C596;--btn-2:#7BE495;--on-btn:#0C2B1A;--shadow:0 2px 16px rgba(0,0,0,.55)}
+  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--btn:#064E3B;--btn-2:#0A5C36;--on-btn:#FFFFFF;--shadow:0 2px 16px rgba(0,0,0,.55)}
 }
 :root[data-theme="dark"]{--bg:#1B1D25;--surface:rgba(255,255,255,.072);--surface-2:rgba(255,255,255,.042);
   --solid:#24262F;--chrome:rgba(27,29,37,.78);--glass-hi:rgba(255,255,255,.15);
@@ -67,7 +67,7 @@
   --brand:#7BD189;--brand-2:#9CE0A6;--amber:#FF9163;--amber-2:#FFA87F;
   --in:#7BD189;--in-bg:rgba(99,190,113,.16);--out:#FF9163;--out-bg:rgba(242,107,58,.16);
   --warn:#F5C56B;--warn-bg:rgba(245,197,107,.14);--save:#7BD189;--save-bg:rgba(99,190,113,.16);
-  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--btn:#56C596;--btn-2:#7BE495;--on-btn:#0C2B1A;--shadow:0 2px 16px rgba(0,0,0,.55)}
+  --plum:#C3B4F5;--plum-bg:rgba(195,180,245,.15);--opt:#8FC7F7;--opt-bg:rgba(143,199,247,.16);--on-brand:#16261C;--btn:#064E3B;--btn-2:#0A5C36;--on-btn:#FFFFFF;--shadow:0 2px 16px rgba(0,0,0,.55)}
 
 /* ---------- tab banners (income, expenses) ----------
    The artwork is optional: if the .jpg is not in the repo the <img> fails and
@@ -150,9 +150,13 @@
    the only place a visitor who has never seen the box learns it exists. In
    progress state Save now is the primary and Buy now sits beside it, smaller:
    an owner may want a second box for a child or a gift. */
-.sb-card{display:block;position:relative;border-radius:20px;padding:15px 16px 11px;
+.sb-card{display:block;position:relative;border-radius:20px;padding:16px 18px 14px;
   margin-bottom:13px;background:var(--sbx);box-shadow:var(--sbx-shadow);
-  text-decoration:none;color:var(--sb-ink)}
+  border:1px solid var(--sbx-border);
+  backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
+  text-decoration:none;color:var(--sb-ink);overflow:hidden}
+.sb-card::after{content:'';position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.36),transparent);pointer-events:none}
 /* The icon sits on the title line only, not beside the whole text block: an
    icon column would narrow the taglines by ~44px and wrap the Telugu line,
    which is the one thing this card cannot afford. It is the app's own gift
@@ -181,8 +185,8 @@
    shape, not just weight, is what separates it from the secondary. Green ink
    on the pale pink pill — a filled green button would need white text, and
    nothing on this card is white. */
-.sb-go{font-size:15.5px;font-weight:800;color:var(--sb-green);white-space:nowrap;
-  text-decoration:none;background:var(--sb-pill);border:0;border-radius:999px;
+.sb-go{font-size:15.5px;font-weight:800;color:#A7F3D0;white-space:nowrap;
+  text-decoration:none;background:var(--sb-pill);border:1px solid rgba(52,211,153,.45);border-radius:999px;
   font-family:inherit;cursor:pointer;padding:9px 15px;line-height:1}
 /* the secondary action stays plain text — no shape, lighter, smaller */
 .sb-go2{font-size:13.5px;font-weight:600;color:var(--sb-muted);white-space:nowrap;
@@ -194,7 +198,7 @@
 .sb-badge{position:absolute;top:13px;right:14px;min-width:38px;height:26px;
   border-radius:999px;display:grid;place-items:center;padding:0 9px;
   font-size:12.5px;font-weight:800;letter-spacing:-.01em;
-  background:var(--sb-badge-bg);color:var(--sb-badge-ink)}
+  background:var(--sb-badge-bg);color:var(--sb-badge-ink);border:1px solid rgba(52,211,153,.35)}
 
 /* The full promo, for someone who has neither a box nor a single saving
    recorded: they have never met the product, so it gets the card treatment
@@ -221,38 +225,59 @@
    The app's brand green does not survive on it: #25743D reads 4.40:1 against
    #FBD7EC, under AA. So the title and the action use a darker green on this
    card only, which is why --sb-green exists rather than reusing --brand. */
-:root{--sbx:#FBD7EC; --sb-green:#1F6234; --sb-ink:#22242E; --sb-ink-2:#4A3843;
-  --sb-muted:#5A4450; --sb-rule:rgba(74,31,61,.18);
-  --sb-badge-bg:#F3BFDD; --sb-badge-ink:#4A1F3D;
-  /* the icon takes the same green as the title so the card reads as one
-     colour idea; --sb-ico is its own token so the deeper-pink alternative
-     is a one-line swap (#9B2C6F light / #F0A6D0 dark) rather than a rewrite */
-  --sb-ico:#1F6234;
-  /* the primary action is a tinted pill, not a filled green button: a filled
-     one would need white text, and nothing on this pink is white */
-  --sb-pill:#F3BFDD;
-  --sbx-shadow:0 1px 2px rgba(34,36,46,.05), 0 10px 22px -8px rgba(34,36,46,.20)}
+:root{
+  --sbx:linear-gradient(135deg, rgba(8, 44, 25, 0.90) 0%, rgba(4, 28, 16, 0.95) 100%);
+  --sbx-border:rgba(52, 211, 153, 0.28);
+  --sb-green:#6EE7B7;
+  --sb-ink:#FFFFFF;
+  --sb-ink-2:rgba(255, 255, 255, 0.88);
+  --sb-muted:rgba(220, 245, 230, 0.78);
+  --sb-rule:rgba(255, 255, 255, 0.16);
+  --sb-badge-bg:rgba(52, 211, 153, 0.22);
+  --sb-badge-ink:#A7F3D0;
+  --sb-ico:#34D399;
+  --sb-pill:rgba(52, 211, 153, 0.24);
+  --sbx-shadow:0 12px 32px rgba(2, 20, 11, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  --sbx-tag:rgba(255, 255, 255, 0.88);
+  --sbx-rim:rgba(52, 211, 153, 0.35);
+  --sbx-btn:rgba(52, 211, 153, 0.28);
+  --sbx-btn-ink:#FFFFFF;
+}
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--sbx:#4A1F3D; --sb-green:#7BD189; --sb-ink:#FBD7EC;
-    --sb-ink-2:#D8B6C8; --sb-muted:#C9A8BB; --sb-rule:rgba(251,215,236,.20);
-    --sb-badge-bg:#3A1030; --sb-badge-ink:#FBD7EC;
-    --sb-ico:#7BD189; --sb-pill:#3A1030;
-    --sbx-shadow:0 2px 20px rgba(0,0,0,.55)}
+  :root:not([data-theme="light"]){
+    --sbx:linear-gradient(135deg, rgba(7, 38, 22, 0.92) 0%, rgba(3, 20, 12, 0.97) 100%);
+    --sbx-border:rgba(52, 211, 153, 0.26);
+    --sb-green:#6EE7B7;
+    --sb-ink:#FFFFFF;
+    --sb-ink-2:rgba(255, 255, 255, 0.88);
+    --sb-muted:rgba(220, 245, 230, 0.78);
+    --sb-rule:rgba(255, 255, 255, 0.16);
+    --sb-badge-bg:rgba(52, 211, 153, 0.22);
+    --sb-badge-ink:#A7F3D0;
+    --sb-ico:#34D399;
+    --sb-pill:rgba(52, 211, 153, 0.24);
+    --sbx-shadow:0 14px 34px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  }
 }
-:root[data-theme="dark"]{--sbx:#4A1F3D; --sb-green:#7BD189; --sb-ink:#FBD7EC;
-  --sb-ink-2:#D8B6C8; --sb-muted:#C9A8BB; --sb-rule:rgba(251,215,236,.20);
-  --sb-badge-bg:#3A1030; --sb-badge-ink:#FBD7EC;
-  --sb-ico:#7BD189; --sb-pill:#3A1030;
-  --sbx-shadow:0 2px 20px rgba(0,0,0,.55)}
+:root[data-theme="dark"]{
+  --sbx:linear-gradient(135deg, rgba(7, 38, 22, 0.92) 0%, rgba(3, 20, 12, 0.97) 100%);
+  --sbx-border:rgba(52, 211, 153, 0.26);
+  --sb-green:#6EE7B7;
+  --sb-ink:#FFFFFF;
+  --sb-ink-2:rgba(255, 255, 255, 0.88);
+  --sb-muted:rgba(220, 245, 230, 0.78);
+  --sb-rule:rgba(255, 255, 255, 0.16);
+  --sb-badge-bg:rgba(52, 211, 153, 0.22);
+  --sb-badge-ink:#A7F3D0;
+  --sb-ico:#34D399;
+  --sb-pill:rgba(52, 211, 153, 0.24);
+  --sbx-shadow:0 14px 34px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
-:root[data-theme="dark"]{--sbx:#4A1F3D; --sb-card:#24262F;
-  --sb-rule:rgba(255,255,255,.13);
-  --sb-badge-bg:#3A1030; --sb-badge-ink:#FBD7EC;
-  --sbx-shadow:0 2px 20px rgba(0,0,0,.55)}
 
 .sb.promo.big{align-items:flex-start;gap:12px;padding:13px 14px;border-radius:20px;
   position:relative;overflow:hidden;flex-wrap:nowrap;
-  background:var(--sbx);border-color:var(--sbx-rim);box-shadow:var(--sbx-shadow)}
+  background:var(--sbx);border:1px solid var(--sbx-border);box-shadow:var(--sbx-shadow);
+  backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4)}
 .sb.promo.big .n{color:var(--sbx-ink)}
 .sb.promo.big .buy{background:var(--sbx-btn);color:var(--sbx-btn-ink)}
 .sb.promo.big > *{position:relative}
@@ -493,14 +518,31 @@
 .reel[aria-disabled="true"]{opacity:.72}
 
 /* ---------- quick add tiles ----------
-   Each glyph sits on its own coloured rounded square, the way app icons do,
-   so a category is found by colour before the label is read. The glyphs are
-   the app's own stroke set drawn in white — no second icon library. */
-.q-ic{width:56px;height:56px;border-radius:17px;display:grid;place-items:center;margin:0 auto;
-  background:var(--btn);color:var(--on-btn);
-  box-shadow:0 4px 10px rgba(14,27,20,.18), inset 0 1px 0 rgba(255,255,255,.28)}
-.q-ic .i{width:29px;height:29px;stroke-width:2}
-@media (max-width:359px){.q-ic{width:50px;height:50px;border-radius:15px}.q-ic .i{width:26px;height:26px}}
+   Buttons designed with clean dark green line symbols and dark green text matching #0B7A43, placed directly on cards. */
+.q-btn{padding:16px 8px 14px;text-align:center;cursor:pointer;border:1px solid var(--line);
+  font-family:inherit;background:var(--surface);border-radius:18px;
+  box-shadow:0 1px 3px rgba(34,36,46,.04), 0 4px 14px rgba(34,36,46,.04);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:transform .12s, box-shadow .12s, background .12s;color:#0B7A43}
+.q-btn:active{transform:scale(.96);background:rgba(11,122,67,.06)}
+.q-btn:hover{box-shadow:0 3px 12px rgba(11,122,67,.12);border-color:rgba(11,122,67,.3)}
+.q-ic{width:46px;height:46px;display:grid;place-items:center;margin:0 auto;
+  background:none !important;box-shadow:none !important;border:none !important;border-radius:0 !important;
+  color:#0B7A43}
+.q-ic svg,.q-ic .i{width:34px;height:34px;stroke:#0B7A43;fill:none !important;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;color:#0B7A43}
+.q-lbl{font-size:13.5px;font-weight:700;margin-top:8px;color:#0B7A43;letter-spacing:-.01em}
+
+:root[data-theme="dark"] .q-btn{background:var(--surface);border-color:var(--line);color:#34D399}
+:root[data-theme="dark"] .q-ic{color:#34D399}
+:root[data-theme="dark"] .q-ic svg,:root[data-theme="dark"] .q-ic .i{stroke:#34D399;fill:none !important;color:#34D399}
+:root[data-theme="dark"] .q-lbl{color:#34D399}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .q-btn{background:var(--surface);border-color:var(--line);color:#34D399}
+  :root:not([data-theme="light"]) .q-ic{color:#34D399}
+  :root:not([data-theme="light"]) .q-ic svg,:root:not([data-theme="light"]) .q-ic .i{stroke:#34D399;fill:none !important;color:#34D399}
+  :root:not([data-theme="light"]) .q-lbl{color:#34D399}
+}
 
 /* ---------- ask-about-your-money banner ----------
    A Siri-style animated orb, but built from the app's own greens rather than
@@ -802,6 +844,62 @@ button{color:var(--ink)}
    fixed elements, since backdrop-filter on every card is slow on budget phones */
 .card::after{content:'';position:absolute;left:0;right:0;top:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
+/* ---------- happy customers banner ---------- */
+.happy-customers-banner{
+  position:relative;
+  overflow:hidden;
+  border-radius:var(--radius);
+  padding:16px 18px;
+  margin-bottom:13px;
+  background:linear-gradient(135deg, #FAF6F0 0%, #F5ECE1 100%);
+  border:1px solid #D8C3AE;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+:root[data-theme="dark"] .happy-customers-banner{
+  background:linear-gradient(135deg, #1C1612 0%, #251D17 100%);
+  border-color:#4A3828;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .happy-customers-banner{
+    background:linear-gradient(135deg, #1C1612 0%, #251D17 100%);
+    border-color:#4A3828;
+  }
+}
+.happy-customers-banner .hc-num{
+  font-size:38px;
+  font-weight:800;
+  line-height:1.05;
+  letter-spacing:-.03em;
+  color:#0B7A43;
+}
+:root[data-theme="dark"] .happy-customers-banner .hc-num{
+  color:#34D399;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .happy-customers-banner .hc-num{
+    color:#34D399;
+  }
+}
+.happy-customers-banner .hc-label{
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.02em;
+  color:#5B3A21;
+  margin-top:4px;
+}
+:root[data-theme="dark"] .happy-customers-banner .hc-label{
+  color:#DCC4AF;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .happy-customers-banner .hc-label{
+    color:#DCC4AF;
+  }
+}
 .balance-card{min-height:var(--card-h);padding:18px;color:#fff;border:0;position:relative;overflow:hidden;
   display:flex;flex-direction:column;justify-content:space-between;
   background:linear-gradient(140deg,#065F38 0%,#0B7A43 46%,#16A34A 100%);
@@ -894,7 +992,9 @@ html[lang="te"] .tile .t-lbl{text-transform:none;letter-spacing:0;font-size:14px
    the backup bar fell into; the mic is hidden this way inside a TWA */
 .btn[hidden]{display:none}
 /* every filled button is the one green, with white on it */
-.btn-p,.btn-in,.btn-save,.btn-plum{background:var(--btn);color:var(--on-btn)}
+.btn-p,.btn-in,.btn-save,.btn-plum{background:linear-gradient(135deg, #0A5C36 0%, #064E3B 100%);color:#FFFFFF;border:1px solid rgba(52,211,153,.28);box-shadow:0 2px 8px rgba(6,55,31,.24);transition:filter .12s, transform .12s}
+.btn-p:hover,.btn-in:hover,.btn-save:hover,.btn-plum:hover{filter:brightness(1.08)}
+.btn-p:active,.btn-in:active,.btn-save:active,.btn-plum:active{filter:brightness(.92);transform:scale(.98)}
 .btn-g{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
 /* the exception: this button records an expense, and money out has to stay
    distinguishable from money in at a glance */
@@ -1092,9 +1192,9 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
   padding:14px 7px 12px;border-radius:16px;border:1px solid var(--line);background:var(--surface);
   box-shadow:var(--shadow);cursor:pointer;font-family:inherit;text-align:center;min-height:104px}
 .menu-tile:active{transform:scale(.97)}
-.menu-tile .mt-ic{width:42px;height:42px;border-radius:50%;background:var(--in-bg);color:var(--brand);
+.menu-tile .mt-ic{width:42px;height:42px;border-radius:12px;background:rgba(11,122,67,.06);border:1.5px solid rgba(11,122,67,.25);color:#0B7A43;
   display:grid;place-items:center;flex:0 0 auto}
-.menu-tile .mt-ic .i{width:21px;height:21px}
+.menu-tile .mt-ic .i{width:21px;height:21px;stroke:#0B7A43;fill:none}
 .menu-tile .mt-t{display:block;font-size:12.5px;font-weight:700;line-height:1.25;color:var(--ink)}
 .menu-tile .mt-s{display:block;font-size:10.5px;font-weight:600;line-height:1.2;color:var(--muted);margin-top:3px}
 @media (max-width:339px){.menu-grid{grid-template-columns:repeat(2,1fr)}}
@@ -1149,8 +1249,9 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .brokers .btn{text-decoration:none;padding:7px 11px;font-size:13.5px;border-radius:999px}
 .sipc{padding:15px}
 .sipc-head{display:flex;align-items:flex-start;gap:11px;margin-bottom:13px}
-.sipc-ic{width:38px;height:38px;border-radius:12px;background:var(--in-bg);color:var(--brand);
+.sipc-ic{width:38px;height:38px;border-radius:12px;background:transparent;border:1.5px solid var(--line);color:var(--ink);
   display:grid;place-items:center;flex:0 0 auto}
+.sipc-ic .i{stroke:var(--ink);fill:none}
 .sipc-head h4{font-size:16px;font-weight:800;letter-spacing:-.01em}
 .sipc-head p{font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.4}
 .sipc-bal{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--in-bg);
@@ -1228,24 +1329,25 @@ table.sip tbody tr:last-child td{font-size:15px}
 
 /* tile quick-add + save bar */
 .t-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
-.t-add{width:32px;height:32px;border-radius:10px;border:0;cursor:pointer;display:grid;place-items:center;
-  flex:0 0 auto;font-family:inherit}
-.t-add .i{width:19px;height:19px;stroke-width:2.4}
-.t-add-in{background:var(--brand);color:#fff}
-.t-add-out{background:var(--out);color:#fff}
-.t-add:active{transform:scale(.94)}
+.t-add{width:32px;height:32px;border-radius:10px;border:1.5px solid rgba(11,122,67,.3);cursor:pointer;display:grid;place-items:center;
+  flex:0 0 auto;font-family:inherit;background:rgba(11,122,67,.06);color:#0B7A43;transition:transform .12s, background .12s, border-color .12s}
+.t-add .i{width:18px;height:18px;stroke-width:2.2;stroke:#0B7A43;fill:none}
+.t-add-in{background:rgba(11,122,67,.06);color:#0B7A43;border:1.5px solid rgba(11,122,67,.3)}
+.t-add-out{background:rgba(176,67,26,.06);color:var(--out);border:1.5px solid rgba(176,67,26,.3)}
+.t-add-out .i{stroke:var(--out)}
+.t-add:active{transform:scale(.94);background:rgba(11,122,67,.14)}
 .save-bar{width:100%;display:flex;align-items:center;gap:11px;margin-bottom:12px;padding:11px 13px;
   border-radius:15px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);
   cursor:pointer;font-family:inherit;text-align:left}
-.save-bar .sb-ic{width:36px;height:36px;border-radius:11px;background:var(--brand);color:#fff;
+.save-bar .sb-ic{width:36px;height:36px;border-radius:11px;background:rgba(11,122,67,.06);border:1.5px solid rgba(11,122,67,.25);color:#0B7A43;
   display:grid;place-items:center;flex:0 0 auto}
-.save-bar .sb-ic .i{width:20px;height:20px}
+.save-bar .sb-ic .i{width:20px;height:20px;stroke:#0B7A43;fill:none}
 .save-bar .sb-txt{flex:1;min-width:0;display:block}
 .save-bar .sb-txt b{display:block;font-size:14.5px;font-weight:700;color:var(--ink)}
 .save-bar .sb-txt i{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:2px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .save-bar .sb-g{color:var(--muted);flex:0 0 auto}
-.save-bar.on .sb-ic{background:var(--in-bg);color:var(--brand)}
+.save-bar.on .sb-ic{background:var(--surface-2);border-color:var(--line);color:var(--ink)}
 .save-bar.busy{opacity:.6;pointer-events:none}
 /* go() sets .hidden on this off the home tab, but display:flex above beats the
    attribute on its own, so the bar was showing on every tab regardless. Same
@@ -1316,6 +1418,11 @@ table.sip tbody tr:last-child td{font-size:15px}
 
   <!-- ===================== HOME ===================== -->
   <section class="page on" id="page-home">
+
+    <div class="happy-customers-banner" id="happyCustomersBanner">
+      <div class="hc-num" id="happyCustomersCount">0+</div>
+      <div class="hc-label">Happy Customers</div>
+    </div>
 
     <div class="card balance-card">
       <div>
@@ -1646,6 +1753,11 @@ table.sip tbody tr:last-child td{font-size:15px}
     </div>
 
     <div class="sec">
+      <div class="sec-head"><h3 data-i18n="sipLumpCalc">Lumpsum calculator</h3></div>
+      <div class="sip-stack" id="lumpBox" data-sip-host></div>
+    </div>
+
+    <div class="sec">
       <button class="sos-tile" data-go="sos">
         <span class="ic" data-icon="shield"></span>
         <span class="tx"><span class="n" data-i18n="mSOS">Emergency help</span>
@@ -1884,6 +1996,38 @@ table.sip tbody tr:last-child td{font-size:15px}
    Telugu is the default language; English is a toggle, not the other way round.
    ========================================================================= */
 'use strict';
+
+const HAPPY_CUSTOMERS = 843;
+
+function initHappyCustomers(){
+  const el = document.getElementById('happyCustomersCount');
+  if(!el) return;
+  const target = HAPPY_CUSTOMERS;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    el.textContent = target + '+';
+    return;
+  }
+  const duration = 1200;
+  const start = performance.now();
+  function update(now){
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const current = Math.floor(ease * target);
+    el.textContent = current + '+';
+    if(progress < 1){
+      requestAnimationFrame(update);
+    }else{
+      el.textContent = target + '+';
+    }
+  }
+  requestAnimationFrame(update);
+}
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', initHappyCustomers);
+}else{
+  initHappyCustomers();
+}
 
 const STR = {
   en: {
@@ -3072,7 +3216,7 @@ function guessCategory(s){
 const QUICK = [
   {cat:'Milk',      te:'పాలు',            en:'Milk',          ic:'glass',   amt:30},
   {cat:'Vegetables',te:'కూరగాయలు',       en:'Veg',           ic:'leafy',   amt:100},
-  {cat:'Food',      te:'టీ/టిఫిన్',        en:'Tea',           ic:'food',    amt:20},
+  {cat:'Food',      te:'టీ/టిఫిన్',        en:'Tea',           ic:'cup',     amt:20},
   {cat:'Travel',    te:'ప్రయాణం',         en:'Travel',        ic:'bus',     amt:50},
   {cat:'Fuel',      te:'పెట్రోల్',         en:'Petrol',        ic:'fuel',    amt:200},
   {cat:'Recharge',  te:'రీఛార్జ్',         en:'Recharge',      ic:'phone',   amt:239},
@@ -3203,9 +3347,9 @@ function renderHome(){
       </div></div>` : '';
 
   $('#quickTiles').innerHTML = QUICK.map((q,i) => `
-    <button class="card" data-quick="${i}" style="padding:11px 8px;text-align:center;cursor:pointer;border:1px solid var(--line);font-family:inherit">
+    <button class="card q-btn" data-quick="${i}">
       <span class="q-ic">${ic(q.ic)}</span>
-      <div style="font-size:13.5px;font-weight:700;margin-top:6px">${LANG==='te'?q.te:q.en}</div>
+      <div class="q-lbl">${LANG==='te'?q.te:q.en}</div>
     </button>`).join('');
 
   const k = mKey(VIEW);
@@ -5477,9 +5621,10 @@ function brokersHTML(card = true){
 }
 
 function renderSip(){
-  const html = SIP_MODES.map(m => sipCardHTML(m)).join('')
-             + brokersHTML();
-  ['#sipBox', '#sipBox2'].forEach(sel => { const el = $(sel); if(el) el.innerHTML = html; });
+  const sipHtml = sipCardHTML('monthly') + brokersHTML();
+  ['#sipBox', '#sipBox2'].forEach(sel => { const el = $(sel); if(el) el.innerHTML = sipHtml; });
+  const lump = $('#lumpBox');
+  if(lump) lump.innerHTML = sipCardHTML('once');
 }
 
 document.addEventListener('click', e => {

@@ -6,6 +6,7 @@ const CACHE = 'pocketseeds-v37';
    not the same app. addAll is all-or-nothing, so everything listed here must
    exist in the repo. */
 const ASSETS = ['./', 'index.html', 'manifest.webmanifest', 'privacy/', 'seedbox/', 'moneybox/', 'box/',
+  'qr.js',
   'fonts/fonts.css',
   'fonts/noto-sans-telugu-telugu.woff2', 'fonts/noto-sans-telugu-latin.woff2',
   'fonts/noto-sans-telugu-latin-ext.woff2',

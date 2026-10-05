@@ -12,17 +12,17 @@
 :root{
   --bg:#F5F7F6; --surface:#FFFFFF; --surface-2:#F2F6F3;
   --ink:#0E1B14; --muted:#6B7A72; --line:#E4EBE6;
-  --brand:#0B7A43; --brand-2:#16A34A; --on-brand:#FFFFFF;
+  --brand:#064E3B; --brand-2:#0A5C36; --on-brand:#FFFFFF;
   --in-bg:#E6F4EC; --warn:#B45309; --warn-bg:#FEF3C7;
   --radius:18px; --shadow:0 1px 3px rgba(14,27,20,.06),0 6px 18px rgba(14,27,20,.05);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){--bg:#0A120E;--surface:#121D17;--surface-2:#0E1712;--ink:#E7F0EA;
-  --muted:#8FA398;--line:#1F2E26;--brand:#34D399;--brand-2:#34D399;--on-brand:#06231A;--in-bg:#0C2A1D;
+  --muted:#8FA398;--line:#1F2E26;--brand:#064E3B;--brand-2:#0A5C36;--on-brand:#FFFFFF;--in-bg:#0C2A1D;
   --warn:#FCD34D;--warn-bg:#2E2410;--shadow:0 2px 12px rgba(0,0,0,.45)}
 }
 :root[data-theme="dark"]{--bg:#0A120E;--surface:#121D17;--surface-2:#0E1712;--ink:#E7F0EA;
-  --muted:#8FA398;--line:#1F2E26;--brand:#34D399;--brand-2:#34D399;--on-brand:#06231A;--in-bg:#0C2A1D;
+  --muted:#8FA398;--line:#1F2E26;--brand:#064E3B;--brand-2:#0A5C36;--on-brand:#FFFFFF;--in-bg:#0C2A1D;
   --warn:#FCD34D;--warn-bg:#2E2410;--shadow:0 2px 12px rgba(0,0,0,.45)}
 
 *{box-sizing:border-box}
@@ -70,7 +70,9 @@ h2{font-size:16.5px;margin:0 0 10px;letter-spacing:-.2px}
 .sub{color:var(--muted);font-size:13.5px;margin:0 0 12px;line-height:1.5}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:13px;
   padding:13px 15px;font-family:inherit;font-size:15.5px;font-weight:800;cursor:pointer;text-decoration:none}
-.btn-p{background:var(--brand);color:var(--on-brand)}
+.btn-p{background:linear-gradient(135deg, #0A5C36 0%, #064E3B 100%);color:#FFFFFF;border:1px solid rgba(52,211,153,.28);box-shadow:0 2px 8px rgba(6,55,31,.24);transition:filter .12s, transform .12s}
+.btn-p:hover{filter:brightness(1.08)}
+.btn-p:active{filter:brightness(.92);transform:scale(.98)}
 .btn-g{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
 .btn-block{display:flex;width:100%}
 .btn:focus-visible{outline:3px solid #2E8B49;outline-offset:2px}
@@ -218,6 +220,7 @@ footer a{color:var(--brand);font-weight:700}
 </footer>
 </div>
 
+<script src="../qr.js"></script>
 <script>
 'use strict';
 /* ==================== SEED BOX — TRACKER ====================
@@ -403,7 +406,16 @@ const STR = {
     announce:'{a} దాచారు, {p} శాతం.',
     shareTxt:'PocketSeeds విత్తన పెట్టెలో ఇప్పటివరకు {a} దాచాను ({p}%). నువ్వూ మొదలుపెట్టు 👉 ',
     homeLabel:'PocketSeeds యాప్‌కి తిరిగి వెళ్లండి',
-    backApp:'యాప్‌కి తిరిగి', aboutBox:'బాక్స్ గురించి', close:'మూసివేయి'
+    backApp:'యాప్‌కి తిరిగి', aboutBox:'బాక్స్ గురించి', close:'మూసివేయి',
+    payAsk:'మీ పొదుపు కోసం ₹{a} చెల్లించాలా?',
+    addAsk:'మీ పొదుపులో ₹{a} చేర్చాలా?',
+    payPhonePe:'PhonePe తో చెల్లించండి',
+    yesAdd:'అవును, చేర్చు',
+    cancel:'రద్దు చేయి',
+    didSendAsk:'మీరు ₹{a} పంపించారా?',
+    yesPaid:'అవును, చెల్లించాను',
+    noPaid:'లేదు',
+    scanPhonePe:'PhonePe తో స్కాన్ చేసి ₹{a} చెల్లించండి'
   },
   en: {
     tagline:'Discipline today, freedom tomorrow',
@@ -438,7 +450,16 @@ const STR = {
     announce:'{a} saved, {p} per cent.',
     shareTxt:'I have saved {a} ({p}%) in my PocketSeeds Seed Box. Start yours 👉 ',
     homeLabel:'Back to the PocketSeeds app',
-    backApp:'Back to the app', aboutBox:'About the box', close:'Close'
+    backApp:'Back to the app', aboutBox:'About the box', close:'Close',
+    payAsk:'Pay ₹{a} to your savings?',
+    addAsk:'Add ₹{a} to your savings?',
+    payPhonePe:'Pay with PhonePe',
+    yesAdd:'Yes, add',
+    cancel:'Cancel',
+    didSendAsk:'Did you send ₹{a}?',
+    yesPaid:'Yes, I paid',
+    noPaid:'No',
+    scanPhonePe:'Scan with PhonePe to pay ₹{a}'
   }
 };
 let LMODE = localStorage.getItem('pocketseeds.lmode') === 'en' ? 'en' : 'te';
@@ -795,6 +816,156 @@ function toggleCell(id){
   announce();
   if(c.filledAt) checkMilestones();
 }
+
+function markCellPaid(id){
+  const c = BOX.cells.find(x => x.id === id);
+  if(!c) return;
+  c.filledAt = ymd(new Date());
+  saveBox();
+  const btn = document.querySelector('[data-cell="' + CSS.escape(id) + '"]');
+  if(btn) btn.setAttribute('aria-pressed', 'true');
+  paintTotals();
+  announce();
+  checkMilestones();
+  cheer(t('addedSav', { a: money(c.amount) }));
+}
+
+let PENDING_PAY = null;
+
+function isPhoneDevice(){
+  return /Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    || ('ontouchstart' in window && window.innerWidth < 768);
+}
+
+function handleCellTap(cellId){
+  const c = BOX.cells.find(x => x.id === cellId);
+  if(!c) return;
+  if(c.filledAt){
+    toggleCell(cellId);
+    return;
+  }
+  showCellPayPopup(c);
+}
+
+async function showCellPayPopup(c){
+  const onPhone = isPhoneDevice();
+  const upiUrl = 'upi://pay?pa=malkibapu-3@okaxis&pn=PocketSeeds&am=' + c.amount + '&cu=INR&tn=Savings';
+
+  if(!onPhone){
+    // Computer: show QR code so user can scan with PhonePe
+    openSheet(`
+      <div style="text-align:center;padding:4px 4px 8px">
+        <h3 style="font-size:19px;margin:0 0 4px">${esc(t('payAsk', { a: c.amount }))}</h3>
+        <p class="sub" style="margin:0 0 10px">${esc(t('addAsk', { a: c.amount }))}</p>
+        <p style="font-size:13.5px;font-weight:700;color:var(--brand);margin:0 0 8px">${esc(t('scanPhonePe', { a: c.amount }))}</p>
+        <div style="margin:6px auto 14px;width:180px;height:180px;display:grid;place-items:center;background:#fff;border-radius:14px;border:1px solid var(--line);box-shadow:var(--shadow)" id="qrHolder">
+          <div style="font-size:13px;color:var(--muted)">Generating QR...</div>
+        </div>
+        <p style="font-size:15px;font-weight:700;margin:0 0 12px">${esc(t('didSendAsk', { a: c.amount }))}</p>
+        <button class="btn btn-p btn-block" id="btnQrPaid" style="margin-bottom:8px;font-size:15.5px">${esc(t('yesPaid'))}</button>
+        <button class="btn btn-p btn-block" id="btnYesAdd" style="background:var(--brand);color:var(--on-brand);margin-bottom:8px;font-size:15.5px">${esc(t('yesAdd'))}</button>
+        <button class="btn btn-g btn-block" id="btnPayCancel">${esc(t('cancel'))}</button>
+      </div>
+    `);
+
+    setTimeout(async () => {
+      const holder = document.getElementById('qrHolder');
+      if(!holder) return;
+      try {
+        if(window.QRCode && window.QRCode.toString){
+          const svg = await window.QRCode.toString(upiUrl, { type:'svg', margin:1, width:164 });
+          holder.innerHTML = svg;
+        } else {
+          holder.innerHTML = `<img src="/api/qr?text=${encodeURIComponent(upiUrl)}" width="164" height="164" alt="QR" style="display:block;margin:auto" />`;
+        }
+      } catch(err) {
+        holder.innerHTML = `<img src="/api/qr?text=${encodeURIComponent(upiUrl)}" width="164" height="164" alt="QR" style="display:block;margin:auto" />`;
+      }
+    }, 40);
+
+    $('#btnQrPaid').addEventListener('click', () => {
+      markCellPaid(c.id);
+      closeSheet();
+    });
+    $('#btnYesAdd').addEventListener('click', () => {
+      markCellPaid(c.id);
+      closeSheet();
+    });
+    $('#btnPayCancel').addEventListener('click', closeSheet);
+    return;
+  }
+
+  // Mobile phone:
+  openSheet(`
+    <div style="text-align:center;padding:6px 4px 8px">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(95,37,159,.12);color:#5f259f;display:grid;place-items:center;margin:0 auto 10px;font-size:24px;font-weight:800">₹</div>
+      <h3 style="font-size:19px;margin:0 0 4px">${esc(t('payAsk', { a: c.amount }))}</h3>
+      <p class="sub" style="margin:0 0 16px">${esc(t('addAsk', { a: c.amount }))}</p>
+      
+      <button class="btn btn-p btn-block" id="btnPhonePe" style="background:#5f259f;color:#fff;margin-bottom:9px;font-size:16px;box-shadow:0 4px 14px rgba(95,37,159,.25)">
+        ${esc(t('payPhonePe'))}
+      </button>
+      <button class="btn btn-p btn-block" id="btnYesAdd" style="background:var(--brand);color:var(--on-brand);margin-bottom:9px;font-size:16px">
+        ${esc(t('yesAdd'))}
+      </button>
+      <button class="btn btn-g btn-block" id="btnPayCancel">
+        ${esc(t('cancel'))}
+      </button>
+    </div>
+  `);
+
+  $('#btnPhonePe').addEventListener('click', () => {
+    PENDING_PAY = { cellId: c.id, amount: c.amount };
+    try{ sessionStorage.setItem('pending_pay', JSON.stringify(PENDING_PAY)); }catch(_){}
+    closeSheet();
+    window.location.href = upiUrl;
+  });
+
+  $('#btnYesAdd').addEventListener('click', () => {
+    markCellPaid(c.id);
+    closeSheet();
+  });
+
+  $('#btnPayCancel').addEventListener('click', closeSheet);
+}
+
+function checkPendingPayOnReturn(){
+  if(!PENDING_PAY){
+    try{
+      const raw = sessionStorage.getItem('pending_pay');
+      if(raw) PENDING_PAY = JSON.parse(raw);
+    }catch(_){}
+  }
+  if(!PENDING_PAY) return;
+  const p = PENDING_PAY;
+  setTimeout(() => {
+    openSheet(`
+      <div style="text-align:center;padding:8px 4px 6px">
+        <div style="font-size:34px;margin-bottom:6px">💰</div>
+        <h3 style="font-size:19px;margin:0 0 6px">${esc(t('didSendAsk', { a: p.amount }))}</h3>
+        <p class="sub" style="margin:0 0 16px">Mark ₹${p.amount} as saved in your box?</p>
+        <button class="btn btn-p btn-block" id="btnConfirmYes" style="margin-bottom:9px;font-size:16px">${esc(t('yesPaid'))}</button>
+        <button class="btn btn-g btn-block" id="btnConfirmNo">${esc(t('noPaid'))}</button>
+      </div>
+    `);
+    $('#btnConfirmYes').addEventListener('click', () => {
+      markCellPaid(p.cellId);
+      PENDING_PAY = null;
+      try{ sessionStorage.removeItem('pending_pay'); }catch(_){}
+      closeSheet();
+    });
+    $('#btnConfirmNo').addEventListener('click', () => {
+      PENDING_PAY = null;
+      try{ sessionStorage.removeItem('pending_pay'); }catch(_){}
+      closeSheet();
+    });
+  }, 400);
+}
+
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible') checkPendingPayOnReturn();
+});
+window.addEventListener('focus', checkPendingPayOnReturn);
 function announce(){
   $('#live').textContent = t('announce', { a: money(total()), p: pct1() });
 }
@@ -822,7 +993,7 @@ function share(){
 
 document.addEventListener('click', e => {
   const c = e.target.closest('[data-cell]');
-  if(c) toggleCell(c.dataset.cell);
+  if(c) handleCellTap(c.dataset.cell);
 });
 $('#langPick').addEventListener('click', e => {
   const b = e.target.closest('button[data-lang]'); if(!b || b.dataset.lang === LMODE) return;
