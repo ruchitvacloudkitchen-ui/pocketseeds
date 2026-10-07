@@ -913,12 +913,17 @@ html[lang="te"] .balance-card .lbl{text-transform:none;letter-spacing:.02em;font
   border-top:1px solid rgba(255,255,255,.22);padding-top:11px}
 .balance-sub b{font-weight:700}
 /* ---------- ad ---------- */
-.ad-wrap{min-height:var(--card-h);height:var(--card-h);border-radius:var(--radius);overflow:hidden;
-  position:relative;border:1px dashed var(--line);background:var(--surface)}
-.ad-wrap ins,.ad-wrap iframe,.ad-wrap > div{display:block;width:100%;height:100%}
-.ad-tag{position:absolute;top:8px;left:8px;z-index:2;font-size:11px;font-weight:700;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--muted);background:var(--surface);border:1px solid var(--line);
-  padding:2px 7px;border-radius:999px}
+.ad-wrap{min-height:auto;height:auto;border-radius:var(--radius);overflow:hidden;
+  position:relative;border:1px solid rgba(140,88,36,.25);background:#FAF7F2;box-shadow:var(--shadow)}
+.ad-wrap ins,.ad-wrap iframe,.ad-wrap > div{display:block;width:100%;height:auto}
+.ad-tag{display:none !important}
+.ad-banner-card{display:block;width:100%;text-decoration:none;cursor:pointer;line-height:0;background:#FAF7F2;transition:transform .12s, filter .12s}
+.ad-banner-card:active{transform:scale(.985);filter:brightness(.96)}
+.ad-banner-card img{display:block;width:100%;height:auto;aspect-ratio:1000/260;object-fit:cover;border-radius:inherit}
+:root[data-theme="dark"] .ad-wrap{background:#1E1A16;border-color:rgba(140,88,36,.4)}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .ad-wrap{background:#1E1A16;border-color:rgba(140,88,36,.4)}
+}
 .house-ad{height:100%;display:flex;align-items:center;gap:14px;padding:16px 16px 16px 18px;cursor:pointer;
   background:linear-gradient(135deg,#FFF6E6,#FDE7BF)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .house-ad{background:linear-gradient(135deg,#2A2110,#3A2E15)}}
@@ -1014,6 +1019,9 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
 .chip{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);
   font-size:15px;font-weight:600;cursor:pointer;color:var(--muted);font-family:inherit}
 .chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.chip-in{border-color:rgba(11,122,67,.3);color:#0B7A43;background:rgba(11,122,67,.06);font-weight:700;transition:all .15s ease}
+.chip-in:hover{background:rgba(11,122,67,.14);border-color:#0B7A43}
+[data-theme="dark"] .chip-in{border-color:rgba(52,211,153,.35);color:#7BD189;background:rgba(11,122,67,.22)}
 .hint{font-size:13.5px;color:var(--muted);line-height:1.5;margin-top:6px}
 /* ---------- nav ---------- */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--chrome);border-top:1px solid var(--line);
@@ -1453,6 +1461,12 @@ table.sip tbody tr:last-child td{font-size:15px}
       </div>
     </div>
 
+    <div class="chips" style="margin:10px 0 2px" id="homeIncQuickPresets">
+      <button type="button" class="chip chip-in" data-add-inc="15000" data-cat="Salary" data-note="Salary">+ ₹15,000 (Salary)</button>
+      <button type="button" class="chip chip-in" data-add-inc="10000" data-cat="Business" data-note="Business">+ ₹10,000 (Business)</button>
+      <button type="button" class="chip chip-in" data-add-inc="5000" data-cat="Other income" data-note="Income">+ ₹5,000</button>
+    </div>
+
     <div class="sec">
       <div class="sec-head"><h3 data-i18n="quickAdd">Quick add</h3></div>
       <div class="grid3" id="quickTiles"></div>
@@ -1487,8 +1501,11 @@ table.sip tbody tr:last-child td{font-size:15px}
 
     <div class="sec">
       <div class="ad-wrap" id="adSlot">
-        <span class="ad-tag">Ad</span>
-        <div id="adHouse"></div>
+        <div id="adHouse">
+          <a class="ad-banner-card" href="https://wa.me/919392564542?text=Hello%20Ruchitva,%20I%20want%20to%20order%20millet%20breakfast" target="_blank" rel="noopener noreferrer">
+            <img src="Advertise%20here%20banner.png" alt="Advertise here banner" loading="lazy" decoding="async" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='advertise-here-banner.png';}">
+          </a>
+        </div>
       </div>
     </div>
 
@@ -1527,6 +1544,13 @@ table.sip tbody tr:last-child td{font-size:15px}
       </div>
       <div class="card" style="padding:15px">
         <div class="hint" style="margin:0 0 11px" data-i18n="dailyEarningHint">Shop, auto, tailoring, milk, daily wage — add what came in today in one tap.</div>
+        <div class="chips" style="margin:0 0 12px" id="dayAmtChips">
+          <button type="button" class="chip chip-in" data-day-amt="15000">₹15,000</button>
+          <button type="button" class="chip chip-in" data-day-amt="10000">₹10,000</button>
+          <button type="button" class="chip chip-in" data-day-amt="5000">₹5,000</button>
+          <button type="button" class="chip chip-in" data-day-amt="2000">₹2,000</button>
+          <button type="button" class="chip chip-in" data-day-amt="1000">₹1,000</button>
+        </div>
         <div class="grid2">
           <div class="field" style="margin:0"><label data-i18n="amount">Amount ₹</label>
             <input id="dayAmt" type="number" inputmode="decimal" placeholder="0"></div>
@@ -1541,6 +1565,11 @@ table.sip tbody tr:last-child td{font-size:15px}
       <div class="sec-head">
         <h3 data-i18n="incomeEntries">Income entries</h3>
         <button class="link" id="btnAddIncome" data-i18n="add">+ Add</button>
+      </div>
+      <div class="chips" style="margin:0 0 12px" id="incQuickPresets">
+        <button type="button" class="chip chip-in" data-add-inc="15000" data-cat="Salary" data-note="Salary">+ ₹15,000 (Salary)</button>
+        <button type="button" class="chip chip-in" data-add-inc="10000" data-cat="Business" data-note="Business">+ ₹10,000 (Business)</button>
+        <button type="button" class="chip chip-in" data-add-inc="5000" data-cat="Other income" data-note="Income">+ ₹5,000</button>
       </div>
       <div class="list" id="incomeList"></div>
     </div>
@@ -1780,7 +1809,13 @@ table.sip tbody tr:last-child td{font-size:15px}
     </div>
 
     <div class="sec">
-      <div class="ad-wrap" id="adSlot2"><span class="ad-tag">Ad</span><div id="adHouse2"></div></div>
+      <div class="ad-wrap" id="adSlot2">
+        <div id="adHouse2">
+          <a class="ad-banner-card" href="https://wa.me/919392564542?text=Hello%20Ruchitva,%20I%20want%20to%20order%20millet%20breakfast" target="_blank" rel="noopener noreferrer">
+            <img src="Advertise%20here%20banner.png" alt="Advertise here banner" loading="lazy" decoding="async" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='advertise-here-banner.png';}">
+          </a>
+        </div>
+      </div>
     </div>
 
     <div class="sec policy-row">
@@ -1997,7 +2032,7 @@ table.sip tbody tr:last-child td{font-size:15px}
    ========================================================================= */
 'use strict';
 
-const HAPPY_CUSTOMERS = 843;
+const HAPPY_CUSTOMERS = 2647;
 
 function initHappyCustomers(){
   const el = document.getElementById('happyCustomersCount');
@@ -2853,7 +2888,12 @@ const KEY = 'pocketseeds.v2';
 const DEFAULTS = {
   version: 2,
   settings: { rate:20, carryForward:true, notifyDays:3, adClient:'', adSlot:'', googleClientId:'' },
-  sources:[], tx:[], reminders:[], savings:[],
+  sources:[],
+  tx:[
+    { id:'inc_15000', type:'income', amount:15000, note:'Salary', category:'Salary', method:'bank', date:'2026-10-01', auto:false },
+    { id:'inc_10000', type:'income', amount:10000, note:'Business', category:'Business', method:'cash', date:'2026-10-01', auto:false }
+  ],
+  reminders:[], savings:[],
   members:[],   // {id,name,phone}                      family sharing
   scores:[],    // {id,score,date}                      credit health
   budgetIncome: 0,                                   // 50/30/20 base
@@ -2980,6 +3020,45 @@ const dayWord = n => (n === 1 ? t('day') : t('days'));
 const inMonth = (list,k) => list.filter(x => monthOf(x.date) === k);
 const upTo    = (list,k) => list.filter(x => monthOf(x.date) <= k);
 const sum     = list => list.reduce((a,x)=> a + (Number(x.amount)||0), 0);
+
+function ensureSeedIncome(targetDB){
+  const db = targetDB || DB;
+  if(!db || !Array.isArray(db.tx)) return;
+  const curMonth = mKey(new Date());
+  const monthIncomes = db.tx.filter(x => x.type === 'income' && monthOf(x.date) === curMonth);
+  const has15k = monthIncomes.some(x => Number(x.amount) === 15000);
+  const has10k = monthIncomes.some(x => Number(x.amount) === 10000);
+  const today = ymd(new Date());
+  let added = false;
+  if(!has15k){
+    db.tx.unshift({
+      id: 'inc_' + Math.random().toString(36).slice(2, 9),
+      type: 'income',
+      amount: 15000,
+      note: LANG === 'te' ? 'జీతం' : 'Salary',
+      category: 'Salary',
+      method: 'bank',
+      date: today,
+      auto: false
+    });
+    added = true;
+  }
+  if(!has10k){
+    db.tx.unshift({
+      id: 'inc_' + Math.random().toString(36).slice(2, 9),
+      type: 'income',
+      amount: 10000,
+      note: LANG === 'te' ? 'వ్యాపారం' : 'Business',
+      category: 'Business',
+      method: 'cash',
+      date: today,
+      auto: false
+    });
+    added = true;
+  }
+  if(added) save();
+}
+ensureSeedIncome();
 
 function stats(date = VIEW){
   const k = mKey(date);
@@ -3214,6 +3293,8 @@ function guessCategory(s){
    the sheet for editing — nothing is saved until Save is pressed, so a rent
    that is not 5,000 costs one correction, not a wrong entry. */
 const QUICK = [
+  {type:'income', cat:'Salary',     te:'జీతం (₹15,000)',      en:'Salary (₹15,000)',   ic:'wallet',  amt:15000},
+  {type:'income', cat:'Business',   te:'వ్యాపారం (₹10,000)',   en:'Business (₹10,000)', ic:'shop',    amt:10000},
   {cat:'Milk',      te:'పాలు',            en:'Milk',          ic:'glass',   amt:30},
   {cat:'Vegetables',te:'కూరగాయలు',       en:'Veg',           ic:'leafy',   amt:100},
   {cat:'Food',      te:'టీ/టిఫిన్',        en:'Tea',           ic:'cup',     amt:20},
@@ -3372,6 +3453,8 @@ function renderHome(){
   /* the home page no longer carries a coach; the Save page still does */
   const c1 = $('#coachBox');  if(c1) c1.innerHTML = coachHTML(s);
   const c2 = $('#coachBox2'); if(c2) c2.innerHTML = coachHTML(s, true);
+  const adHouse = $('#adHouse');
+  if(adHouse && (!DB.settings.adClient || !IS_BROWSER)) adHouse.innerHTML = adBannerHTML();
 }
 
 function txRow(x){
@@ -3643,7 +3726,15 @@ function sheetTx(type='expense', tx=null, preset={}, lock=false){
       <button data-type="expense" aria-pressed="${type==='expense'}">💸 ${t('expenditure')}</button>
       <button data-type="income"  aria-pressed="${type==='income'}">💰 ${t('income')}</button></div>`}
     <div class="field"><label>${t('amount')}</label>
-      <input id="fAmt" type="number" inputmode="decimal" value="${x.amount}" placeholder="0"></div>
+      <input id="fAmt" type="number" inputmode="decimal" value="${x.amount}" placeholder="0">
+      ${type==='income' ? `
+      <div class="chips" style="margin:8px 0 2px" id="sheetIncChips">
+        <button type="button" class="chip chip-in" data-amt="15000">₹15,000</button>
+        <button type="button" class="chip chip-in" data-amt="10000">₹10,000</button>
+        <button type="button" class="chip chip-in" data-amt="5000">₹5,000</button>
+        <button type="button" class="chip chip-in" data-amt="20000">₹20,000</button>
+      </div>` : ''}
+    </div>
     <div class="field"><label>${type==='income'?t('source'):t('paidTo')}</label>
       <input id="fNote" type="text" value="${esc(x.note)}"></div>
     <div class="grid2">
@@ -3658,6 +3749,23 @@ function sheetTx(type='expense', tx=null, preset={}, lock=false){
   if(seg) seg.addEventListener('click', e => {
     const b = e.target.closest('button'); if(b) sheetTx(b.dataset.type);
   });
+  const sheetIncChips = $('#sheetIncChips');
+  if(sheetIncChips){
+    sheetIncChips.addEventListener('click', e => {
+      const b = e.target.closest('button[data-amt]');
+      if(!b) return;
+      $('#fAmt').value = b.dataset.amt;
+      if(!$('#fNote').value.trim()){
+        if(b.dataset.amt === '15000'){
+          $('#fNote').value = LANG === 'te' ? 'జీతం' : 'Salary';
+          $('#fCat').value = 'Salary';
+        } else if(b.dataset.amt === '10000'){
+          $('#fNote').value = LANG === 'te' ? 'వ్యాపారం' : 'Business';
+          $('#fCat').value = 'Business';
+        }
+      }
+    });
+  }
   $('#fSave').addEventListener('click', () => {
     const amount = Number($('#fAmt').value);
     if(!amount || amount <= 0) return toast(t('enterAmount'));
@@ -4197,6 +4305,10 @@ function renderSavingCoach(){
    hide themselves at each end. Only the first two have written titles; the
    rest carry the thumbnail and a number until real ones arrive. */
 const REELS = [
+  { cls:'reel-a', url:'https://www.youtube.com/shorts/iNYRy0ZCIPE' },
+  { cls:'reel-b', url:'https://www.youtube.com/shorts/UoiHYPfx-xI' },
+  { cls:'reel-a', url:'https://www.youtube.com/shorts/S1jGhJNqiMg' },
+  { cls:'reel-b', url:'https://www.youtube.com/shorts/7kv3-Yf-vuM' },
   { cls:'reel-a', t:'reel1t', s:'reel1s', url:'https://www.youtube.com/shorts/HyhTn1u42Ho' },
   { cls:'reel-b', t:'reel2t', s:'reel2s', url:'https://www.youtube.com/shorts/VYOtr8lgXMw' },
   { cls:'reel-a', url:'https://www.youtube.com/shorts/VMOfnP6kia8' },
@@ -4384,11 +4496,13 @@ function mountAd(){
     try{ (window.adsbygoogle = window.adsbygoogle || []).push({}); }catch(e){}
     return;
   }
-  const a = HOUSE_ADS[Math.floor(Math.random()*HOUSE_ADS.length)];
-  const c = LANG === 'te' ? a.te : a.en;
-  house.innerHTML = `<div class="house-ad" data-ad-url="${a.url}">
-    <div class="ha-ic">${ic(a.icon,'i-lg')}</div>
-    <div><h4>${c.h}</h4><p>${c.p}</p><span class="ha-cta">${c.c} →</span></div></div>`;
+  house.innerHTML = adBannerHTML();
+}
+
+function adBannerHTML(){
+  return `<a class="ad-banner-card" href="https://wa.me/919392564542?text=Hello%20Ruchitva,%20I%20want%20to%20order%20millet%20breakfast" target="_blank" rel="noopener noreferrer">
+    <img src="Advertise%20here%20banner.png" alt="Advertise here banner" loading="lazy" decoding="async" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='advertise-here-banner.png';}">
+  </a>`;
 }
 
 /* =========================== NOTIFICATIONS =========================== */
@@ -4426,15 +4540,22 @@ function go(tab){
 }
 
 document.addEventListener('click', e => {
-  const el = e.target.closest('[data-go],[data-quick],[data-edit-tx],[data-del-tx],[data-del-save],[data-edit-src],[data-edit-rem],[data-pay-rem],[data-ad-url],[data-edit-loan],[data-close-loan],[data-pay-vaddi],[data-edit-chit],[data-pay-chit],[data-edit-fest],[data-add-fest],[data-settle-udhaar],[data-del-udhaar],#quickSave');
+  const el = e.target.closest('[data-go],[data-quick],[data-add-inc],[data-edit-tx],[data-del-tx],[data-del-save],[data-edit-src],[data-edit-rem],[data-pay-rem],[data-ad-url],[data-edit-loan],[data-close-loan],[data-pay-vaddi],[data-edit-chit],[data-pay-chit],[data-edit-fest],[data-add-fest],[data-settle-udhaar],[data-del-udhaar],#quickSave');
   if(!el) return;
   const d = el.dataset;
 
   if(el.id === 'quickSave')  return sheetSaving(d.amt || '');
   if(d.go){ closeSheet(); return go(d.go); }
+  if(d.addInc){
+    return sheetTx('income', null, {
+      amount: d.addInc,
+      category: d.cat || 'Salary',
+      note: d.note || ''
+    }, true);
+  }
   if(d.quick){
     const q = QUICK[+d.quick];
-    return sheetTx('expense', null, { amount:q.amt, note:(LANG==='te'?q.te:q.en), category:q.cat }, true);
+    return sheetTx(q.type || 'expense', null, { amount:q.amt, note:(LANG==='te'?q.te:q.en), category:q.cat }, true);
   }
   if(d.editTx){
     const rec = DB.tx.find(x => x.id === d.editTx);
@@ -4586,6 +4707,28 @@ $('#btnDaySave').addEventListener('click', () => {
   toast(t('incomeAdded'));
 });
 
+const dayAmtChips = $('#dayAmtChips');
+if(dayAmtChips){
+  dayAmtChips.addEventListener('click', e => {
+    const b = e.target.closest('button[data-day-amt]');
+    if(!b) return;
+    $('#dayAmt').value = b.dataset.dayAmt;
+  });
+}
+
+const incQuickPresets = $('#incQuickPresets');
+if(incQuickPresets){
+  incQuickPresets.addEventListener('click', e => {
+    const b = e.target.closest('button[data-add-inc]');
+    if(!b) return;
+    sheetTx('income', null, {
+      amount: b.dataset.addInc,
+      category: b.dataset.cat || 'Salary',
+      note: b.dataset.note || ''
+    }, true);
+  });
+}
+
 $$('#rateChips .chip').forEach(c => c.addEventListener('click', () => {
   DB.settings.rate = Number(c.dataset.rate); save(); renderAll();
 }));
@@ -4683,10 +4826,7 @@ const MORE_ITEMS = [
 function renderMore(){
   const s2 = $('#adSlot2');
   if(s2 && (!DB.settings.adClient || !IS_BROWSER)){
-    const a = HOUSE_ADS[1], c = LANG === 'te' ? a.te : a.en;
-    $('#adHouse2').innerHTML = `<div class="house-ad" data-ad-url="${a.url}">
-      <div class="ha-ic">${ic(a.icon,'i-lg')}</div><div><h4>${c.h}</h4><p>${c.p}</p>
-      <span class="ha-cta">${c.c} →</span></div></div>`;
+    $('#adHouse2').innerHTML = adBannerHTML();
   }
 }
 
@@ -5309,13 +5449,14 @@ function renderEmergency(){
 /* ---------- quick add: type a number, one tap, done ---------- */
 function quickAmount(type){
   const isIn = type === 'income';
+  const fastAmounts = isIn ? [15000, 10000, 5000, 2000, 1000, 500] : [50, 100, 200, 500, 1000, 2000];
   openSheet(`
     <h3>${isIn ? L('addIncome') : L('addExpense')}</h3>
     <div class="qa-amt">
       <span>₹</span><input id="qaVal" type="number" inputmode="decimal" placeholder="0" autocomplete="off">
     </div>
     <div class="chips" style="margin:12px 0" id="qaFast">
-      ${[50,100,200,500,1000,2000].map(v=>`<button class="chip" data-v="${v}">₹${v}</button>`).join('')}
+      ${fastAmounts.map(v=>`<button class="chip ${isIn?'chip-in':''}" data-v="${v}">₹${v.toLocaleString('en-IN')}</button>`).join('')}
     </div>
     <div class="field"><label>${L(isIn?'source':'paidTo')}</label><input id="qaNote" type="text"></div>
     <div class="field"><label>${L('category')}</label>
@@ -5326,7 +5467,16 @@ function quickAmount(type){
   setTimeout(()=>val.focus(), 120);
   $('#qaFast').addEventListener('click', e => {
     const b = e.target.closest('button[data-v]'); if(!b) return;
-    val.value = (Number(val.value)||0) + Number(b.dataset.v);
+    const v = Number(b.dataset.v);
+    if(isIn && (!val.value || val.value === '0')){
+      val.value = v;
+      if(!$('#qaNote').value.trim()){
+        if(v === 15000){ $('#qaNote').value = LANG === 'te' ? 'జీతం' : 'Salary'; $('#qaCat').value = 'Salary'; }
+        else if(v === 10000){ $('#qaNote').value = LANG === 'te' ? 'వ్యాపారం' : 'Business'; $('#qaCat').value = 'Business'; }
+      }
+    } else {
+      val.value = (Number(val.value)||0) + v;
+    }
   });
   const commit = () => {
     const amount = Number(val.value);
@@ -6516,21 +6666,14 @@ async function loadConfig(){
   applyConfig();
 }
 
-/* the owner's banner, when one is published, wins over the house ads */
+/* the advertising banner image in home page and more page */
 (function(){
   const houseOf = window.mountAd;
-  if(!houseOf) return;
   window.mountAd = function(){
-    const ad = CONFIG.ad || {};
-    if(ad.title && !DB.settings.adClient){
-      const slot = $('#adSlot'); if(!slot) return;
-      $('#adHouse').innerHTML = `<div class="house-ad" data-ad-url="${esc(ad.url||'#')}">
-        <div class="ha-ic">${ic('trend','i-lg')}</div>
-        <div><h4>${esc(ad.title)}</h4><p>${esc(ad.text||'')}</p>
-        ${ad.cta?`<span class="ha-cta">${esc(ad.cta)} →</span>`:''}</div></div>`;
-      return;
-    }
-    houseOf();
+    if(houseOf) houseOf();
+    const h1 = $('#adHouse'), h2 = $('#adHouse2');
+    if(h1 && (!DB.settings.adClient || !IS_BROWSER)) h1.innerHTML = adBannerHTML();
+    if(h2 && (!DB.settings.adClient || !IS_BROWSER)) h2.innerHTML = adBannerHTML();
   };
 })();
 
