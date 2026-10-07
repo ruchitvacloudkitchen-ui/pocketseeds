@@ -4650,7 +4650,15 @@ window.addEventListener('resize', sizeAd);
   document.addEventListener('visibilitychange', () => {
     if(document.visibilityState === 'visible'){ runAutoIncome(); renderAll(); fireDueNotifications(); }
   });
-  if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js', { updateViaCache:'none' })
+      .then(reg => {
+        reg.update().catch(()=>{});
+        document.addEventListener('visibilitychange', () => {
+          if(document.visibilityState === 'visible') reg.update().catch(()=>{});
+        });
+      }).catch(()=>{});
+  }
 })();
 </script>
 </body>
