@@ -1428,7 +1428,7 @@ table.sip tbody tr:last-child td{font-size:15px}
   <section class="page on" id="page-home">
 
     <div class="happy-customers-banner" id="happyCustomersBanner">
-      <div class="hc-num" id="happyCustomersCount">0+</div>
+      <div class="hc-num" id="happyCustomersCount">4516+</div>
       <div class="hc-label">Happy Customers</div>
     </div>
 
@@ -2020,7 +2020,7 @@ table.sip tbody tr:last-child td{font-size:15px}
    ========================================================================= */
 'use strict';
 
-const HAPPY_CUSTOMERS = 3104;
+const HAPPY_CUSTOMERS = 4516;
 
 function initHappyCustomers(){
   const el = document.getElementById('happyCustomersCount');
@@ -4705,7 +4705,7 @@ window.addEventListener('resize', sizeAd);
         window.location.reload();
       }
     });
-    navigator.serviceWorker.register('sw.js?v=42', { updateViaCache:'none' })
+    navigator.serviceWorker.register('sw.js?v=44', { updateViaCache:'none' })
       .then(reg => {
         reg.update().catch(()=>{});
         reg.addEventListener('updatefound', () => {
