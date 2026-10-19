@@ -844,6 +844,108 @@ button{color:var(--ink)}
    fixed elements, since backdrop-filter on every card is slow on budget phones */
 .card::after{content:'';position:absolute;left:0;right:0;top:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
+/* ---------- promotional JIO IPO banner ---------- */
+.ipo-banner-sec{
+  margin: 32px 0;
+  width: 100%;
+  position: relative;
+}
+.ipo-banner-link{
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(34,36,46,.08);
+  transition: transform .2s ease, box-shadow .2s ease;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.ipo-banner-link:hover{
+  transform: scale(1.01);
+  box-shadow: 0 8px 24px rgba(34,36,46,.16);
+}
+.ipo-banner-link:active{
+  transform: scale(.99);
+}
+.ipo-banner-img{
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 15px 15px 0 0;
+  max-width: 100%;
+}
+.ipo-btn-container{
+  line-height: 1.4;
+  padding: 12px 14px 14px;
+  background: var(--surface);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid var(--line);
+}
+.ipo-btn-gold{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #FBE082 0%, #E7B634 50%, #D49D18 100%);
+  color: #382103;
+  font-size: 15.5px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  border-radius: 999px;
+  border: 1px solid rgba(175, 125, 10, 0.45);
+  box-shadow: 0 4px 12px rgba(212, 160, 23, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  text-align: center;
+  transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+}
+.ipo-banner-link:hover .ipo-btn-gold{
+  filter: brightness(1.06);
+  box-shadow: 0 6px 18px rgba(212, 160, 23, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+.ipo-banner-link:active .ipo-btn-gold{
+  transform: scale(.985);
+}
+:root[data-theme="dark"] .ipo-banner-link{
+  box-shadow: 0 4px 14px rgba(0,0,0,.45);
+}
+:root[data-theme="dark"] .ipo-banner-link:hover{
+  box-shadow: 0 8px 24px rgba(0,0,0,.65);
+}
+:root[data-theme="dark"] .ipo-btn-container{
+  background: var(--surface);
+  border-top-color: var(--line);
+}
+:root[data-theme="dark"] .ipo-btn-gold{
+  background: linear-gradient(135deg, #FCD974 0%, #E7B735 50%, #CD9315 100%);
+  color: #271600;
+  border-color: rgba(245, 205, 80, 0.45);
+  box-shadow: 0 4px 16px rgba(230, 180, 40, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .ipo-banner-link{
+    box-shadow: 0 4px 14px rgba(0,0,0,.45);
+  }
+  :root:not([data-theme="light"]) .ipo-banner-link:hover{
+    box-shadow: 0 8px 24px rgba(0,0,0,.65);
+  }
+  :root:not([data-theme="light"]) .ipo-btn-container{
+    background: var(--surface);
+    border-top-color: var(--line);
+  }
+  :root:not([data-theme="light"]) .ipo-btn-gold{
+    background: linear-gradient(135deg, #FCD974 0%, #E7B735 50%, #CD9315 100%);
+    color: #271600;
+    border-color: rgba(245, 205, 80, 0.45);
+    box-shadow: 0 4px 16px rgba(230, 180, 40, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  }
+}
+
 /* ---------- happy customers banner ---------- */
 .happy-customers-banner{
   position:relative;
@@ -1427,8 +1529,27 @@ table.sip tbody tr:last-child td{font-size:15px}
   <!-- ===================== HOME ===================== -->
   <section class="page on" id="page-home">
 
+    <!-- Promotional JIO IPO Banner -->
+    <div class="ipo-banner-sec" id="ipoBannerSec">
+      <a class="ipo-banner-link" href="https://wa.me/918886388635?text=Hi%2C%20I%20want%20help%20applying%20for%20the%20Jio%20IPO" target="_blank" rel="noopener noreferrer">
+        <img class="ipo-banner-img"
+             src="https://raw.githubusercontent.com/ruchitvacloudkitchen-ui/pocketseeds/main/PocketSeeds%20JIO%20IPO%20Investment%20Banner.png"
+             alt="PocketSeeds JIO IPO Investment Banner - Demat account, UPI link and IPO application guide"
+             loading="lazy"
+             onerror="if(!this.dataset.triedLocal){this.dataset.triedLocal='1';this.src='PocketSeeds%20JIO%20IPO%20Investment%20Banner.png';}else if(!this.dataset.triedJpg){this.dataset.triedJpg='1';this.src='https://raw.githubusercontent.com/ruchitvacloudkitchen-ui/pocketseeds/main/PocketSeeds%20JIO%20IPO%20Investment%20Banner.jpg';}else if(!this.dataset.triedLocalJpg){this.dataset.triedLocalJpg='1';this.src='PocketSeeds%20JIO%20IPO%20Investment%20Banner.jpg';}else{const sec=document.getElementById('ipoBannerSec');if(sec)sec.style.display='none';}">
+        <div class="ipo-btn-container">
+          <span class="ipo-btn-gold">
+            <svg class="ipo-btn-icon" viewBox="0 0 24 24" fill="currentColor" width="19" height="19" style="flex:0 0 auto">
+              <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.78 14.18c-.24.68-1.39 1.3-1.92 1.38-.49.07-1.12.1-3.23-.77-2.69-1.12-4.43-3.87-4.57-4.05-.14-.18-1.1-1.46-1.1-2.79 0-1.33.7-1.98.94-2.25.24-.28.53-.35.7-.35.18 0 .35 0 .5.01.16.01.38-.06.59.45.22.53.76 1.84.82 1.98.07.14.11.31.02.49-.09.18-.14.28-.27.44-.14.16-.29.35-.42.48-.14.14-.28.3-.12.58.16.28.72 1.19 1.55 1.93 1.07.95 1.97 1.25 2.25 1.39.28.14.45.12.61-.07.16-.19.7-1.01.88-1.22.18-.21.36-.18.61-.09.25.09 1.58.74 1.85.88.27.14.45.21.52.32.07.12.07.7-.17 1.38z"/>
+            </svg>
+            Click here to message us
+          </span>
+        </div>
+      </a>
+    </div>
+
     <div class="happy-customers-banner" id="happyCustomersBanner">
-      <div class="hc-num" id="happyCustomersCount">4516+</div>
+      <div class="hc-num" id="happyCustomersCount">6729+</div>
       <div class="hc-label">Happy Customers</div>
     </div>
 
@@ -2020,7 +2141,16 @@ table.sip tbody tr:last-child td{font-size:15px}
    ========================================================================= */
 'use strict';
 
-const HAPPY_CUSTOMERS = 4516;
+const SHOW_IPO_BANNER = true;
+const HAPPY_CUSTOMERS = 6729;
+
+function initIpoBanner(){
+  const sec = document.getElementById('ipoBannerSec');
+  if(!sec) return;
+  if(typeof SHOW_IPO_BANNER !== 'undefined' && !SHOW_IPO_BANNER){
+    sec.style.display = 'none';
+  }
+}
 
 function initHappyCustomers(){
   const el = document.getElementById('happyCustomersCount');
@@ -2047,8 +2177,12 @@ function initHappyCustomers(){
   requestAnimationFrame(update);
 }
 if(document.readyState === 'loading'){
-  document.addEventListener('DOMContentLoaded', initHappyCustomers);
+  document.addEventListener('DOMContentLoaded', () => {
+    initIpoBanner();
+    initHappyCustomers();
+  });
 }else{
+  initIpoBanner();
   initHappyCustomers();
 }
 
@@ -3403,6 +3537,7 @@ function renderHome(){
   const c2 = $('#coachBox2'); if(c2) c2.innerHTML = coachHTML(s, true);
   const adHouse = $('#adHouse');
   if(adHouse && (!DB.settings.adClient || !IS_BROWSER)) adHouse.innerHTML = adBannerHTML();
+  initIpoBanner();
 }
 
 function txRow(x){
@@ -3666,7 +3801,7 @@ const methodOptions = sel => ['phonepe','gpay','paytm','upi','cash','card','bank
    expenditure (+) or a quick-add tile is already about an expense, and
    offering Income there is one mis-tap away from filing a bill as earnings. */
 function sheetTx(type='expense', tx=null, preset={}, lock=false){
-  const x = tx || { amount:(type==='income' && !tx) ? '' : (preset.amount||''), note:preset.note||'', category: preset.category || (type==='income'?'Salary':'Food'),
+  const x = tx || { amount:(type==='income' && !tx) ? '' : (preset.amount||''), note:preset.note||'', category: preset.category || (type==='income'?'Salary':'Other'),
                     method: type==='income'?'cash':'phonepe', date: ymd(new Date()) };
   openSheet(`
     <h3>${tx ? (type==='income'?t('editIncome'):t('editExpense')) : (type==='income'?t('addIncome'):t('addExpense'))}</h3>
@@ -4705,7 +4840,7 @@ window.addEventListener('resize', sizeAd);
         window.location.reload();
       }
     });
-    navigator.serviceWorker.register('sw.js?v=44', { updateViaCache:'none' })
+    navigator.serviceWorker.register('sw.js?v=47', { updateViaCache:'none' })
       .then(reg => {
         reg.update().catch(()=>{});
         reg.addEventListener('updatefound', () => {
@@ -5382,7 +5517,7 @@ function quickAmount(type){
     </div>
     <div class="field"><label>${L(isIn?'source':'paidTo')}</label><input id="qaNote" type="text"></div>
     <div class="field"><label>${L('category')}</label>
-      <select id="qaCat">${isIn ? incOptions('Salary') : catOptions('Food')}</select></div>
+      <select id="qaCat">${isIn ? incOptions('Salary') : catOptions('Other')}</select></div>
     <button class="btn ${isIn?'btn-in':'btn-out'} btn-block" id="qaSave">${L(isIn?'addIncome':'addExpense')}</button>
     <button class="btn btn-g btn-block" style="margin-top:8px" id="qaMore">${L('add')}…</button>`);
   const val = $('#qaVal');
