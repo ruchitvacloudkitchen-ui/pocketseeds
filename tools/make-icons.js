@@ -17,14 +17,15 @@ const fs=require('fs'), path=require('path');
 const ROOT=path.resolve(__dirname,'..');
 
 const ANY='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
- +'<path d="M7 0h86a7 7 0 0 1 7 7v45.5C100 80.4 77.6 100 50 100S0 80.4 0 52.5V7a7 7 0 0 1 7-7z" fill="#0A8A66"/>'
- +'<path d="M75.5 29.5C71.2 19.6 61.8 14 49.5 14 34.6 14 24.5 22.2 24.5 33.4c0 12.4 11.4 17.2 25.6 21.2 12.6 3.5 20.4 6.4 20.4 14.2 0 8.2-8.2 13.4-20.6 13.4-12.8 0-22.4-4.8-27.4-13.6" fill="none" stroke="white" stroke-width="17.5"/></svg>';
+ +'<rect width="100" height="100" rx="22" fill="#0A8A66"/>'
+ +'<path d="M18 71V29h13a10.5 10.5 0 0 1 0 21H18" fill="none" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>'
+ +'<path d="M81 33.5C78 29 72 28 66.5 28 58.5 28 54.5 32.5 54.5 38.2c0 6.5 5.8 9.2 13.8 11.5 7.5 2.1 13.2 4.5 13.2 11.3 0 6.5-5.5 10.5-14 10.5-6.5 0-11.8-2-14.8-6.5" fill="none" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 /* the maskable variant keeps the mark inside the safe circle by padding the
    viewBox and filling the bleed, so Android can crop it to any shape */
 const MASK='<svg xmlns="http://www.w3.org/2000/svg" viewBox="-22 -22 144 144">'
  +'<rect x="-22" y="-22" width="144" height="144" fill="#0A8A66"/>'
- +'<path d="M7 0h86a7 7 0 0 1 7 7v45.5C100 80.4 77.6 100 50 100S0 80.4 0 52.5V7a7 7 0 0 1 7-7z" fill="#0A8A66"/>'
- +'<path d="M75.5 29.5C71.2 19.6 61.8 14 49.5 14 34.6 14 24.5 22.2 24.5 33.4c0 12.4 11.4 17.2 25.6 21.2 12.6 3.5 20.4 6.4 20.4 14.2 0 8.2-8.2 13.4-20.6 13.4-12.8 0-22.4-4.8-27.4-13.6" fill="none" stroke="white" stroke-width="17.5"/></svg>';
+ +'<path d="M18 71V29h13a10.5 10.5 0 0 1 0 21H18" fill="none" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>'
+ +'<path d="M81 33.5C78 29 72 28 66.5 28 58.5 28 54.5 32.5 54.5 38.2c0 6.5 5.8 9.2 13.8 11.5 7.5 2.1 13.2 4.5 13.2 11.3 0 6.5-5.5 10.5-14 10.5-6.5 0-11.8-2-14.8-6.5" fill="none" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 const JOBS=[['icon-192.png',192,ANY,true],['icon-512.png',512,ANY,true],
             ['icon.png',512,ANY,true],['icon-512-maskable.png',512,MASK,false]];

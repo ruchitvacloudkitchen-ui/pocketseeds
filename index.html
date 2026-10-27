@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#2E8B49">
 <title>PocketSeeds — తెలుగు డబ్బు యాప్</title>
 <meta name="description" content="తెలుగు వారి కోసం డబ్బు యాప్ — ఆదాయం, ఖర్చులు, వడ్డీ అప్పులు, చిట్టీలు, మొయి పుస్తకం, పండుగ పొదుపు.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M7%200h86a7%207%200%200%201%207%207v45.5C100%2080.4%2077.6%20100%2050%20100S0%2080.4%200%2052.5V7a7%207%200%200%201%207-7z' fill='%230A8A66'/%3E%3Cpath d='M75.5%2029.5C71.2%2019.6%2061.8%2014%2049.5%2014%2034.6%2014%2024.5%2022.2%2024.5%2033.4c0%2012.4%2011.4%2017.2%2025.6%2021.2%2012.6%203.5%2020.4%206.4%2020.4%2014.2%200%208.2-8.2%2013.4-20.6%2013.4-12.8%200-22.4-4.8-27.4-13.6' fill='none' stroke='white' stroke-width='17.5'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230A8A66'/%3E%3Cpath d='M18%2071V29h13a10.5%2010.5%200%200%201%200%2021H18' fill='none' stroke='white' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M81%2033.5C78%2029%2072%2028%2066.5%2028%2058.5%2028%2054.5%2032.5%2054.5%2038.2c0%206.5%205.8%209.2%2013.8%2011.5%207.5%202.1%2013.2%204.5%2013.2%2011.3%200%206.5-5.5%2010.5-14%2010.5-6.5%200-11.8-2-14.8-6.5' fill='none' stroke='white' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
@@ -1377,19 +1377,38 @@ textarea{resize:vertical;min-height:92px;font-size:16px;line-height:1.5}
   font-family:'Plus Jakarta Sans',sans-serif}
 .sipc-f .box input:focus{border:0}
 .sipc-rate{margin-top:13px}
-.sipc-rate .chips{gap:6px}
-.sipc-rate .chip{padding:8px 14px}
+.sipc-rate .chips{display:none}
+.sipc-lines{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);overflow:hidden}
+.sipc-line{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 13px;cursor:pointer;
+  border-bottom:1px dashed var(--line);font-size:14px;transition:background .15s ease}
+.sipc-line:last-child{border-bottom:0}
+.sipc-line[aria-pressed="true"]{background:var(--in-bg)}
+.sipc-line .rl{font-weight:700;color:var(--ink);display:flex;align-items:center;gap:7px}
+.sipc-line .rl i{width:7px;height:7px;border-radius:50%;background:var(--line);display:inline-block}
+.sipc-line[aria-pressed="true"] .rl i{background:#0B7A43}
+.sipc-line .rv{font-weight:800;font-size:15px;color:#0B7A43;font-variant-numeric:tabular-nums}
 .sipc-out{margin-top:14px;background:var(--in-bg);border-radius:14px;padding:14px;
   display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .sipc-out .lbl{font-size:12.5px;color:var(--muted);font-weight:600}
-.sipc-out .big{font-size:28px;font-weight:800;color:var(--brand);letter-spacing:-.02em;line-height:1.1}
+.sipc-out .big{font-size:28px;font-weight:800;color:#0B7A43;letter-spacing:-.02em;line-height:1.1}
 .sipc-out .side{text-align:right}
 .sipc-out .side b{font-size:15px;font-weight:800;display:block;margin-top:2px}
-.sipc-glance{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
-.sipc-glance div{flex:0 0 auto;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;
-  padding:9px 12px;text-align:center;min-width:78px}
-.sipc-glance .y{font-size:11.5px;color:var(--muted);font-weight:700}
-.sipc-glance .v{font-size:13.5px;font-weight:800;margin-top:3px}
+.sipc-glance{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.sipc-glance div{background:var(--surface-2);border:1px solid var(--line);border-radius:11px;
+  padding:10px 8px;text-align:center}
+.sipc-glance .y{font-size:12px;color:var(--muted);font-weight:700}
+.sipc-glance .v{font-size:14.5px;font-weight:800;margin-top:4px;color:#0B7A43;font-variant-numeric:tabular-nums}
+:root[data-theme="dark"] .sipc-line[aria-pressed="true"] .rl i,
+:root[data-theme="dark"] .sipc-line .rv,
+:root[data-theme="dark"] .sipc-out .big,
+:root[data-theme="dark"] .sipc-glance .v{color:#34D399}
+:root[data-theme="dark"] .sipc-line[aria-pressed="true"] .rl i{background:#34D399}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .sipc-line .rv,
+  :root:not([data-theme="light"]) .sipc-out .big,
+  :root:not([data-theme="light"]) .sipc-glance .v{color:#34D399}
+  :root:not([data-theme="light"]) .sipc-line[aria-pressed="true"] .rl i{background:#34D399}
+}
 
 /* fund list + shortcut cards */
 .fund-row{display:flex;align-items:flex-start;gap:11px;padding:12px 0;border-top:1px solid var(--line)}
@@ -1487,7 +1506,7 @@ table.sip tbody tr:last-child td{font-size:15px}
 
   <header class="top">
     <div class="top-row">
-      <div class="brand"><div class="logo" id="logoIcon"></div>PocketSeeds</div>
+      <div class="brand"><div class="logo" id="logoIcon"><span class="mark-fallback"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="currentColor"/><path d="M18 71V29h13a10.5 10.5 0 0 1 0 21H18" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M81 33.5C78 29 72 28 66.5 28 58.5 28 54.5 32.5 54.5 38.2c0 6.5 5.8 9.2 13.8 11.5 7.5 2.1 13.2 4.5 13.2 11.3 0 6.5-5.5 10.5-14 10.5-6.5 0-11.8-2-14.8-6.5" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>PocketSeeds</div>
       <div class="top-tools">
         <div class="lang-pick" id="langPick">
           <button data-lang="te" aria-pressed="false">తె</button>
@@ -1549,7 +1568,7 @@ table.sip tbody tr:last-child td{font-size:15px}
     </div>
 
     <div class="happy-customers-banner" id="happyCustomersBanner">
-      <div class="hc-num" id="happyCustomersCount">6729+</div>
+      <div class="hc-num" id="happyCustomersCount">9762+</div>
       <div class="hc-label">Happy Customers</div>
     </div>
 
@@ -2142,7 +2161,7 @@ table.sip tbody tr:last-child td{font-size:15px}
 'use strict';
 
 const SHOW_IPO_BANNER = true;
-const HAPPY_CUSTOMERS = 6729;
+const HAPPY_CUSTOMERS = 9762;
 
 function initIpoBanner(){
   const sec = document.getElementById('ipoBannerSec');
@@ -2963,7 +2982,6 @@ function paintIcons(){
   if(lg && !lg.dataset.painted){
     lg.innerHTML = '<span class="mark-fallback">' + MARK_SVG + '</span>';
     lg.dataset.painted = '1';
-    useArtworkIfPresent(lg);
   }
 }
 /* icon.png is the supplied artwork. Look for it once a week rather than on
@@ -3400,12 +3418,13 @@ const QUICK = [
 /* =========================== ICONS ===========================
    One stroke-drawn set, single colour: every glyph inherits the text
    colour, so the same icon is green on white and white on green. */
-/* the PocketSeeds mark: shield plus the S, one colour on a green field */
-const MARK_SHIELD = 'M7 0h86a7 7 0 0 1 7 7v45.5C100 80.4 77.6 100 50 100S0 80.4 0 52.5V7a7 7 0 0 1 7-7z';
-const MARK_S = 'M75.5 29.5C71.2 19.6 61.8 14 49.5 14 34.6 14 24.5 22.2 24.5 33.4c0 12.4 11.4 17.2 25.6 21.2 12.6 3.5 20.4 6.4 20.4 14.2 0 8.2-8.2 13.4-20.6 13.4-12.8 0-22.4-4.8-27.4-13.6';
+/* the PocketSeeds mark: simple PS monogram on a rounded green field */
+const MARK_P = 'M18 71V29h13a10.5 10.5 0 0 1 0 21H18';
+const MARK_S = 'M81 33.5C78 29 72 28 66.5 28 58.5 28 54.5 32.5 54.5 38.2c0 6.5 5.8 9.2 13.8 11.5 7.5 2.1 13.2 4.5 13.2 11.3 0 6.5-5.5 10.5-14 10.5-6.5 0-11.8-2-14.8-6.5';
 const MARK_SVG = '<svg class="mark" viewBox="0 0 100 100" aria-hidden="true">' +
-  '<path d="' + MARK_SHIELD + '" fill="currentColor"/>' +
-  '<path d="' + MARK_S + '" fill="none" stroke="#fff" stroke-width="17.5"/></svg>';
+  '<rect width="100" height="100" rx="22" fill="currentColor"/>' +
+  '<path d="' + MARK_P + '" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>' +
+  '<path d="' + MARK_S + '" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 const ICON = {
   home:'<path d="M3 10.4 12 3.2l9 7.2V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9.2 21v-6.6h5.6V21"/>',
@@ -4232,25 +4251,7 @@ let REC = null, LISTENING = false;
    entry can be attached to any button later — micLive() is where that button
    would show it is listening. */
 function micLive(on){ const m = $('#fabMic'); if(m) m.classList.toggle('live', !!on); }
-function startVoice(){
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR) return toast(t('voiceNo'));
-  if(LISTENING && REC){ REC.stop(); return; }
-  REC = new SR();
-  REC.lang = LANG === 'te' ? 'te-IN' : 'en-IN';
-  REC.interimResults = false;
-  REC.maxAlternatives = 1;
-  REC.onstart = () => { LISTENING = true; micLive(true); toast(t('voiceListen')); };
-  REC.onerror = () => { LISTENING = false; micLive(false); toast(t('voiceFail')); };
-  REC.onend   = () => { LISTENING = false; micLive(false); };
-  REC.onresult = e => {
-    const said = e.results[0][0].transcript;
-    const p = parseSpoken(said);
-    toast(t('voiceGot',{t:said}));
-    sheetTx('expense', null, { amount:p.amount||'', note:p.note, category:p.category });
-  };
-  try{ REC.start(); }catch(e){ toast(t('voiceFail')); }
-}
+function startVoice(){}
 
 /* A CSS background fires no load event, so the artwork is probed separately.
    The splash only appears once that image has really decoded — an empty dark
@@ -4840,7 +4841,7 @@ window.addEventListener('resize', sizeAd);
         window.location.reload();
       }
     });
-    navigator.serviceWorker.register('sw.js?v=47', { updateViaCache:'none' })
+    navigator.serviceWorker.register('sw.js?v=51', { updateViaCache:'none' })
       .then(reg => {
         reg.update().catch(()=>{});
         reg.addEventListener('updatefound', () => {
@@ -5392,31 +5393,7 @@ function voiceConfirm(said, p){
     }catch(e){ console.error(e); }
   };
 
-  // voice now goes through the confirm sheet
-  if(typeof REC !== 'undefined' || true){
-    const oldStart = startVoice;
-    window.startVoice = function(){
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if(!SR) return toast(t('voiceNo'));
-      const r = new SR();
-      r.lang = LANG === 'te' ? 'te-IN' : 'en-IN';
-      r.interimResults = false; r.maxAlternatives = 1;
-      r.onstart = () => { micLive(true); toast(t('voiceListen')); };
-      r.onerror = () => { micLive(false); toast(t('voiceFail')); };
-      r.onend   = () => { micLive(false); };
-      r.onresult = e => {
-        const said = e.results[0][0].transcript;
-        voiceConfirm(said, parseSpoken(said));
-      };
-      try{ r.start(); }catch(e){ toast(t('voiceFail')); }
-    };
-    const mic = $('#fabMic');
-    if(mic){
-      const fresh = mic.cloneNode(true);
-      mic.parentNode.replaceChild(fresh, mic);
-      fresh.addEventListener('click', () => window.startVoice());
-    }
-  }
+  // voice input removed
 
   // SMS scan now fills a review queue instead of writing straight in
   const scan = $('#btnParseSms');
@@ -5720,7 +5697,7 @@ paintIcons(); renderSaveBar();   /* this block loads after the first render */
    Compounding is annual for the lump sum and monthly for the SIP, which is
    how fund houses quote them.
    ========================================================================= */
-const SIP_GLANCE = [5, 10, 15, 20, 25];
+const SIP_GLANCE = [5, 10, 15];
 const SIP_RATES  = [8, 10, 12, 14, 18];
 /* Two calculators, not one toggle: a monthly SIP and a lump sum answer
    different questions, and people compare them side by side. Each keeps its
@@ -5782,17 +5759,22 @@ function sipCardHTML(mode){
 
     <div class="sipc-rate">
       <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:7px">${t('sipExpected')}</label>
-      <div class="chips">${SIP_RATES.map(r => `<button class="chip" data-sip-rate="${r}" data-sip-mode="${mode}" aria-pressed="${r===st.rate}">${r}%</button>`).join('')}</div>
+      <div class="sipc-lines">
+        ${SIP_RATES.map(r => `<div class="sipc-line" data-sip-rate="${r}" data-sip-mode="${mode}" aria-pressed="${r===st.rate}">
+          <span class="rl"><i></i>${r}%</span>
+          <span class="rv">${money(sipFuture(P, st.yrs, r, monthly))}</span>
+        </div>`).join('')}
+      </div>
     </div>
 
     <div class="sipc-out">
-      <div><div class="lbl">${t('sipProjected')}</div><div class="big">${money(fv)}</div></div>
+      <div><div class="lbl">${t('sipProjected')} (${st.rate}%)</div><div class="big">${money(fv)}</div></div>
       <div class="side"><div class="lbl">${t('sipYouPlant')}</div><b>${money(put)}</b></div>
     </div>
 
     <div class="hint" style="margin-top:11px">${t('sipGlance')} · ${st.rate}%</div>
     <div class="sipc-glance">
-      ${SIP_GLANCE.map(y => `<div><div class="y">${y} ${t('sipYr')}</div>
+      ${SIP_GLANCE.map(y => `<div><div class="y">${LANG==='en' ? y+(y===15?'yrs':'yr') : y+' '+t('sipYr')}</div>
         <div class="v">${money(sipFuture(P, y, st.rate, monthly))}</div></div>`).join('')}
     </div>
 
@@ -7143,10 +7125,7 @@ function sheetAsk(prefill = ''){
     <div class="sheet-sub">${t('askSub')}</div>
     <div class="field"><input id="askIn" type="text" value="${esc(prefill)}"
       placeholder="${esc(t('askPlaceholder'))}"></div>
-    <div class="grid2">
-      <button class="btn btn-p" id="askGo">${t('askGo')}</button>
-      <button class="btn btn-g" id="askMic"${IS_TWA ? ' hidden' : ''}>${t('askListen')}</button>
-    </div>
+    <button class="btn btn-p btn-block" id="askGo">${t('askGo')}</button>
     <div id="askOut"></div>
     <div class="hint" style="margin-top:11px;font-weight:700;color:var(--ink)">${t('askTry')}</div>
     <div class="ask-q">${ASK_SUGGEST.map(k =>
@@ -7168,18 +7147,6 @@ function sheetAsk(prefill = ''){
     if(!b) return;
     $('#askIn').value = t(b.dataset.ask);
     ask();
-  });
-  $('#askMic').addEventListener('click', () => {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(!SR) return toast(t('voiceNo'));
-    const r = new SR();
-    r.lang = LANG === 'te' ? 'te-IN' : 'en-IN';
-    r.interimResults = false;
-    r.onstart  = () => toast(t('voiceListen'));
-    r.onerror  = () => toast(t('voiceFail'));
-    r.onresult = e => { const said = e.results[0][0].transcript;
-                        $('#askIn').value = said; show(said); };
-    try{ r.start(); }catch(_){ toast(t('voiceFail')); }
   });
   if(prefill) ask();
 }
