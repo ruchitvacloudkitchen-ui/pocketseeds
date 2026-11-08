@@ -26,6 +26,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));
 
 app.listen(PORT, '0.0.0.0', () => {
